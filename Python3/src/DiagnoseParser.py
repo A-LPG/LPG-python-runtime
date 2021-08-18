@@ -52,7 +52,7 @@ class SecondaryRepairInfo(object):
 
 
 class StateInfo(object): 
-    def __init__(self,state: int, next: int) -> int : 
+    def __init__(self,state: int, next: int) -> int: 
         self.state = state
         self.next = next
     
@@ -116,15 +116,13 @@ class DiagnoseParser(Stacks):
         self.scopeIndex: list =  []
         self.scopePosition: list =  []
 
-        self.buffer: list =  [0](self.BUFF_SIZE)
+        self.buffer: list = [0] * self.BUFF_SIZE
         self.main_configuration_stack: ConfigurationStack = None
 
-        self.stateSeen: list =  []
+        self.stateSeen: list = []
 
         self.statePoolTop: int = -1
         self.statePool: list = []
-
-
 
         self.monitor = monitor
         self.maxErrors = maxErrors
@@ -150,85 +148,85 @@ class DiagnoseParser(Stacks):
 
 
 
-    def rhs(self,index: int) -> int : 
+    def rhs(self, index: int) -> int: 
         return self.prs.rhs(index)
     
-    def baseAction(self,index: int) -> int : 
+    def baseAction(self, index: int) -> int: 
         return self.prs.baseAction(index)
     
-    def baseCheck(self,index: int) -> int : 
+    def baseCheck(self, index: int) -> int: 
         return self.prs.baseCheck(index)
     
-    def lhs(self,index: int) -> int : 
+    def lhs(self, index: int) -> int: 
         return self.prs.lhs(index)
     
-    def termCheck(self,index: int) -> int : 
+    def termCheck(self, index: int) -> int: 
         return self.prs.termCheck(index)
     
-    def termAction(self,index: int) -> int : 
+    def termAction(self, index: int) -> int: 
         return self.prs.termAction(index)
     
-    def asb(self,index: int) -> int : 
+    def asb(self, index: int) -> int: 
         return self.prs.asb(index)
     
-    def asr(self,index: int) -> int : 
+    def asr(self, index: int) -> int: 
         return self.prs.asr(index)
     
-    def nasb(self,index: int) -> int : 
+    def nasb(self, index: int) -> int: 
         return self.prs.nasb(index)
     
-    def nasr(self,index: int) -> int : 
+    def nasr(self, index: int) -> int: 
         return self.prs.nasr(index)
     
-    def terminalIndex(self,index: int) -> int : 
+    def terminalIndex(self, index: int) -> int: 
         return self.prs.terminalIndex(index)
     
-    def nonterminalIndex(self,index: int) -> int : 
+    def nonterminalIndex(self, index: int) -> int:
         return self.prs.nonterminalIndex(index)
     
-    def symbolIndex(self,index: int) -> int : 
+    def symbolIndex(self, index: int) -> int: 
         return self.nonterminalIndex(index - self.NT_OFFSET)  if index > self.NT_OFFSET else self.terminalIndex(index)
     
-    def scopePrefix(self,index: int) -> int : 
+    def scopePrefix(self, index: int) -> int: 
         return self.prs.scopePrefix(index)
     
-    def scopeSuffix(self,index: int) -> int : 
+    def scopeSuffix(self, index: int) -> int: 
         return self.prs.scopeSuffix(index)
     
-    def scopeLhs(self,index: int) -> int : 
+    def scopeLhs(self, index: int) -> int: 
         return self.prs.scopeLhs(index)
     
-    def scopeLa(self,index: int) -> int : 
+    def scopeLa(self, index: int) -> int: 
         return self.prs.scopeLa(index)
     
-    def scopeStateSet(self,index: int) -> int : 
+    def scopeStateSet(self, index: int) -> int: 
         return self.prs.scopeStateSet(index)
     
-    def scopeRhs(self,index: int) -> int : 
+    def scopeRhs(self, index: int) -> int: 
         return self.prs.scopeRhs(index)
     
-    def scopeState(self,index: int) -> int : 
+    def scopeState(self, index: int) -> int: 
         return self.prs.scopeState(index)
     
-    def inSymb(self,index: int) -> int : 
+    def inSymb(self, index: int) -> int: 
         return self.prs.inSymb(index)
     
-    def name(self,index: int) -> str:  
+    def name(self, index: int) -> str:  
         return self.prs.name(index)
     
-    def originalState(self,state: int) -> int : 
+    def originalState(self,state: int) -> int: 
         return self.prs.originalState(state)
     
-    def asi(self,state: int) -> int : 
+    def asi(self,state: int) -> int: 
         return self.prs.asi(state)
     
-    def nasi(self,state: int) -> int : 
+    def nasi(self,state: int) -> int: 
         return self.prs.nasi(state)
     
-    def inSymbol(self,state: int) -> int : 
+    def inSymbol(self,state: int) -> int: 
         return self.prs.inSymbol(state)
     
-    def ntAction(self,state: int, sym: int) -> int : 
+    def ntAction(self,state: int, sym: int) -> int: 
         return self.prs.ntAction(state, sym)
 
     def isNullable(self,symbol: int) ->  bool  :
@@ -264,14 +262,14 @@ class DiagnoseParser(Stacks):
         self.diagnoseEntry(0, error_token)
     
 
-    def diagnoseEntry(self,marker_kind: int, error_token : int = None) -> int : 
+    def diagnoseEntry(self,marker_kind: int, error_token : int = None) -> int: 
         if (error_token): 
             self.diagnoseEntry2(marker_kind, error_token)
         else :
             self.diagnoseEntry1(marker_kind)
         
     
-    def diagnoseEntry1(self,marker_kind: int) -> int : 
+    def diagnoseEntry1(self,marker_kind: int) -> int: 
         self.reallocateStacks()
         self.tempStackTop = 0
         self.tempStack[self.tempStackTop] = self.START_STATE
@@ -295,7 +293,7 @@ class DiagnoseParser(Stacks):
         
         return
     
-    def diagnoseEntry2(self,marker_kind: int, error_token: int) -> int : 
+    def diagnoseEntry2(self,marker_kind: int, error_token: int):
         action: IntTuple =  IntTuple(1 << 18)
         startTime: int = time.time()
         errorCount: int = 0
@@ -582,7 +580,7 @@ class DiagnoseParser(Stacks):
     # succesful, we return the farthest token on which an error was
     # encountered. Otherwise, we return 0.
     #
-    def parseForError(self,current_kind: int) -> int : 
+    def parseForError(self,current_kind: int) -> int: 
         error_token: int = 0
         #
         # Get next token in stream and compute initial action
@@ -674,7 +672,7 @@ class DiagnoseParser(Stacks):
     # in tokStream):, parse up to error_token in the tokStream and store
     # all the parsing actions executed in the "action" tuple.
     #
-    def parseUpToError(self,action: IntTuple, current_kind: int, error_token: int) -> int : 
+    def parseUpToError(self,action: IntTuple, current_kind: int, error_token: int) -> int: 
         #
         # Assume predecessor of next token and compute initial action
         #
@@ -767,7 +765,7 @@ class DiagnoseParser(Stacks):
     # been consumed, or an error is encountered. Return the int
     # of tokens that were expended before the parse blocked.
     #
-    def parseCheck(self,stack, stack_top: int, first_symbol: int, buffer_position: int) -> int : 
+    def parseCheck(self,stack, stack_top: int, first_symbol: int, buffer_position: int) -> int: 
         buffer_index: int
         current_kind: int
 
@@ -1004,7 +1002,7 @@ class DiagnoseParser(Stacks):
     # issued, the configuration is updated and the function returns
     # "True".  Otherwise, it returns "False".
     #
-    def primaryPhase(self,error_token: int) -> int :  
+    def primaryPhase(self,error_token: int) -> int:  
         #
         # Initialize the buffer.
         #
@@ -1143,7 +1141,7 @@ class DiagnoseParser(Stacks):
     # the buffer.  If so, it returns the candidate in question
     # otherwise it returns 0.
     #
-    def mergeCandidate(self,state: int, buffer_position: int) -> int : 
+    def mergeCandidate(self,state: int, buffer_position: int) -> int: 
         name :str = self.tokStream.getName(self.buffer[buffer_position]) + self.tokStream.getName(self.buffer[buffer_position + 1])
         k: int = self.asi(state)
         while ( self.asr(k) != 0): 
@@ -1179,7 +1177,7 @@ class DiagnoseParser(Stacks):
     # repair_code are assumed to be initialized.
     #
 
-    def checkPrimaryDistance(self,repair: PrimaryRepairInfo, stck, stack_top: int) -> int : 
+    def checkPrimaryDistance(self,repair: PrimaryRepairInfo, stck, stack_top: int) -> int: 
         #
         #  First, try scope recovery.
         #
@@ -1495,7 +1493,7 @@ class DiagnoseParser(Stacks):
     # the name index of the highest level nonterminal that can
     # directly or indirectly produce the candidate.
     #
-    def getTermIndex(self,stck, stack_top: int, tok: int, buffer_position: int) -> int : 
+    def getTermIndex(self,stck, stack_top: int, tok: int, buffer_position: int) -> int: 
         #
         # Initialize stack index of temp_stack and initialize maximum
         # position of state stack that is still useful.
@@ -1609,7 +1607,7 @@ class DiagnoseParser(Stacks):
     # that C =>+rm B. (Recall that for an LALR(k): grammar if
     # C =>+rm B, it cannot be the case that B =>+rm C):
     #
-    def getNtermIndex(self,start: int, sym: int, buffer_position: int) -> int : 
+    def getNtermIndex(self,start: int, sym: int, buffer_position: int) -> int: 
         highest_symbol: int = sym - self.NT_OFFSET,
         tok: int = self.tokStream.getKind(self.buffer[buffer_position])
         self.tokStream.reset(self.buffer[buffer_position + 1])
@@ -1654,7 +1652,7 @@ class DiagnoseParser(Stacks):
     # Certain singleton symbols (such as ":" and ""): are also
     # considered to be misspellings of each other.
     #
-    def misspell(self,sym: int, tok: int) -> int : 
+    def misspell(self,sym: int, tok: int) -> int: 
         #
         # Set up the two strings in question. Note that there is a "0"
         # gate added at the end of each str. This is important as
@@ -1762,7 +1760,7 @@ class DiagnoseParser(Stacks):
         return (count * 10) // ( ( s1.__len__() if n < s1.__len__()  else  n) + num_errors)
     
 
-    def scopeTrial(self,repair: PrimaryRepairInfo, stack, stack_top: int) -> int : 
+    def scopeTrial(self,repair: PrimaryRepairInfo, stack, stack_top: int) -> int: 
 
         if (self.stateSeen == None  or self.stateSeen.__len__() == 0 or self.stateSeen.__len__() < self.stateStack.__len__()): 
             self.stateSeen =  [0]*(self.stateStack.__len__())
@@ -1783,7 +1781,7 @@ class DiagnoseParser(Stacks):
         return
     
 
-    def scopeTrialCheck(self,repair: PrimaryRepairInfo, stack, stack_top: int, indx: int) -> int : 
+    def scopeTrialCheck(self,repair: PrimaryRepairInfo, stack, stack_top: int, indx: int) -> int: 
 
         i: int = self.stateSeen[stack_top] 
         while (i != DiagnoseParser.NIL ): 
@@ -2349,8 +2347,9 @@ class DiagnoseParser(Stacks):
             ( "\"" + self.name(name_index) + "\""
              if name_index >= 0 and self.name(name_index).upper() == "ERROR" else  "" ))
         
-        if (msg_code == ParseErrorCodes.INVALID_CODE): 
-            msg_code =  ParseErrorCodes.INVALID_CODE if token_name.__len__() == 0 else ParseErrorCodes.INVALID_TOKEN_CODE
+        if msg_code == ParseErrorCodes.INVALID_CODE:
+            msg_code = ParseErrorCodes.INVALID_CODE if token_name.__len__() == 0 \
+                else ParseErrorCodes.INVALID_TOKEN_CODE
         
         if (msg_code == ParseErrorCodes.SCOPE_CODE): 
             token_name = "\""
@@ -2378,7 +2377,7 @@ class DiagnoseParser(Stacks):
     #
     # keep looking ahead until we compute a valid action
     #
-    def lookahead(self,act: int, token: int) -> int : 
+    def lookahead(self,act: int, token: int) -> int: 
         act = self.prs.lookAhead(act - self.LA_STATE_OFFSET, self.tokStream.getKind(token))
         return (self.lookahead(act, self.tokStream.getNext(token)) if act > self.LA_STATE_OFFSET else act)
     
@@ -2388,7 +2387,7 @@ class DiagnoseParser(Stacks):
     # are in the token stream beginning at the next token that
     # is yielded by peek().
     #
-    def tAction(self,act: int, sym: int) -> int : 
+    def tAction(self,act: int, sym: int) -> int: 
         act = self.prs.tAction(act, sym)
         return (self.lookahead(act, self.tokStream.peek()) if act > self.LA_STATE_OFFSET else act)
     

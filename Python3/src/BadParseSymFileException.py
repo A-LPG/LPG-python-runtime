@@ -1,4 +1,4 @@
- class BadParseSymFileException (Exception ):
+class BadParseSymFileException (Exception ):
     
      
     

@@ -1,11 +1,11 @@
- class NotBacktrackParseTableException (Exception):
+class NotBacktrackParseTableException (Exception):
   
      
     def __init__(self,info:str = None): 
         super().__init__()
-        if (info == None): 
+        if info is None:
             self.info = "NotBacktrackParseTableException"
-        else :
+        else:
             self.info = info
         
     

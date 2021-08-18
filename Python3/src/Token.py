@@ -1,6 +1,4 @@
 
-
-from _typeshed import Self
 from AbstractToken import AbstractToken
 from Protocol import IPrsStream
 

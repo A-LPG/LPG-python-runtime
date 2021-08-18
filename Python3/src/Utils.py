@@ -83,7 +83,7 @@ class ArrayList(object):
         
     
 
-    def get(self,index: int): 
+    def get(self, index: int): 
         return self.content[index]
     
 
@@ -101,7 +101,7 @@ class ArrayList(object):
         return self.size() == 0
     
 
-    def set(self,index: int, element): 
+    def set(self, index: int, element): 
         self.content[index] = element
         return element
     

@@ -126,7 +126,7 @@ class ILexStream(TokenStream):
  
 
 
-class IPrsStream ( TokenStream ):
+class IPrsStream(TokenStream):
     @abstractmethod   
     def getMessageHandler(self): 
        pass       
@@ -182,13 +182,11 @@ class IPrsStream ( TokenStream ):
     def getStreamIndex(self)-> int: 
        pass
     @abstractmethod   
-    def setStreamIndex(self,index: int): 
+    def setStreamIndex(self, index: int): 
        pass
+
     @abstractmethod   
-    def setStreamLength(self)-> int: 
-       pass
-    @abstractmethod   
-    def setStreamLength(self,len: int): 
+    def setStreamLength(self, length: int = -1):
        pass
     @abstractmethod   
     def addToken(self,token: IToken): 

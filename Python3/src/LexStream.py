@@ -1,5 +1,5 @@
 
-from ParseErrorCodes import  ParseErrorCodes, errorMsgText  
+from ParseErrorCodes import  ParseErrorCodes
 from IMessageHandler import  IMessageHandler  
 from IntSegmentedTuple import  IntSegmentedTuple  
 from Protocol import  ILexStream, IPrsStream  
@@ -93,7 +93,7 @@ class LexStream ( ILexStream ):
     def getTab(self) -> int: 
         return self.tab
     
-    def setStreamIndex(self,index: int): 
+    def setStreamIndex(self, index: int): 
         self.index = index
     
     def getStreamIndex(self)->int: 
@@ -286,7 +286,7 @@ class LexStream ( ILexStream ):
                     print(errorInfo[i] + " ")
                 
             
-            print(errorMsgText[errorCode])
+            print(ParseErrorCodes.errorMsgText[errorCode])
         else :
             self.errMsg.handleMessage(errorCode, self.getLocation(left_loc, right_loc), self.getLocation(error_left_loc, error_right_loc), self.getFileName(), errorInfo)
         
