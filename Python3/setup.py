@@ -8,10 +8,9 @@ setup(
     install_requires=[
         "typing  python_version<'3.5'",
     ],
-    url='https:#github.com/A-LPG/LPG-python-runtime',
+    url='https:/github.com/A-LPG/LPG-python-runtime',
     license='MIT',
     author='Kuafuwang',
     author_email='731784510@qq.com',
-    scripts=["bin/pygrun"],
     description='Python3  runtime for LPG2'
 )
