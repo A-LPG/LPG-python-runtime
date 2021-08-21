@@ -2,10 +2,11 @@
 # -*- coding: utf-8 -*-
 from abc import ABC
 
-from Protocol import IPrsStream, IToken
+from lpg2.IPrsStream import IPrsStream
+from lpg2.IToken import IToken
 
 
-class AbstractToken(IToken, ABC):
+class AbstractToken(IToken):
 
     def __init__(self, startOffset: int = 0, endOffset: int = 0, kind: int = 0, iPrsStream: IPrsStream = None):
         super().__init__()

@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 from abc import ABCMeta, abstractmethod
 
-from Protocol import IToken
-from Utils import ArrayList
-from lpg2 import IAstVisitor
+from lpg2.IToken import IToken
+from lpg2.Utils import ArrayList
+from lpg2.IAstVisitor import IAstVisitor
 
 
 class IAst(metaclass=ABCMeta):

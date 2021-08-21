@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from ConfigurationStack import ConfigurationStack
-from IntTuple import IntTuple
-from Monitor import Monitor
-from ParseTable import ParseTable
-from Stacks import Stacks
-from TokenStream import TokenStream
-from ParseErrorCodes import ParseErrorCodes
-from Utils import arraycopy
+from lpg2.ConfigurationStack import ConfigurationStack
+from lpg2.IntTuple import IntTuple
+from lpg2.Monitor import Monitor
+from lpg2.ParseTable import ParseTable
+from lpg2.Stacks import Stacks
+from lpg2.TokenStream import TokenStream
+from lpg2.ParseErrorCodes import ParseErrorCodes
+from lpg2.Utils import arraycopy
 import time
 
 
@@ -53,7 +53,7 @@ class SecondaryRepairInfo(object):
 
 
 class StateInfo(object):
-    def __init__(self, state: int, next_state: int) -> int:
+    def __init__(self, state: int, next_state: int) :
         self.state = state
         self.next = next_state
 
@@ -71,10 +71,10 @@ class DiagnoseParser(Stacks):
 
     def __init__(self, tokStream: TokenStream, prs: ParseTable, maxErrors: int = 0, maxTime: int = 0,
                  monitor: Monitor = None):
-
-        self.monitor: Monitor = None
-        self.tokStream: TokenStream = None
-        self.prs: ParseTable = None
+        super().__init__()
+        self.monitor: Monitor = monitor
+        self.tokStream: TokenStream = tokStream
+        self.prs: ParseTable = prs
 
         self.ERROR_SYMBOL: int = 0
         self.SCOPE_SIZE: int = 0
@@ -114,7 +114,6 @@ class DiagnoseParser(Stacks):
         self.scopePosition: list = []
 
         self.buffer: list = [0] * self.BUFF_SIZE
-        self.main_configuration_stack: ConfigurationStack = None
 
         self.stateSeen: list = []
 
@@ -251,13 +250,13 @@ class DiagnoseParser(Stacks):
     def diagnose(self, error_token: int = 0):
         self.diagnoseEntry(0, error_token)
 
-    def diagnoseEntry(self, marker_kind: int, error_token: int = None) -> int:
+    def diagnoseEntry(self, marker_kind: int, error_token: int = None) :
         if error_token is not None:
             self.diagnoseEntry2(marker_kind, error_token)
         else:
             self.diagnoseEntry1(marker_kind)
 
-    def diagnoseEntry1(self, marker_kind: int) -> int:
+    def diagnoseEntry1(self, marker_kind: int):
         self.reallocateStacks()
         self.tempStackTop = 0
         self.tempStack[self.tempStackTop] = self.START_STATE
@@ -651,7 +650,7 @@ class DiagnoseParser(Stacks):
     # in tokStream):, parse up to error_token in the tokStream and store
     # all the parsing actions executed in the "action" tuple.
     #
-    def parseUpToError(self, action: IntTuple, current_kind: int, error_token: int) -> int:
+    def parseUpToError(self, action: IntTuple, current_kind: int, error_token: int):
         #
         # Assume predecessor of next token and compute initial action
         #
@@ -1119,7 +1118,7 @@ class DiagnoseParser(Stacks):
     # repair_code are assumed to be initialized.
     #
 
-    def checkPrimaryDistance(self, repair: PrimaryRepairInfo, stck, stack_top: int) -> int:
+    def checkPrimaryDistance(self, repair: PrimaryRepairInfo, stck, stack_top: int):
         #
         #  First, try scope recovery.
         #
@@ -1417,8 +1416,8 @@ class DiagnoseParser(Stacks):
         # Initialize stack index of temp_stack and initialize maximum
         # position of state stack that is still useful.
         #
-        act: int = stck[stack_top],
-        max_pos: int = stack_top,
+        act: int = stck[stack_top]
+        max_pos: int = stack_top
         highest_symbol: int = tok
 
         self.tempStackTop = stack_top - 1
@@ -1523,7 +1522,7 @@ class DiagnoseParser(Stacks):
     # C =>+rm B, it cannot be the case that B =>+rm C):
     #
     def getNtermIndex(self, start: int, sym: int, buffer_position: int) -> int:
-        highest_symbol: int = sym - self.NT_OFFSET,
+        highest_symbol: int = sym - self.NT_OFFSET
         tok: int = self.tokStream.getKind(self.buffer[buffer_position])
         self.tokStream.reset(self.buffer[buffer_position + 1])
 
@@ -1615,11 +1614,11 @@ class DiagnoseParser(Stacks):
         # This algorithm is an adaptation of a bool misspelling
         # algorithm proposed by Juergen Uhl.
         #
-        count: int = 0,
-        prefix_length: int = 0,
+        count: int = 0
+        prefix_length: int = 0
         num_errors: int = 0
 
-        i: int = 0,
+        i: int = 0
         j: int = 0
 
         while (i < n) and (j < m):
@@ -1630,7 +1629,7 @@ class DiagnoseParser(Stacks):
                 if num_errors == 0:
                     prefix_length += 1
 
-            elif s1[i + 1] == s2[i] and s1[i] == s2[j + 1]: # transposition
+            elif s1[i + 1] == s2[j] and s1[i] == s2[j + 1]:  # transposition
 
                 count += 2
                 i += 2
@@ -1665,7 +1664,7 @@ class DiagnoseParser(Stacks):
 
         return (count * 10) // ((s1.__len__() if n < s1.__len__() else n) + num_errors)
 
-    def scopeTrial(self, repair: PrimaryRepairInfo, stack: list, stack_top: int) -> int:
+    def scopeTrial(self, repair: PrimaryRepairInfo, stack: list, stack_top: int):
 
         if (self.stateSeen is None or self.stateSeen.__len__() == 0 or self.stateSeen.__len__()
                 < len(self.stateStack)):
@@ -1687,7 +1686,7 @@ class DiagnoseParser(Stacks):
 
         return
 
-    def scopeTrialCheck(self, repair: PrimaryRepairInfo, stack, stack_top: int, indx: int) -> int:
+    def scopeTrialCheck(self, repair: PrimaryRepairInfo, stack, stack_top: int, indx: int):
 
         i: int = self.stateSeen[stack_top]
         while i != DiagnoseParser.NIL:
@@ -1801,7 +1800,7 @@ class DiagnoseParser(Stacks):
                         # after parsing the left-hand symbol.
                         #
                         if self.scopeState(j) != 0:  # state was found
-                            previous_distance: int = repair.distance,
+                            previous_distance: int = repair.distance
                             distance: int = self.parseCheck(stack,
                                                             stack_position,
                                                             self.scopeLhs(i) + self.NT_OFFSET,
@@ -2114,7 +2113,7 @@ class DiagnoseParser(Stacks):
     #
     def secondaryRecovery(self, repair: SecondaryRepairInfo, stack: list, stack_top: int,
                           last_index: int, stack_flag: bool):
-        previous_loc: int = self.buffer[2],
+        previous_loc: int = self.buffer[2]
         stack_deletions: int = 0
         top: int = stack_top
         while top >= 0 and repair.numDeletions >= stack_deletions:

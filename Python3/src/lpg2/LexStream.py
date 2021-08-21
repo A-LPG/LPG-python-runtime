@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from ParseErrorCodes import ParseErrorCodes
-from IMessageHandler import IMessageHandler
-from IntSegmentedTuple import IntSegmentedTuple
-from Protocol import ILexStream, IPrsStream
+from lpg2.ILexStream import ILexStream
+from lpg2.ParseErrorCodes import ParseErrorCodes
+from lpg2.IMessageHandler import IMessageHandler
+from lpg2.IntSegmentedTuple import IntSegmentedTuple
+from lpg2.IPrsStream import IPrsStream
 import codecs
 
 
@@ -37,26 +38,26 @@ class LexStream(ILexStream):
         self.setLineOffset(-1)
         self.tab = tab
 
-    def readDataFrom(self, fileName: str, encoding: str = 'ascii', errors: str = 'strict'):
+    def readDataFrom(self, fileName: str, encoding: str = 'utf-8', errors: str = 'strict'):
         # read binary to avoid line ending conversion
         with open(fileName, 'rb') as file:
             bytes = file.read()
             return codecs.decode(bytes, encoding, errors)
 
     def initialize(self, fileName: str, inputChars: str = None, lineOffsets: IntSegmentedTuple = None):
-        if None == inputChars:
+        if inputChars is None:
             try:
-                inputChars = self.readDataFrom(fileName, "ascii")
+                inputChars = self.readDataFrom(fileName, "utf-8")
             except ValueError as ex:
                 pass
 
-        if None == inputChars:
+        if inputChars is None:
             return
 
         self.setInputChars(inputChars)
         self.setStreamLength(inputChars.__len__())
         self.setFileName(fileName)
-        if lineOffsets:
+        if lineOffsets is not None:
             self.lineOffsets = lineOffsets
         else:
             self.computeLineOffsets()
@@ -99,8 +100,8 @@ class LexStream(ILexStream):
     def getStreamIndex(self) -> int:
         return self.index
 
-    def setStreamLength(self, streamLength: int):
-        self.streamLength = streamLength
+    def setStreamLength(self, length: int):
+        self.streamLength = length
 
     def getStreamLength(self) -> int:
         return self.streamLength
@@ -111,9 +112,9 @@ class LexStream(ILexStream):
     def getLineOffset(self, i: int) -> int:
         return self.lineOffsets.get(i)
 
-    def setPrsStream(self, prsStream: IPrsStream):
-        prsStream.setLexStream(self)
-        self.prsStream = prsStream
+    def setPrsStream(self, stream: IPrsStream):
+        stream.setLexStream(self)
+        self.prsStream = stream
 
     def getIPrsStream(self) -> IPrsStream:
         return self.prsStream
@@ -151,7 +152,7 @@ class LexStream(ILexStream):
         return self.index
 
     def getToken(self, end_token: int = None) -> int:
-        if None == end_token:
+        if end_token is None:
             return self.getToken2()
 
         self.index = (self.getNext(self.index) if self.index < end_token else self.streamLength)
@@ -180,7 +181,7 @@ class LexStream(ILexStream):
         return self.getNext(self.index)
 
     def reset(self, i: int = None):
-        if i != None:
+        if i is not None:
             self.index = i - 1
         else:
             self.index = -1
@@ -189,13 +190,10 @@ class LexStream(ILexStream):
         return 0
 
     def getLine(self, i: int = None) -> int:
-        if None != i:
-            return self.getLine2()
+        if i is None:
+            return self.getLineCount()
 
         return self.getLineNumberOfCharAt(i)
-
-    def getLine2(self) -> int:
-        return self.getLineCount()
 
     def getColumn(self, i: int) -> int:
         return self.getColumnOfCharAt(i)
@@ -221,18 +219,21 @@ class LexStream(ILexStream):
     def getLastRealToken(self, i: int) -> int:
         return i
 
-    def setMessageHandler(self, errMsg: IMessageHandler):
-        self.errMsg = errMsg
+    def setMessageHandler(self, handler: IMessageHandler):
+        self.errMsg = handler
 
     def getMessageHandler(self) -> IMessageHandler:
         return self.errMsg
 
-    def makeToken(self, startLoc: int, endLoc: int, kind: int):
-        if self.prsStream:
-            self.prsStream.makeToken(startLoc, endLoc, kind)
+    def makeToken(self, start_loc: int, end_loc: int, kind: int):
+        if self.prsStream is not None:
+            self.prsStream.makeToken(start_loc, end_loc, kind)
         else:
-            self.reportLexicalError(startLoc, endLoc)
+            self.reportLexicalError(start_loc, end_loc)
 
+    '''/**
+     * See IMessaageHandler for a description of the int[] return value.
+     */'''
     def getLocation(self, left_loc: int, right_loc: int) -> list:
         length: int = (right_loc if right_loc < self.streamLength else self.streamLength - 1) - left_loc + 1
         return [left_loc,
@@ -243,62 +244,72 @@ class LexStream(ILexStream):
                 self.getColumnOfCharAt(right_loc)
                 ]
 
-    def reportLexicalError(self, left_loc: int, right_loc: int, errorCode: int = None,
-                           error_left_loc_arg: int = None, error_right_loc_arg: int = None, errorInfoArg=None):
+    def reportLexicalError(self, left_loc: int, right_loc: int, error_code: int = None,
+                           error_left_loc_arg: int = None, error_right_loc_arg: int = None, error_info: list = None):
 
         error_left_loc: int = 0
-        if error_left_loc_arg:
+        if error_left_loc_arg is not None:
             error_left_loc = error_left_loc_arg
 
         error_right_loc: int = 0
-        if error_right_loc_arg:
+        if error_right_loc_arg is not None:
             error_right_loc = error_right_loc_arg
 
-        errorInfo: list = []
-        if errorInfoArg != None:
-            errorInfo = errorInfoArg
+        if error_info is None:
+            error_info = []
 
-        if None == errorCode:
-            errorCode = (ParseErrorCodes.EOF_CODE if right_loc >= self.streamLength
-                         else (
-                ParseErrorCodes.LEX_ERROR_CODE if left_loc == right_loc else ParseErrorCodes.INVALID_TOKEN_CODE))
-            tokenText: str = ("End-of-file " if errorCode == ParseErrorCodes.EOF_CODE
-                              else ("\"" + self.inputChars[left_loc, left_loc + right_loc - left_loc + 1] + "\" "
-                                    if errorCode == ParseErrorCodes.INVALID_TOKEN_CODE
-                                    else "\"" + self.getCharValue(left_loc) + "\" "))
-            error_left_loc = 0
-            error_right_loc = 0
-            errorInfo = [tokenText]
+        if error_code is None:
+            error_code = (ParseErrorCodes.EOF_CODE if right_loc >= self.streamLength
+                                                   else (ParseErrorCodes.LEX_ERROR_CODE
+                                                                   if left_loc == right_loc
+                                                                   else ParseErrorCodes.INVALID_TOKEN_CODE))
 
-        if not self.errMsg:
-            locationInfo: str = self.getFileName() + ':' + self.getLineNumberOfCharAt(
-                left_loc) + ':' + self.getColumnOfCharAt(left_loc) + ':' + self.getLineNumberOfCharAt(
-                right_loc) + ':' + self.getColumnOfCharAt(
-                right_loc) + ':' + error_left_loc + ':' + error_right_loc + ':' + errorCode + ": "
-            print("****Error: " + locationInfo)
-            if (errorInfo):
-                for i in range(0, errorInfo.__len__()):
-                    print(errorInfo[i] + " ")
+            token_text: str = ("End-of-file " if error_code == ParseErrorCodes.EOF_CODE
+                                  else ("\"" + self.inputChars[left_loc:  right_loc + 1] + "\" "
+                                        if error_code == ParseErrorCodes.INVALID_TOKEN_CODE
+                                        else "\"" + self.getCharValue(left_loc) + "\" "))
 
-            print(ParseErrorCodes.errorMsgText[errorCode])
+            error_info = [token_text]
+
+        if self.errMsg is None:
+            location_info: str = (self.getFileName() + ':' + str(self.getLineNumberOfCharAt(left_loc)) + ':'
+                                  + str(self.getColumnOfCharAt(left_loc)) + ':'
+                                  + str(self.getLineNumberOfCharAt(right_loc)) + ':'
+                                  + str(self.getColumnOfCharAt(right_loc)) + ':'
+                                  + str(error_left_loc) + ':'
+                                  + str(error_right_loc) + ':'
+                                  + str(error_code) + ": ")
+            print("****Error: " + location_info)
+
+            if error_info:
+                for i in range(0, error_info.__len__()):
+                    print(error_info[i] + " ")
+
+            print(ParseErrorCodes.errorMsgText[error_code] + "\n")
         else:
-            self.errMsg.handleMessage(errorCode, self.getLocation(left_loc, right_loc),
-                                      self.getLocation(error_left_loc, error_right_loc), self.getFileName(), errorInfo)
+            '''/**
+             * This is the only method in the IMessageHandler interface
+             * It is called with the following arguments:
+             */'''
+            self.errMsg.handleMessage(error_code,
+                                      self.getLocation(left_loc, right_loc),
+                                      self.getLocation(error_left_loc, error_right_loc),
+                                      self.getFileName(),
+                                      error_info)
 
-    def reportError(self, errorCode: int, leftToken: int, rightToken: int, errorInfo, errorToken: int = 0):
-        tempInfo: list = []
+    def reportError(self, errorCode: int, leftToken: int, rightToken: int, errorInfo = None, errorToken: int = 0):
+
         if isinstance(errorInfo, str):
-            tempInfo = [errorInfo]
+            temp_info = [errorInfo]
 
         elif isinstance(errorInfo, list):
-            tempInfo = errorInfo
-
+            temp_info = errorInfo
         else:
-            tempInfo = []
+            temp_info = []
 
-        self.reportLexicalError(leftToken, rightToken, errorCode, errorToken, errorToken, tempInfo)
+        self.reportLexicalError(leftToken, rightToken, errorCode, errorToken, errorToken, temp_info)
 
     def toString(self, startOffset: int, endOffset: int) -> str:
         length: int = endOffset - startOffset + 1
         return ("$EOF" if endOffset >= self.inputChars.__len__() else (
-            "" if length <= 0 else self.inputChars[startOffset, startOffset + length]))
+            "" if length <= 0 else self.inputChars[startOffset: startOffset + length]))

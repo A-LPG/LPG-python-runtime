@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from LexStream import LexStream
-from IntSegmentedTuple import IntSegmentedTuple
+from lpg2.LexStream import LexStream
+from lpg2.IntSegmentedTuple import IntSegmentedTuple
 
 
 class LpgLexStream(LexStream):

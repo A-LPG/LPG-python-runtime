@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from Stacks import Stacks
-from Monitor import Monitor
-from IntTuple import IntTuple
-from TokenStream import TokenStream
-from ParseTable import ParseTable
-from RuleAction import RuleAction
-from BadParseException import BadParseException
-from UnavailableParserInformationException import UnavailableParserInformationException
-from BadParseSymFileException import BadParseSymFileException
-from NotDeterministicParseTableException import NotDeterministicParseTableException
+from lpg2.Stacks import Stacks
+from lpg2.Monitor import Monitor
+from lpg2.IntTuple import IntTuple
+from lpg2.TokenStream import TokenStream
+from lpg2.ParseTable import ParseTable
+from lpg2.RuleAction import RuleAction
+from lpg2.BadParseException import BadParseException
+from lpg2.UnavailableParserInformationException import UnavailableParserInformationException
+from lpg2.BadParseSymFileException import BadParseSymFileException
+from lpg2.NotDeterministicParseTableException import NotDeterministicParseTableException
 
 
 class DeterministicParser(Stacks):

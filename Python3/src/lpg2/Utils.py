@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-def arraycopy(src, srcPos: int, dest, destPos: int, numElements: int):
-    for i in range(numElements):
-        dest[destPos + i] = src[srcPos + i]
+def arraycopy(src, src_pos: int, dest, dest_pos: int, length: int):
+    i: int
+    for i in range(length):
+        dest[dest_pos + i] = src[src_pos + i]
     return dest
 
 
@@ -20,7 +21,7 @@ class ArrayList(object):
 
     def addAll(self, index, vals=None):
         tempArray = []
-        if vals != None:
+        if vals is not None:
             if isinstance(vals, ArrayList):
                 tempArray = vals.toArray()
             elif isinstance(vals, list):
@@ -57,7 +58,7 @@ class ArrayList(object):
 
     def toArray(self):
         result = []
-        for x in result:
+        for x in self.content:
             result.append(x)
 
         return result
@@ -66,7 +67,7 @@ class ArrayList(object):
         return len(self.content)
 
     def add(self, index, elem=None):
-        if (elem != None):
+        if elem is not None:
             temp = []
             temp = self.content[: index]
             temp.append = elem
@@ -83,9 +84,6 @@ class ArrayList(object):
         for x in self.content:
             if x == val:
                 return True
-        return False
-
-    def containsAll(self, elems):
         return False
 
     def isEmpty(self):
@@ -108,3 +106,20 @@ class ArrayList(object):
             if self.content[size - i - 1] == element:
                 return size - i - i
         return -1
+
+
+if __name__ == '__main__':
+
+    a = [1] * 12
+    b = [0] * 12
+
+    arraycopy(a, 0, b, 0, 8)
+    for i in b:
+        print(i)
+    buff = ArrayList()
+    buff.add(10)
+    buff.add(11)
+
+    buff1 = buff.toArray()
+    for item in buff1:
+        print(item)

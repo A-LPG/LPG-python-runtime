@@ -11,7 +11,7 @@
 # found to be off later, more space will be allocated.
 #
 
-from Utils import arraycopy
+from lpg2.Utils import arraycopy
 
 
 class IntTuple(object):

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from ParseTable import ParseTable
-from RuleAction import RuleAction
-from IntTuple import IntTuple
-from Monitor import Monitor
+from lpg2.ParseTable import ParseTable
+from lpg2.RuleAction import RuleAction
+from lpg2.IntTuple import IntTuple
+from lpg2.Monitor import Monitor
 
-from Protocol import ILexStream
-from UnavailableParserInformationException import UnavailableParserInformationException
-from Utils import arraycopy
+from lpg2.IPrsStream import ILexStream
+from lpg2.UnavailableParserInformationException import UnavailableParserInformationException
+from lpg2.Utils import arraycopy
 
 
 class LexParser(object):
@@ -115,7 +115,7 @@ class LexParser(object):
     #
     def getToken(self, i: int) -> int:
         if self.taking_actions:
-            return self.locationStack[self.stateStackTop + (i - 1):]
+            return self.locationStack[self.stateStackTop + (i - 1)]
 
         raise UnavailableParserInformationException()
 
@@ -182,7 +182,7 @@ class LexParser(object):
             self.stateStackTop = -1
             self.currentAction = self.START_STATE
             self.starttok = self.curtok
-            bContinueProcessTokens: bool = False
+            b_continue_process_tokens: bool = False
             # ScanToken:
             while True:
 
@@ -206,7 +206,12 @@ class LexParser(object):
                 # as if we had reached the end of the file (end of the token, since we are really
                 # scanning).
                 #
+                if self.curtok == 275:
+                        self.curtok = 275
                 self.parseNextCharacter(self.curtok, self.current_kind)
+                if self.curtok == 275:
+                        self.curtok = 275
+
                 if (
                         self.currentAction == self.ERROR_ACTION and self.current_kind != self.EOFT_SYMBOL):  # if not successful try EOF
 
@@ -230,12 +235,12 @@ class LexParser(object):
                         self.ra.ruleAction(self.currentAction)
                         lhs_symbol = self.prs.lhs(self.currentAction)
                         if lhs_symbol == self.START_SYMBOL:
-                            bContinueProcessTokens = True
+                            b_continue_process_tokens = True
                             break
                         self.currentAction = self.prs.ntAction(self.stack[self.stateStackTop], lhs_symbol)
                         if not self.currentAction <= self.NUM_RULES:
                             break
-                    if bContinueProcessTokens:
+                    if b_continue_process_tokens:
                         break
                 elif self.currentAction < self.ACCEPT_ACTION:  # Shift
 
@@ -244,12 +249,12 @@ class LexParser(object):
                     self.current_kind = self.tokStream.getKind(self.curtok)
 
                 elif self.currentAction == self.ACCEPT_ACTION:
-                    bContinueProcessTokens = True
+                    b_continue_process_tokens = True
                     break
                 else:
                     break  # ScanToken ERROR_ACTION
 
-            if bContinueProcessTokens:
+            if b_continue_process_tokens:
                 continue
             #
             # Whenever we reach self point, an error has been detected.
@@ -590,7 +595,7 @@ class LexParser(object):
         self.stateStackTop = -1
         self.currentAction = self.START_STATE
         # process_actions:
-        bBreakProcess_actions = False
+        b_break_process_actions = False
         for i in range(0, self.action.size()):
             self.stateStackTop += 1
             self.stack[self.stateStackTop] = self.currentAction
@@ -606,7 +611,7 @@ class LexParser(object):
                     lhs_symbol = self.prs.lhs(self.currentAction)
                     if lhs_symbol == self.START_SYMBOL:
                         # assert(starttok != self.curtok):  # None str reduction to self.START_SYMBOL is illegal
-                        bBreakProcess_actions = True
+                        b_break_process_actions = True
                         break  # process_actions
 
                     self.currentAction = self.prs.ntAction(self.stack[self.stateStackTop], lhs_symbol)
@@ -625,13 +630,13 @@ class LexParser(object):
                         self.ra.ruleAction(self.currentAction)
                         lhs_symbol = self.prs.lhs(self.currentAction)
                         if lhs_symbol == self.START_SYMBOL:
-                            bBreakProcess_actions = True
+                            b_break_process_actions = True
                             break  # process_actions
                         self.currentAction = self.prs.ntAction(self.stack[self.stateStackTop], lhs_symbol)
                         if not self.currentAction <= self.NUM_RULES:
                             break
 
-            if bBreakProcess_actions:
+            if b_break_process_actions:
                 break
 
         self.taking_actions = False  # indicate that we are done

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from AbstractToken import AbstractToken
-from Protocol import IPrsStream
+from lpg2.AbstractToken import AbstractToken
+from lpg2.IPrsStream import IPrsStream
 
 
 class Adjunct(AbstractToken):

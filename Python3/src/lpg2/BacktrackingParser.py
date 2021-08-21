@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import lpg2
+from lpg2.BadParseException import BadParseException
+from lpg2.BadParseSymFileException import BadParseSymFileException
+from lpg2.ConfigurationStack import ConfigurationStack
+from lpg2.ErrorToken import ErrorToken
+from lpg2.IntSegmentedTuple import IntSegmentedTuple
+from lpg2.IntTuple import IntTuple
+from lpg2.Monitor import Monitor
+from lpg2.NotBacktrackParseTableException import NotBacktrackParseTableException
+from lpg2.ParseTable import ParseTable
+from lpg2.IPrsStream import IPrsStream
 
-from BadParseException import BadParseException
-from BadParseSymFileException import BadParseSymFileException
-from ConfigurationStack import ConfigurationStack
-from ErrorToken import ErrorToken
-from IntSegmentedTuple import IntSegmentedTuple
-from IntTuple import IntTuple
-from Monitor import Monitor
-from NotBacktrackParseTableException import NotBacktrackParseTableException
-from ParseTable import ParseTable
-from Protocol import IPrsStream
-from RecoveryParser import RecoveryParser
-from RuleAction import RuleAction
-from Stacks import Stacks
-from TokenStream import TokenStream
-from TokenStreamNotIPrsStreamException import TokenStreamNotIPrsStreamException
-from Utils import arraycopy
+from lpg2.RuleAction import RuleAction
+from lpg2.Stacks import Stacks
+from lpg2.TokenStream import TokenStream
+from lpg2.TokenStreamNotIPrsStreamException import TokenStreamNotIPrsStreamException
+from lpg2.Utils import arraycopy
 import sys
 
 
@@ -117,8 +117,9 @@ class BacktrackingParser(Stacks):
 
     def reset(self, tokStream: TokenStream = None, prs: ParseTable = None, ra: RuleAction = None,
               monitor: Monitor = None):
-        self.prs = prs
-        if prs:
+
+        if prs is not None:
+            self.prs = prs
             self.START_STATE = prs.getStartState()
             self.NUM_RULES = prs.getNumRules()
             self.NT_OFFSET = prs.getNtOffset()
@@ -132,7 +133,8 @@ class BacktrackingParser(Stacks):
             if not prs.getBacktrack():
                 raise NotBacktrackParseTableException()
 
-        self.ra = ra
+        if ra is not None:
+            self.ra = ra
 
         if not tokStream:
             self.reset1()
@@ -203,7 +205,7 @@ class BacktrackingParser(Stacks):
             if not isinstance(self.tokStream, IPrsStream):
                 raise TokenStreamNotIPrsStreamException()
 
-            rp = RecoveryParser(self, self.action, self.tokens, self.tokStream, self.prs, max_error_count, 0,
+            rp = lpg2.RecoveryParser(self, self.action, self.tokens, self.tokStream, self.prs, max_error_count, 0,
                                 self.monitor)
             start_token = rp.recover(marker_token, error_token)
 
@@ -255,7 +257,7 @@ class BacktrackingParser(Stacks):
         self.tokens.add(self.tokStream.getPrevious(self.tokStream.peek()))
 
         start_token_index: int = self.tokStream.peek()
-        repair_token: int = self.getMarkerToken(marker_kind, start_token_index),
+        repair_token: int = self.getMarkerToken(marker_kind, start_token_index)
         start_action_index: int = self.action.size()  # obviously 0
         temp_stack: list = [0] * (self.stateStackTop + 1)
         arraycopy(self.stateStack, 0, temp_stack, 0, len(temp_stack))
@@ -329,7 +331,7 @@ class BacktrackingParser(Stacks):
     # the list "action" and the sequence of tokens in list "tokens".
     #
     def parseActions(self, marker_kind: int):
-        ti: int = -1,
+        ti: int = -1
         curtok: int
 
         ti += 1
@@ -602,8 +604,8 @@ class BacktrackingParser(Stacks):
         #
         start_token: int = self.tokStream.peek()
         final_token: int = self.tokStream.getStreamLength()  # unreachable
-        curtok: int = 0,
-        current_kind: int = self.ERROR_SYMBOL,
+        curtok: int = 0
+        current_kind: int = self.ERROR_SYMBOL
         act: int = self.tAction(self.stateStack[self.stateStackTop], current_kind)
 
         while True:

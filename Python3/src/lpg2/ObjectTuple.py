@@ -9,7 +9,7 @@
 # for log_blksize and base_increment. If these estimates are
 # found to be off later, more space will be allocated.
 #
-from Utils import arraycopy
+from lpg2.Utils import arraycopy
 
 
 class ObjectTuple(object):
@@ -60,7 +60,7 @@ class ObjectTuple(object):
     def nextIndex(self) -> int:
         i: int = self.top
         self.top += 1
-        if (i >= self.array.__len__()):
+        if i >= self.array.__len__():
             self.array = arraycopy(self.array, 0, [None] * (i * 2), 0, i)
 
         return i

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from Protocol import IToken
-from Token import Token
+from lpg2.IPrsStream import IToken
+from lpg2.Token import Token
 
 
 class ErrorToken(Token):

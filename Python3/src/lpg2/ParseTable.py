@@ -91,7 +91,7 @@ class ParseTable(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def originalState(state: int) -> int:
+    def originalState(self, state: int) -> int:
         pass
 
     @abstractmethod

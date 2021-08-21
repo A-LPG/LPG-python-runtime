@@ -5,7 +5,7 @@ class NullTerminalSymbolsException(Exception):
 
     def __init__(self, info: str = None):
         super().__init__()
-        if (info is None):
+        if info is None:
             self.info = "NullTerminalSymbolsException"
         else:
             self.info = info

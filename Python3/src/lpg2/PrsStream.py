@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from LexStream import LexStream
-from Token import Token
-from ErrorToken import ErrorToken
-from Adjunct import Adjunct
+from lpg2.ILexStream import ILexStream
+from lpg2.IToken import IToken
+from lpg2.LexStream import LexStream
+from lpg2.Token import Token
+from lpg2.ErrorToken import ErrorToken
+from lpg2.Adjunct import Adjunct
 # import  Utf8LexStream  from Utf8LexStream"
-from IMessageHandler import IMessageHandler
-from NullTerminalSymbolsException import NullTerminalSymbolsException
-from UndefinedEofSymbolException import UndefinedEofSymbolException
-from UnimplementedTerminalsException import UnimplementedTerminalsException
+from lpg2.IMessageHandler import IMessageHandler
+from lpg2.NullTerminalSymbolsException import NullTerminalSymbolsException
+from lpg2.UndefinedEofSymbolException import UndefinedEofSymbolException
+from lpg2.UnimplementedTerminalsException import UnimplementedTerminalsException
 
-from Protocol import IPrsStream, ILexStream, IToken
-from Utils import ArrayList
+from lpg2.IPrsStream import IPrsStream
+from lpg2.Utils import ArrayList
 
 
 #
@@ -19,16 +21,16 @@ from Utils import ArrayList
 #
 class PrsStream(IPrsStream):
 
-    def __init__(self, iLexStream: ILexStream = None):
+    def __init__(self, lex: ILexStream = None):
         self.iLexStream: ILexStream = None
         self.kindMap: list = []
         self.tokens: ArrayList = ArrayList()
         self.adjuncts: ArrayList = ArrayList()
         self.index: int = 0
         self.len: int = 0
-        if (iLexStream):
-            self.iLexStream = iLexStream
-            iLexStream.setPrsStream(self)
+        if lex is not None:
+            self.iLexStream = lex
+            lex.setPrsStream(self)
             self.resetTokenStream()
 
     def orderedExportedSymbols(self) -> list:
@@ -36,38 +38,38 @@ class PrsStream(IPrsStream):
 
     def remapTerminalSymbols(self, ordered_parser_symbols: list, eof_symbol: int):
         # lexStream might be None, maybe only erroneously, but it has happened
-        if (not self.iLexStream):
+        if self.iLexStream is None:
             raise ReferenceError("PrsStream.remapTerminalSymbols(..):  lexStream is None")
 
         ordered_lexer_symbols: list = self.iLexStream.orderedExportedSymbols()
-        if (ordered_lexer_symbols is None):
+        if ordered_lexer_symbols is None:
             raise NullTerminalSymbolsException()
 
-        if (ordered_parser_symbols is None):
+        if ordered_parser_symbols is None:
             raise NullTerminalSymbolsException()
 
         unimplemented_symbols: ArrayList = ArrayList()
-        if (ordered_lexer_symbols != ordered_parser_symbols):
+        if ordered_lexer_symbols != ordered_parser_symbols:
             self.kindMap = [0] * (ordered_lexer_symbols.__len__())
             terminal_map = dict()
             for i in range(0, ordered_lexer_symbols.__len__()):
                 terminal_map[ordered_lexer_symbols[i]] = i
 
-            for k in range(0, ordered_parser_symbols.__len__()):
-                k: int = terminal_map.get(ordered_parser_symbols[i])
-                if (k != None):
+            for i in range(0, ordered_parser_symbols.__len__()):
+                k: int = terminal_map.get(ordered_parser_symbols[i], None)
+                if k is not None:
                     self.kindMap[k] = i
                 else:
-                    if (i == eof_symbol):
+                    if i == eof_symbol:
                         raise UndefinedEofSymbolException()
 
                     unimplemented_symbols.add(i)
 
-        if (unimplemented_symbols.size() > 0):
+        if unimplemented_symbols.size() > 0:
             raise UnimplementedTerminalsException(unimplemented_symbols)
 
     def mapKind(self, kind: int) -> int:
-        return (kind if self.kindMap.__len__() == 0 else self.kindMap[kind])
+        return kind if self.kindMap is None or self.kindMap.__len__() == 0 else self.kindMap[kind]
 
     def resetTokenStream(self):
         self.tokens = ArrayList()
@@ -80,7 +82,7 @@ class PrsStream(IPrsStream):
 
     def resetLexStream(self, lexStream: ILexStream):
 
-        if (lexStream):
+        if lexStream is not None:
             lexStream.setPrsStream(self)
             self.iLexStream = lexStream
 
@@ -94,7 +96,7 @@ class PrsStream(IPrsStream):
         last_index: int = self.tokens.size() - 1
         token: Token = self.tokens.get(last_index)
         adjuncts_size: int = self.adjuncts.size()
-        while (adjuncts_size > token.getAdjunctIndex()):
+        while adjuncts_size > token.getAdjunctIndex():
             adjuncts_size -= 1
             self.adjuncts.remove(adjuncts_size)
 
@@ -157,22 +159,23 @@ class PrsStream(IPrsStream):
         return t.getEndOffset() - t.getStartOffset() + 1
 
     def getLineNumberOfTokenAt(self, i: int) -> int:
-        if (not self.iLexStream): return 0
+        if not self.iLexStream:
+            return 0
         t: IToken = self.tokens.get(i)
         return self.iLexStream.getLineNumberOfCharAt(t.getStartOffset())
 
     def getEndLineNumberOfTokenAt(self, i: int) -> int:
-        if (not self.iLexStream): return 0
+        if not self.iLexStream: return 0
         t: IToken = self.tokens.get(i)
         return self.iLexStream.getLineNumberOfCharAt(t.getEndOffset())
 
     def getColumnOfTokenAt(self, i: int) -> int:
-        if (not self.iLexStream): return 0
+        if not self.iLexStream: return 0
         t: IToken = self.tokens.get(i)
         return self.iLexStream.getColumnOfCharAt(t.getStartOffset())
 
     def getEndColumnOfTokenAt(self, i: int) -> int:
-        if (not self.iLexStream): return 0
+        if not self.iLexStream: return 0
         t: IToken = self.tokens.get(i)
         return self.iLexStream.getColumnOfCharAt(t.getEndOffset())
 
@@ -180,15 +183,15 @@ class PrsStream(IPrsStream):
         return []
 
     def getLineOffset(self, i: int) -> int:
-        if (not self.iLexStream): return 0
+        if not self.iLexStream: return 0
         return self.iLexStream.getLineOffset(i)
 
     def getLineCount(self) -> int:
-        if (not self.iLexStream): return 0
+        if not self.iLexStream: return 0
         return self.iLexStream.getLineCount()
 
     def getLineNumberOfCharAt(self, i: int) -> int:
-        if (not self.iLexStream): return 0
+        if not self.iLexStream: return 0
         return self.iLexStream.getLineNumberOfCharAt(i)
 
     def getColumnOfCharAt(self, i: int) -> int:
@@ -198,7 +201,7 @@ class PrsStream(IPrsStream):
         return self.getFirstRealToken(i)
 
     def getFirstRealToken(self, i: int) -> int:
-        while (i >= self.len):
+        while i >= self.len:
             i = (self.tokens.get(i)).getFirstRealToken().getTokenIndex()
 
         return i
@@ -207,7 +210,7 @@ class PrsStream(IPrsStream):
         return self.getLastRealToken(i)
 
     def getLastRealToken(self, i: int) -> int:
-        while (i >= self.len):
+        while i >= self.len:
             i = (self.tokens.get(i)).getLastRealToken().getTokenIndex()
 
         return i
@@ -223,7 +226,7 @@ class PrsStream(IPrsStream):
         return self.toString(self.tokens.get(first_token), self.tokens.get(last_token))
 
     def toString(self, t1: IToken, t2: IToken) -> str:
-        if (not self.iLexStream): return ""
+        if not self.iLexStream: return ""
         return self.iLexStream.toString(t1.getStartOffset(), t2.getEndOffset())
 
     def getSize(self) -> int:
@@ -233,15 +236,15 @@ class PrsStream(IPrsStream):
         self.len = self.tokens.size()
 
     def getTokenIndexAtCharacter(self, offset: int) -> int:
-        low: int = 0,
+        low: int = 0
         high: int = self.tokens.size()
-        while (high > low):
+        while high > low:
             mid: int = (high + low) // 2
             mid_element: IToken = self.tokens.get(mid)
-            if (offset >= mid_element.getStartOffset() and offset <= mid_element.getEndOffset()):
+            if offset >= mid_element.getStartOffset() and offset <= mid_element.getEndOffset():
                 return mid
             else:
-                if (offset < mid_element.getStartOffset()):
+                if offset < mid_element.getStartOffset():
                     high = mid
                 else:
                     low = mid + 1
@@ -273,12 +276,12 @@ class PrsStream(IPrsStream):
     def setStreamLength2(self):
         self.len = self.tokens.size()
 
-    def setStreamLength(self, length: int = -1):
-        if (-1 == len):
+    def setStreamLength(self, length: int = None):
+        if length is None:
             self.setStreamLength2()
             return
 
-        self.len = len
+        self.len = length
 
     def getILexStream(self) -> ILexStream:
         return self.iLexStream
@@ -287,41 +290,45 @@ class PrsStream(IPrsStream):
         return self.iLexStream
 
     def dumpTokens(self):
-        if (self.getSize() <= 2):
+        if self.getSize() <= 2:
             return
 
-        print(" Kind \tOffset \tLen \tLine \tCol \tText\n")
-        for i in range(1, self.getSize()):
+        print(" Kind \tOffset \tLen \tLine \tCol \tText\n" + "\n")
+        for i in range(1, self.getSize() - 1):
             self.dumpToken(i)
 
     def dumpToken(self, i: int):
-        print(" (" + self.getKind(i) + "):")
-        print(" \t" + self.getStartOffset(i))
-        print(" \t" + self.getTokenLength(i))
-        print(" \t" + self.getLineNumberOfTokenAt(i))
-        print(" \t" + self.getColumnOfTokenAt(i))
-        print(" \t" + self.getTokenText(i))
+        print(" (" + str(self.getKind(i)) + "):" + "\n")
+        print(" \t" + str(self.getStartOffset(i)) + "\n")
+        print(" \t" + str(self.getTokenLength(i)) + "\n")
+        print(" \t" + str(self.getLineNumberOfTokenAt(i)) + "\n")
+        print(" \t" + str(self.getColumnOfTokenAt(i)) + "\n")
+        print(" \t" + str(self.getTokenText(i)) + "\n")
         print("\n")
 
     def getAdjunctsFromIndex(self, i: int) -> list:
         start_index: int = (self.tokens.get(i)).getAdjunctIndex()
-        end_index: int = (self.adjuncts.size() if (i + 1 == self.tokens.size())
+        end_index: int = (self.adjuncts.size()
+                          if (i + 1 == self.tokens.size())
                           else (self.tokens.get(self.getNext(i))).getAdjunctIndex())
         size: int = end_index - start_index
-        slice: list = [None] * (size)
+        token_slice: list = [None] * size
         j: int = start_index
         k: int = 0
-        while (j < end_index):
-            slice[k] = self.adjuncts.get(j)
+        while j < end_index:
+            token_slice[k] = self.adjuncts.get(j)
             k += 1
             j += 1
 
-        return slice
+        return token_slice
 
+    #
+    # Return an iterator for the adjuncts that follow token i.
+    #
     def getFollowingAdjuncts(self, i: int) -> list:
         return self.getAdjunctsFromIndex(i)
 
-    def getPrecedingAdjuncts(self, i: int) -> IToken:
+    def getPrecedingAdjuncts(self, i: int) -> list:
         return self.getAdjunctsFromIndex(self.getPrevious(i))
 
     def getAdjuncts(self) -> ArrayList:
@@ -332,7 +339,7 @@ class PrsStream(IPrsStream):
         return self.index
 
     def getToken(self, end_token: int = None) -> int:
-        if (None == end_token):
+        if end_token is None:
             return self.getToken2()
         self.index = (self.getNext(self.index) if self.index < end_token else self.len - 1)
         return self.index
@@ -343,10 +350,10 @@ class PrsStream(IPrsStream):
 
     def getNext(self, i: int) -> int:
         i += 1
-        return (i if i < self.len else self.len - 1)
+        return i if i < self.len else self.len - 1
 
     def getPrevious(self, i: int) -> int:
-        return (0 if i <= 0 else i - 1)
+        return 0 if i <= 0 else i - 1
 
     def getName(self, i: int) -> str:
         return self.getTokenText(i)
@@ -363,7 +370,6 @@ class PrsStream(IPrsStream):
     def reset(self, i: int = None):
         if i is None:
             self.reset1()
-
         else:
             self.reset2(i)
 
@@ -383,10 +389,11 @@ class PrsStream(IPrsStream):
         return self.getEndColumnOfTokenAt(i)
 
     def afterEol(self, i: int) -> bool:
-        return (True if i < 1 else self.getEndLineNumberOfTokenAt(i - 1) < self.getLineNumberOfTokenAt(i))
+        return True if i < 1 else self.getEndLineNumberOfTokenAt(i - 1) < self.getLineNumberOfTokenAt(i)
 
     def getFileName(self) -> str:
-        if (not self.iLexStream): return ""
+        if not self.iLexStream:
+            return ""
         return self.iLexStream.getFileName()
 
     #
@@ -399,23 +406,21 @@ class PrsStream(IPrsStream):
     #
     # IMessageHandler errMsg = None # the error message handler object is declared in LexStream
     #
-    def setMessageHandler(self, errMsg: IMessageHandler):
-        self.iLexStream.setMessageHandler(errMsg)
+    def setMessageHandler(self, handler: IMessageHandler = None):
+        self.iLexStream.setMessageHandler(handler)
 
     def getMessageHandler(self) -> IMessageHandler:
         return self.iLexStream.getMessageHandler()
 
-    def reportError(self, errorCode: int, leftToken: int, rightToken: int, errorInfo, errorToken: int = 0):
-        tempInfo: list
-        if (isinstance(errorInfo, str)):
-            tempInfo = [errorInfo]
-
-        elif (isinstance(errorInfo, list)):
-            tempInfo = errorInfo
-
+    def reportError(self, errorCode: int, leftToken: int, rightToken: int, errorInfo=None, errorToken: int = 0):
+        temp_info: list
+        if isinstance(errorInfo, str):
+            temp_info = [errorInfo]
+        elif isinstance(errorInfo, list):
+            temp_info = errorInfo
         else:
-            tempInfo = []
+            temp_info = []
 
         self.iLexStream.reportLexicalError(self.getStartOffset(leftToken), self.getEndOffset(rightToken),
                                            errorCode, self.getStartOffset(errorToken), self.getEndOffset(errorToken),
-                                           tempInfo)
+                                           temp_info)

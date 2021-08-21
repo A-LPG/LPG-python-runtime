@@ -7,72 +7,72 @@ class TokenStream(metaclass=ABCMeta):
 
     @abstractmethod
     def getToken(self, end_token: int = None) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getKind(self, i: int) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getNext(self, i: int) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getPrevious(self, i: int) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getName(self, i: int) -> str:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def peek(self) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def reset(self, i: int = None):
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def badToken(self) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getLine(self, i: int) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getColumn(self, i: int) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getEndLine(self, i: int) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getEndColumn(self, i: int) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def afterEol(self, i: int) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getFileName(self) -> str:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getStreamLength(self) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getFirstRealToken(self, i: int) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def getLastRealToken(self, i: int) -> int:
-        '''please Implemente in subclass'''
+        pass
 
     @abstractmethod
     def reportError(self, errorCode: int, leftToken: int, rightToken: int, errorInfo=None, errorToken: int = None):
-        '''please Implemente in subclass'''
+        pass

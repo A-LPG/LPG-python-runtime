@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from Utils import arraycopy
+from lpg2.Utils import arraycopy
 
 
 class Stacks(object):
@@ -23,7 +23,7 @@ class Stacks(object):
     # xi => ti w.
     #
     def getToken(self, i: int) -> int:
-        return self.locationStack[self.stateStackTop + (i - 1):]
+        return self.locationStack[self.stateStackTop + (i - 1)]
 
     #
     # Given a rule of the form     A ::= x1 x2 ... xn     n > 0
@@ -36,7 +36,7 @@ class Stacks(object):
     # tree to GETSYM(1).
     #
     def getSym(self, i: int):
-        return self.parseStack[self.stateStackTop + (i - 1):]
+        return self.parseStack[self.stateStackTop + (i - 1)]
 
     def setSym1(self, ast):
         self.parseStack[self.stateStackTop] = ast
@@ -48,14 +48,14 @@ class Stacks(object):
         old_stack_length: int = 0 if self.stateStack is None else len(self.stateStack)
         stack_length: int = old_stack_length + self.STACK_INCREMENT
 
-        if len(self.stateStack) == 0:
-            self.stateStack = [0] * (stack_length)
-            self.locationStack = [0] * (stack_length)
-            self.parseStack = [None] * (stack_length)
+        if self.stateStack is None or len(self.stateStack) == 0:
+            self.stateStack = [0] * stack_length
+            self.locationStack = [0] * stack_length
+            self.parseStack = [None] * stack_length
         else:
-            self.stateStack = arraycopy(self.stateStack, 0, [0] * (stack_length), 0, old_stack_length)
-            self.locationStack = arraycopy(self.locationStack, 0, [0] * (stack_length), 0, old_stack_length)
-            self.parseStack = arraycopy(self.parseStack, 0, [None] * (stack_length), 0, old_stack_length)
+            self.stateStack = arraycopy(self.stateStack, 0, [0] * stack_length, 0, old_stack_length)
+            self.locationStack = arraycopy(self.locationStack, 0, [0] * stack_length, 0, old_stack_length)
+            self.parseStack = arraycopy(self.parseStack, 0, [None] * stack_length, 0, old_stack_length)
 
         return
 
@@ -66,9 +66,9 @@ class Stacks(object):
         old_stack_length: int = 0 if self.stateStack is None else len(self.stateStack)
         stack_length: int = old_stack_length + self.STACK_INCREMENT
         if self.stateStack is None or len(self.stateStack) == 0:
-            self.stateStack = [0] * (stack_length)
+            self.stateStack = [0] * stack_length
         else:
-            self.stateStack = arraycopy(self.stateStack, 0, [0] * (stack_length), 0, old_stack_length)
+            self.stateStack = arraycopy(self.stateStack, 0, [0] * stack_length, 0, old_stack_length)
 
         return
 

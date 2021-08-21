@@ -1,166 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from abc import ABCMeta, abstractmethod
-from IMessageHandler import IMessageHandler
-
-from TokenStream import TokenStream
-
-
-class IToken(metaclass=ABCMeta):
-    EOF: int = 0xffff
-
-    @abstractmethod
-    def getKind(self) -> int:
-        pass
-
-    @abstractmethod
-    def setKind(self, kind: int):
-        pass
-
-    @abstractmethod
-    def getStartOffset(self) -> int:
-        pass
-
-    @abstractmethod
-    def setStartOffset(self, startOffset: int):
-        pass
-
-    @abstractmethod
-    def getEndOffset(self) -> int:
-        pass
-
-    @abstractmethod
-    def setEndOffset(self, endOffset: int):
-        pass
-
-    @abstractmethod
-    def getTokenIndex(self) -> int:
-        pass
-
-    @abstractmethod
-    def setTokenIndex(self, i: int):
-        pass
-
-    @abstractmethod
-    def getAdjunctIndex(self) -> int:
-        pass
-
-    @abstractmethod
-    def setAdjunctIndex(self, i: int):
-        pass
-
-    @abstractmethod
-    def getPrecedingAdjuncts(self) -> list:
-        pass
-
-    @abstractmethod
-    def getFollowingAdjuncts(self) -> list:
-        pass
-
-    @abstractmethod
-    def getILexStream(self):
-        pass
-
-    @abstractmethod
-    def getIPrsStream(self):
-        pass
-
-    @abstractmethod
-    def getLine(self) -> int:
-        pass
-
-    @abstractmethod
-    def getColumn(self) -> int:
-        pass
-
-    @abstractmethod
-    def getEndLine(self) -> int:
-        pass
-
-    @abstractmethod
-    def getEndColumn(self) -> int:
-        pass
-
-    @abstractmethod
-    def toString(self) -> str:
-        pass
+from abc import abstractmethod
+from lpg2.IMessageHandler import IMessageHandler
+from lpg2.ILexStream import ILexStream
+from lpg2.TokenStream import TokenStream
+from lpg2.IToken import IToken
+from lpg2.Utils import ArrayList
 
 
-class ILexStream(TokenStream):
-
-    @abstractmethod
-    def getIPrsStream(self):
-        pass
-
-    @abstractmethod
-    def setPrsStream(self, stream):
-        pass
-
-    @abstractmethod
-    def getLineCount(self) -> int:
-        pass
-
-    @abstractmethod
-    def orderedExportedSymbols(self) -> list:
-        pass
-
-    @abstractmethod
-    def getLineOffset(self, i: int) -> int:
-        pass
-
-    @abstractmethod
-    def getLineNumberOfCharAt(self, i: int) -> int:
-        pass
-
-    @abstractmethod
-    def getColumnOfCharAt(self, i: int) -> int:
-        pass
-
-    @abstractmethod
-    def getCharValue(self, i: int) -> str:
-        pass
-
-    @abstractmethod
-    def getIntValue(self, i: int) -> int:
-        pass
-
-    @abstractmethod
-    def makeToken(self, startLoc: int, endLoc: int, kind: int):
-        pass
-
-    @abstractmethod
-    def setMessageHandler(self, errMsg: IMessageHandler):
-        pass
-
+class IPrsStream(TokenStream):
     @abstractmethod
     def getMessageHandler(self) -> IMessageHandler:
         pass
 
     @abstractmethod
-    def getLocation(self, left_loc: int, right_loc: int) -> int:
+    def setMessageHandler(self, handler: IMessageHandler = None):
         pass
 
     @abstractmethod
-    def reportLexicalError(self, left_loc: int, right_loc: int, errorCode: int = None, error_left_loc: int = None,
-                           error_right_loc: int = None, errorInfo: list = None):
-        pass
-
-    @abstractmethod
-    def toString(self, startOffset: int, endOffset: int) -> str:
-        pass
-
-
-class IPrsStream(TokenStream):
-    @abstractmethod
-    def getMessageHandler(self):
-        pass
-
-    @abstractmethod
-    def setMessageHandler(self, errMsg: IMessageHandler = None):
-        pass
-
-    @abstractmethod
-    def getILexStream(self):
+    def getILexStream(self) -> ILexStream:
         pass
 
     @abstractmethod
@@ -224,7 +82,7 @@ class IPrsStream(TokenStream):
         pass
 
     @abstractmethod
-    def setStreamLength(self, length: int = -1):
+    def setStreamLength(self, length: int = None):
         pass
 
     @abstractmethod
@@ -240,11 +98,11 @@ class IPrsStream(TokenStream):
         pass
 
     @abstractmethod
-    def getTokens(self) -> list:
+    def getTokens(self) -> ArrayList:
         pass
 
     @abstractmethod
-    def getAdjuncts(self) -> list:
+    def getAdjuncts(self) -> ArrayList:
         pass
 
     @abstractmethod
@@ -304,7 +162,7 @@ class IPrsStream(TokenStream):
         pass
 
     @abstractmethod
-    def getInputChars(self):
+    def getInputChars(self) -> str:
         pass
 
     @abstractmethod

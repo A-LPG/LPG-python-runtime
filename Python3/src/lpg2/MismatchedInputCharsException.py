@@ -4,7 +4,7 @@ class MismatchedInputCharsException(Exception):
 
     def __init__(self, info: str = None):
         super().__init__()
-        if (info is None):
+        if info is None:
             self.info = "MismatchedInputCharsException"
         else:
             self.info = info

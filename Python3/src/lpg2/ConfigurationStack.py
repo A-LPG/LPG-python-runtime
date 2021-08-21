@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from ConfigurationElement import ConfigurationElement
-from StateElement import StateElement
-from ObjectTuple import ObjectTuple
-from ParseTable import ParseTable
+from lpg2.ConfigurationElement import ConfigurationElement
+from lpg2.StateElement import StateElement
+from lpg2.ObjectTuple import ObjectTuple
+from lpg2.ParseTable import ParseTable
 
 
 class ConfigurationStack(object):
@@ -57,7 +57,7 @@ class ConfigurationStack(object):
         self.state_element_size += 1
 
         node: StateElement = StateElement()
-        node.int = state_number
+        node.number = state_number
         node.parent = root.parent
         node.siblings = root.siblings
         root.siblings = node

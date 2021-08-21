@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from StateElement import StateElement
+from lpg2.StateElement import StateElement
 
 
 class ConfigurationElement(object):
