@@ -5,6 +5,7 @@ from abc import ABCMeta, abstractmethod
 
 
 class ParseTable(metaclass=ABCMeta):
+    __slots__ = ()
 
     @abstractmethod
     def baseCheck(self, index: int) -> int:

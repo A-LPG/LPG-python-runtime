@@ -5,6 +5,8 @@ from lpg2.Utils import arraycopy
 
 
 class Stacks(object):
+    __slots__ = ('stateStackTop', 'stateStack', 'locationStack', 'parseStack')
+
     STACK_INCREMENT: int = 1024
 
     def __init__(self) -> None:

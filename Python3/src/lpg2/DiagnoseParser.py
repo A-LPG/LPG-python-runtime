@@ -13,6 +13,8 @@ import time
 
 
 class RepairCandidate(object):
+    __slots__ = ('symbol', 'location')
+
     def __init__(self) -> None:
         super().__init__()
         self.symbol: int = 0
@@ -20,6 +22,7 @@ class RepairCandidate(object):
 
 
 class PrimaryRepairInfo(object):
+    __slots__ = ('distance', 'misspellIndex', 'code', 'bufferPosition', 'symbol')
 
     def __init__(self, clone=None):
         self.distance: int = 0
@@ -41,6 +44,9 @@ class PrimaryRepairInfo(object):
 
 
 class SecondaryRepairInfo(object):
+    __slots__ = ('code', 'distance', 'bufferPosition', 'stackPosition', 'numDeletions',
+                 'symbol', 'recoveryOnNextStack')
+
     def __init__(self):
         super().__init__()
         self.code: int = 0
@@ -53,7 +59,9 @@ class SecondaryRepairInfo(object):
 
 
 class StateInfo(object):
-    def __init__(self, state: int, next_state: int) :
+    __slots__ = ('state', 'next')
+
+    def __init__(self, state: int, next_state: int):
         self.state = state
         self.next = next_state
 
@@ -68,6 +76,15 @@ class DiagnoseParser(Stacks):
 
     def setMonitor(self, monitor: Monitor):
         self.monitor = monitor
+
+    __slots__ = ('monitor', 'tokStream',
+                 'prs', 'ERROR_SYMBOL', 'SCOPE_SIZE', 'MAX_NAME_LENGTH', 'NT_OFFSET',
+                 'LA_STATE_OFFSET', 'NUM_RULES', 'NUM_SYMBOLS',
+                 'START_STATE', 'EOFT_SYMBOL', 'EOLT_SYMBOL', 'ACCEPT_ACTION', 'ERROR_ACTION',
+                 'sym_list', 'maxErrors', 'maxTime',
+                 'tempStackTop', 'tempStack', 'prevStackTop', 'prevStack', 'nextStackTop', 'nextStack',
+                 'scopeStackTop', 'scopeIndex', 'scopePosition', 'buffer', 'stateSeen', 'statePoolTop',
+                 'statePool', 'main_configuration_stack')
 
     def __init__(self, tokStream: TokenStream, prs: ParseTable, maxErrors: int = 0, maxTime: int = 0,
                  monitor: Monitor = None):
@@ -250,7 +267,7 @@ class DiagnoseParser(Stacks):
     def diagnose(self, error_token: int = 0):
         self.diagnoseEntry(0, error_token)
 
-    def diagnoseEntry(self, marker_kind: int, error_token: int = None) :
+    def diagnoseEntry(self, marker_kind: int, error_token: int = None):
         if error_token is not None:
             self.diagnoseEntry2(marker_kind, error_token)
         else:
@@ -345,6 +362,7 @@ class DiagnoseParser(Stacks):
             action_index: int = 0
             act = action.get(action_index)  # tAction(act, current_kind):
             action_index += 1
+
             #
             # When a reduce action is encountered, we compute all REDUCE
             # and associated goto actions induced by the current token.
@@ -369,8 +387,10 @@ class DiagnoseParser(Stacks):
 
                 pos = pos if pos < self.tempStackTop else self.tempStackTop
                 self.tempStack[self.tempStackTop + 1] = act
+
                 act = action.get(action_index)  # tAction(act, current_kind):
                 action_index += 1
+
             #
             # At self point, we have a shift, shift-reduce, accept or error
             # action.  STACK contains the configuration of the state stack
@@ -416,8 +436,10 @@ class DiagnoseParser(Stacks):
                     self.reallocateStacks()
 
                 self.tempStackTop = self.nextStackTop
+
                 self.nextStackTop += 1
                 self.nextStack[self.nextStackTop] = act
+
                 next_pos = self.nextStackTop
                 #
                 # Simulate the parser through the next token without
@@ -668,7 +690,7 @@ class DiagnoseParser(Stacks):
         action.reset()
         while True:
             if act <= self.NUM_RULES:
-                action.add(act)  # save self reduce action
+                action.add(act)  # save this reduce action
                 self.tempStackTop -= 1
 
                 while True:
@@ -851,7 +873,7 @@ class DiagnoseParser(Stacks):
                 break
 
             local_stack_top += 1
-            if local_stack_top >= len(local_stack):
+            if local_stack_top >= len(local_stack): # Stack overflow!!!
                 break
 
             local_stack[local_stack_top] = act
@@ -1694,8 +1716,8 @@ class DiagnoseParser(Stacks):
                 return
             i = self.statePool[i].next
 
-        self.statePoolTop += 1
         old_state_pool_top: int = self.statePoolTop
+        self.statePoolTop += 1
 
         if self.statePoolTop >= self.statePool.__len__():
             self.statePool = arraycopy(self.statePool, 0, [None] * (self.statePoolTop * 2), 0, self.statePoolTop)
@@ -1715,8 +1737,10 @@ class DiagnoseParser(Stacks):
             if act > self.ACCEPT_ACTION and act < self.ERROR_ACTION:  # conflicting actions?
 
                 while True:
-                    act += 1
+
                     action.add(self.baseAction(act))
+                    act += 1
+
                     if not self.baseAction(act) != 0:
                         break
             else:
@@ -1847,7 +1871,8 @@ class DiagnoseParser(Stacks):
                             # then we favor a scope recovery over all other kinds
                             # of recovery.
                             #
-                            if (    # TODO: main_configuration_stack.size(): == 0 and # no other bactracking possibilities left
+                            if (
+                                    # TODO: main_configuration_stack.size(): == 0 and # no other bactracking possibilities left
                                     self.tokStream.getKind(self.buffer[repair.bufferPosition]) == self.EOFT_SYMBOL and
                                     repair.distance == previous_distance):
                                 self.scopeStackTop = indx
@@ -2044,7 +2069,7 @@ class DiagnoseParser(Stacks):
                     repair.stackPosition = self.stateStackTop
                     repair.bufferPosition = scope_repair.bufferPosition
 
-                scope_repair.bufferPosition += 1 # for while loop
+                scope_repair.bufferPosition += 1  # for while loop
 
         #
         # If a successful repair was not found, quit!  Otherwise, issue
@@ -2226,7 +2251,7 @@ class DiagnoseParser(Stacks):
 
         token_name: str = (
             ("\"" + self.name(name_index) + "\""
-             if name_index >= 0 and self.name(name_index).upper() == "ERROR" else ""))
+             if name_index >= 0 and not self.name(name_index).upper() == "ERROR" else ""))
 
         if msg_code == ParseErrorCodes.INVALID_CODE:
             msg_code = ParseErrorCodes.INVALID_CODE if token_name.__len__() == 0 \

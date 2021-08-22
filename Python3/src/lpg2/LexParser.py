@@ -12,6 +12,11 @@ from lpg2.Utils import arraycopy
 
 
 class LexParser(object):
+    __slots__ = ('taking_actions', 'tokStream', 'prs', 'ra', 'START_STATE', 'LA_STATE_OFFSET', 'EOFT_SYMBOL',
+                 'ACCEPT_ACTION', 'ERROR_ACTION', 'START_SYMBOL', 'NUM_RULES', 'action', 'stateStackTop',
+                 'stackLength', 'stack', 'locationStack', 'tempStack', 'lastToken', 'currentAction', 'curtok',
+                 'starttok', 'current_kind'
+                 )
 
     def reset(self, tokStream: ILexStream, prs: ParseTable, ra: RuleAction):
         self.tokStream = tokStream
@@ -207,13 +212,13 @@ class LexParser(object):
                 # scanning).
                 #
                 if self.curtok == 275:
-                        self.curtok = 275
+                    self.curtok = 275
                 self.parseNextCharacter(self.curtok, self.current_kind)
                 if self.curtok == 275:
-                        self.curtok = 275
+                    self.curtok = 275
 
-                if (
-                        self.currentAction == self.ERROR_ACTION and self.current_kind != self.EOFT_SYMBOL):  # if not successful try EOF
+                if (self.currentAction == self.ERROR_ACTION and
+                        self.current_kind != self.EOFT_SYMBOL):  # if not successful try EOF
 
                     save_next_token = self.tokStream.peek()  # save position after curtok
                     self.tokStream.reset(self.tokStream.getStreamLength() - 1)  # point to the end of the input
@@ -298,13 +303,13 @@ class LexParser(object):
 
         self.currentAction = self.tAction(start_action, kind)
 
-        bBreakScan: bool = False
+        b_break_scan: bool = False
         # Scan:
         while self.currentAction <= self.NUM_RULES:
             while True:
                 lhs_symbol = self.prs.lhs(self.currentAction)
                 if lhs_symbol == self.START_SYMBOL:
-                    bBreakScan = True
+                    b_break_scan = True
                     break
 
                 tempStackTop -= (self.prs.rhs(self.currentAction) - 1)
@@ -315,7 +320,7 @@ class LexParser(object):
                 if not self.currentAction <= self.NUM_RULES:
                     break
 
-            if bBreakScan:
+            if b_break_scan:
                 break
 
             if tempStackTop + 1 >= self.stack.__len__():
@@ -367,7 +372,6 @@ class LexParser(object):
                 self.stateStackTop += 1
                 if self.stateStackTop >= self.stack.__len__():
                     self.reallocateStacks()
-
                 self.stack[self.stateStackTop] = self.currentAction
 
                 self.locationStack[self.stateStackTop] = token
@@ -417,14 +421,14 @@ class LexParser(object):
 
         # ScanToken:
         while True:
+
             self.stateStackTop += 1
             if self.stateStackTop >= self.stack.__len__():
                 self.reallocateStacks()
-
             self.stack[self.stateStackTop] = self.currentAction
 
             #
-            # Compute the self.action on the next character. If it is a reduce self.action, we do not
+            # Compute the the action on the next character. If it is a reduce action, we do not
             # want to accept it until we are sure that the character in question is parsable.
             # What we are trying to avoid is a situation where self.curtok is not the EOF token
             # but it yields a default reduce self.action in the current configuration even though
@@ -524,7 +528,7 @@ class LexParser(object):
         tempStackTop = self.stateStackTop - 1
         act = self.tAction(act, kind)
         # Scan:
-        bBreakScan = False
+        b_break_scan = False
         while act <= self.NUM_RULES:
             self.action.add(act)
 
@@ -534,7 +538,7 @@ class LexParser(object):
                     if self.starttok == self.curtok:  # None str reduction to self.START_SYMBOL is illegal
 
                         act = self.ERROR_ACTION
-                        bBreakScan = True
+                        b_break_scan = True
                         break  # Scan
 
                     else:
@@ -547,7 +551,7 @@ class LexParser(object):
 
                 if not act <= self.NUM_RULES:
                     break
-            if bBreakScan:
+            if b_break_scan:
                 break
 
             if tempStackTop + 1 >= self.stack.__len__():
@@ -570,7 +574,7 @@ class LexParser(object):
             self.action.reset(action_save)
         else:
             self.stateStackTop = tempStackTop + 1
-            for i in range(pos + 1, self.stateStackTop + 1):  # update self.stack
+            for i in range(pos + 1, self.stateStackTop + 1):  # update stack
                 self.stack[i] = self.tempStack[i]
 
         return act
@@ -604,7 +608,7 @@ class LexParser(object):
             self.currentAction = self.action.get(i)
             if self.currentAction <= self.NUM_RULES:  # a reduce self.action?
 
-                self.stateStackTop -= 1  # turn reduction intoshift-reduction
+                self.stateStackTop -= 1  # turn reduction into shift-reduction
                 while True:
                     self.stateStackTop -= (self.prs.rhs(self.currentAction) - 1)
                     self.ra.ruleAction(self.currentAction)

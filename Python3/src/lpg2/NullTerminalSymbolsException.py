@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 class NullTerminalSymbolsException(Exception):
+    __slots__ = 'info'
 
     def __init__(self, info: str = None):
         super().__init__()

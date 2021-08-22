@@ -21,6 +21,12 @@ import sys
 
 
 class BacktrackingParser(Stacks):
+    __slots__ = ('monitor', 'START_STATE', 'NUM_RULES', 'NT_OFFSET',
+                 'LA_STATE_OFFSET', 'EOFT_SYMBOL', 'ERROR_SYMBOL', 'ACCEPT_ACTION', 'ERROR_ACTION',
+                 'lastToken', 'currentAction', 'tokStream', 'prs',
+                 'ra', 'action', 'tokens', 'actionStack',
+                 'skipTokens', 'markerTokenIndex'
+                 )
 
     def __init__(self, tokStream: TokenStream = None, prs: ParseTable = None, ra: RuleAction = None,
                  monitor: Monitor = None):
@@ -206,7 +212,7 @@ class BacktrackingParser(Stacks):
                 raise TokenStreamNotIPrsStreamException()
 
             rp = lpg2.RecoveryParser(self, self.action, self.tokens, self.tokStream, self.prs, max_error_count, 0,
-                                self.monitor)
+                                     self.monitor)
             start_token = rp.recover(marker_token, error_token)
 
         if marker_token != 0 and start_token == first_token:

@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 
 def arraycopy(src, src_pos: int, dest, dest_pos: int, length: int):
-    i: int
     for i in range(length):
         dest[dest_pos + i] = src[src_pos + i]
     return dest
 
 
 class ArrayList(object):
+    __slots__ = 'content'
+
     def __init__(self):
         self.content = []
 

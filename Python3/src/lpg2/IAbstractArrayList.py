@@ -3,7 +3,9 @@
 from abc import ABCMeta, abstractmethod
 from lpg2.Utils import ArrayList
 
+
 class IAbstractArrayList(metaclass=ABCMeta):
+    __slots__ = ()
 
     @abstractmethod
     def size(self) -> int:

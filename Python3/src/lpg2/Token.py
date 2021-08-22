@@ -5,6 +5,7 @@ from lpg2.IPrsStream import IPrsStream
 
 
 class Token(AbstractToken):
+    __slots__ = ()
 
     def __init__(self, startOffset: int, endOffset: int, kind: int, iPrsStream: IPrsStream = None):
         super().__init__(startOffset, endOffset, kind, iPrsStream)

@@ -6,7 +6,11 @@ from lpg2.IPrsStream import IPrsStream
 from lpg2.IToken import IToken
 
 
-class AbstractToken(IToken):
+class AbstractToken(IToken, ABC):
+    __slots__ = (
+        'iPrsStream', 'startOffset', 'endOffset', 'kind', 'tokenIndex',
+        'adjunctIndex'
+    )
 
     def __init__(self, startOffset: int = 0, endOffset: int = 0, kind: int = 0, iPrsStream: IPrsStream = None):
         super().__init__()

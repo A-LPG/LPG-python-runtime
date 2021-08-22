@@ -6,6 +6,7 @@ from lpg2.Token import Token
 
 
 class ErrorToken(Token):
+    __slots__ = ('firstToken', 'lastToken', 'errorToken')
 
     def __init__(self, firstToken: IToken, lastToken: IToken, errorToken: IToken, startOffset: int, endOffset: int,
                  kind: int):

@@ -16,6 +16,7 @@ import codecs
 #
 class LexStream(ILexStream):
     DEFAULT_TAB: int = 1
+    __slots__ = ('index', 'streamLength', 'inputChars', 'fileName', 'lineOffsets', 'tab', 'prsStream', 'errMsg')
 
     def __init__(self, fileName: str, inputChars: str = None, tab: int = DEFAULT_TAB,
                  lineOffsets: IntSegmentedTuple = None):
@@ -38,24 +39,26 @@ class LexStream(ILexStream):
         self.setLineOffset(-1)
         self.tab = tab
 
-    def readDataFrom(self, fileName: str, encoding: str = 'utf-8', errors: str = 'strict'):
+    @staticmethod
+    def readDataFrom(fileName: str, encoding: str = 'utf-8', errors: str = 'strict'):
         # read binary to avoid line ending conversion
         with open(fileName, 'rb') as file:
-            bytes = file.read()
-            return codecs.decode(bytes, encoding, errors)
+            _bytes = file.read()
+            return codecs.decode(_bytes, encoding, errors)
 
-    def initialize(self, fileName: str, inputChars: str = None, lineOffsets: IntSegmentedTuple = None):
-        if inputChars is None:
+    def initialize(self, fileName: str, input_content: str = None, lineOffsets: IntSegmentedTuple = None):
+        if input_content is None:
             try:
-                inputChars = self.readDataFrom(fileName, "utf-8")
-            except ValueError as ex:
-                pass
+                input_content = self.readDataFrom(fileName, "utf-8")
+            except Exception as ex:
+                print(str(ex))
+                raise ex
 
-        if inputChars is None:
+        if input_content is None:
             return
 
-        self.setInputChars(inputChars)
-        self.setStreamLength(inputChars.__len__())
+        self.setInputChars(input_content)
+        self.setStreamLength(input_content.__len__())
         self.setFileName(fileName)
         if lineOffsets is not None:
             self.lineOffsets = lineOffsets
@@ -234,6 +237,7 @@ class LexStream(ILexStream):
     '''/**
      * See IMessaageHandler for a description of the int[] return value.
      */'''
+
     def getLocation(self, left_loc: int, right_loc: int) -> list:
         length: int = (right_loc if right_loc < self.streamLength else self.streamLength - 1) - left_loc + 1
         return [left_loc,
@@ -260,14 +264,14 @@ class LexStream(ILexStream):
 
         if error_code is None:
             error_code = (ParseErrorCodes.EOF_CODE if right_loc >= self.streamLength
-                                                   else (ParseErrorCodes.LEX_ERROR_CODE
-                                                                   if left_loc == right_loc
-                                                                   else ParseErrorCodes.INVALID_TOKEN_CODE))
+                          else (ParseErrorCodes.LEX_ERROR_CODE
+                                if left_loc == right_loc
+                                else ParseErrorCodes.INVALID_TOKEN_CODE))
 
             token_text: str = ("End-of-file " if error_code == ParseErrorCodes.EOF_CODE
-                                  else ("\"" + self.inputChars[left_loc:  right_loc + 1] + "\" "
-                                        if error_code == ParseErrorCodes.INVALID_TOKEN_CODE
-                                        else "\"" + self.getCharValue(left_loc) + "\" "))
+                               else ("\"" + self.inputChars[left_loc:  right_loc + 1] + "\" "
+                                     if error_code == ParseErrorCodes.INVALID_TOKEN_CODE
+                                     else "\"" + self.getCharValue(left_loc) + "\" "))
 
             error_info = [token_text]
 
@@ -279,13 +283,13 @@ class LexStream(ILexStream):
                                   + str(error_left_loc) + ':'
                                   + str(error_right_loc) + ':'
                                   + str(error_code) + ": ")
-            print("****Error: " + location_info)
+            print("****Error: " + location_info, end=''),
 
             if error_info:
                 for i in range(0, error_info.__len__()):
-                    print(error_info[i] + " ")
+                    print(error_info[i] + " ", end=''),
 
-            print(ParseErrorCodes.errorMsgText[error_code] + "\n")
+            print(ParseErrorCodes.errorMsgText[error_code])
         else:
             '''/**
              * This is the only method in the IMessageHandler interface
@@ -297,7 +301,7 @@ class LexStream(ILexStream):
                                       self.getFileName(),
                                       error_info)
 
-    def reportError(self, errorCode: int, leftToken: int, rightToken: int, errorInfo = None, errorToken: int = 0):
+    def reportError(self, errorCode: int, leftToken: int, rightToken: int, errorInfo=None, errorToken: int = 0):
 
         if isinstance(errorInfo, str):
             temp_info = [errorInfo]

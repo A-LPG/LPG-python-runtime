@@ -4,6 +4,7 @@ from abc import ABCMeta, abstractmethod
 
 
 class Monitor(metaclass=ABCMeta):
+    __slots__ = ()
 
     @abstractmethod
     def isCancelled(self) -> bool:

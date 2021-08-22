@@ -9,6 +9,8 @@ from lpg2.Utils import ArrayList
 
 
 class IPrsStream(TokenStream):
+    __slots__ = ()
+
     @abstractmethod
     def getMessageHandler(self) -> IMessageHandler:
         pass

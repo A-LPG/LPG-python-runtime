@@ -4,6 +4,8 @@ from lpg2.StateElement import StateElement
 
 
 class ConfigurationElement(object):
+    __slots__ = ('next', 'last_element', 'stack_top', 'action_length',
+                 'conflict_index', 'curtok', 'act')
 
     def __init__(self, info: str = None):
         self.next: ConfigurationElement = None

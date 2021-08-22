@@ -9,6 +9,8 @@ from lpg2.ParseTable import ParseTable
 
 class ConfigurationStack(object):
     TABLE_SIZE: int = 1021  # 1021 is a prime
+    __slots__ = ('prs', 'state_element_size', 'state_root', 'table',
+                 'configuration_stack', 'max_configuration_size', 'stacks_size')
 
     def __init__(self, prs: ParseTable):
         self.prs = prs

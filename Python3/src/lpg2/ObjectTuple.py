@@ -13,6 +13,8 @@ from lpg2.Utils import arraycopy
 
 
 class ObjectTuple(object):
+    __slots__ = ('top', 'array')
+
     #
     # Constructor of a Tuple
     #

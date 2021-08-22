@@ -20,6 +20,8 @@ from lpg2.Utils import ArrayList
 # PrsStream holds an arraylist of tokens "lexed" from the input stream.
 #
 class PrsStream(IPrsStream):
+    __slots__ = ('iLexStream', 'kindMap', 'tokens',
+                 'adjuncts', 'index', 'len')
 
     def __init__(self, lex: ILexStream = None):
         self.iLexStream: ILexStream = None
@@ -252,8 +254,8 @@ class PrsStream(IPrsStream):
         return -(low - 1)
 
     def getTokenAtCharacter(self, offset: int) -> IToken:
-        tokenIndex: int = self.getTokenIndexAtCharacter(offset)
-        return None if (tokenIndex < 0) else self.getTokenAt(tokenIndex)
+        token_index: int = self.getTokenIndexAtCharacter(offset)
+        return None if (token_index < 0) else self.getTokenAt(token_index)
 
     def getTokenAt(self, i: int) -> IToken:
         return self.tokens.get(i)
@@ -293,18 +295,18 @@ class PrsStream(IPrsStream):
         if self.getSize() <= 2:
             return
 
-        print(" Kind \tOffset \tLen \tLine \tCol \tText\n" + "\n")
+        print(" Kind \tOffset \tLen \tLine \tCol \tText\n")
         for i in range(1, self.getSize() - 1):
             self.dumpToken(i)
 
     def dumpToken(self, i: int):
-        print(" (" + str(self.getKind(i)) + "):" + "\n")
-        print(" \t" + str(self.getStartOffset(i)) + "\n")
-        print(" \t" + str(self.getTokenLength(i)) + "\n")
-        print(" \t" + str(self.getLineNumberOfTokenAt(i)) + "\n")
-        print(" \t" + str(self.getColumnOfTokenAt(i)) + "\n")
-        print(" \t" + str(self.getTokenText(i)) + "\n")
-        print("\n")
+        print(" (" + str(self.getKind(i)) + "):", end='')
+        print(" \t" + str(self.getStartOffset(i)), end='')
+        print(" \t" + str(self.getTokenLength(i)), end='')
+        print(" \t" + str(self.getLineNumberOfTokenAt(i)), end='')
+        print(" \t" + str(self.getColumnOfTokenAt(i)), end='')
+        print(" \t" + str(self.getTokenText(i)))
+
 
     def getAdjunctsFromIndex(self, i: int) -> list:
         start_index: int = (self.tokens.get(i)).getAdjunctIndex()

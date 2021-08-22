@@ -8,6 +8,7 @@ from lpg2.TokenStream import TokenStream
 
 
 class ILexStream(TokenStream):
+    __slots__ = ()
 
     @abstractmethod
     def getIPrsStream(self):

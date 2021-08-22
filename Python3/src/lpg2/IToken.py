@@ -4,6 +4,7 @@ from abc import ABCMeta, abstractmethod
 
 
 class IToken(metaclass=ABCMeta):
+    __slots__ = ()
     EOF: int = 0xffff
 
     @abstractmethod

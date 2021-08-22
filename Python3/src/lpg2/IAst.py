@@ -8,6 +8,7 @@ from lpg2.IAstVisitor import IAstVisitor
 
 
 class IAst(metaclass=ABCMeta):
+    __slots__ = ()
 
     @abstractmethod
     def getNextAst(self):

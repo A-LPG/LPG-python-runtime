@@ -5,6 +5,7 @@ from lpg2.IntSegmentedTuple import IntSegmentedTuple
 
 
 class LpgLexStream(LexStream):
+    __slots__ = ()
 
     def __init__(self, fileName: str, inputChars: str = None, tab: int = LexStream.DEFAULT_TAB,
                  lineOffsets: IntSegmentedTuple = None):

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 class UndefinedEofSymbolException(Exception):
+    __slots__ = 'info'
 
     def __init__(self, info: str = None):
         super().__init__()

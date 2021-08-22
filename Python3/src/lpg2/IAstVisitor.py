@@ -4,6 +4,7 @@ from abc import ABCMeta, abstractmethod
 
 
 class IAstVisitor(metaclass=ABCMeta):
+    __slots__ = ()
 
     @abstractmethod
     def preVisit(self, element) -> bool:

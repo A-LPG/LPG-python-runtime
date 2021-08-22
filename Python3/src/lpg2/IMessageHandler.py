@@ -10,6 +10,8 @@ from abc import ABCMeta, abstractmethod
 
 
 class IMessageHandler(metaclass=ABCMeta):
+    __slots__ = ()
+
     """
     /**
     * The following constants can be used as indexes to dereference
@@ -41,5 +43,6 @@ class IMessageHandler(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def handleMessage(errorCode: int, msgLocation: list, errorLocation: list, filename: str, errorInfo: list) -> None:
+    def handleMessage(self, error_code: int, msg_location: list, error_location: list,
+                      filename: str, error_info: list) -> None:
         pass

@@ -15,6 +15,7 @@ from lpg2.Utils import arraycopy
 
 
 class RecoveryParser(DiagnoseParser):
+    __slots__ = ('parser', 'action', 'tokens', 'actionStack', 'scope_repair')
 
     #
     # maxErrors is the maximum int of errors to be repaired
@@ -144,7 +145,7 @@ class RecoveryParser(DiagnoseParser):
                 return True
 
             if act <= self.NUM_RULES:
-                self.action.add(act)  # save self reduce action
+                self.action.add(act)  # save this reduce action
                 self.stateStackTop -= 1
 
                 while True:
@@ -152,6 +153,7 @@ class RecoveryParser(DiagnoseParser):
                     act = self.ntAction(self.stateStack[self.stateStackTop], self.lhs(act))
                     if not act <= self.NUM_RULES:
                         break
+
                 self.stateStackTop += 1
                 if self.stateStackTop >= len(self.stateStack):
                     self.reallocateStacks()
@@ -263,8 +265,10 @@ class RecoveryParser(DiagnoseParser):
             act: int = self.tAction(self.stateStack[self.stateStackTop], la)
             if act > self.ACCEPT_ACTION and act < self.ERROR_ACTION:  # conflicting actions?
                 while True:
+
                     recovery_action.add(self.baseAction(act))
                     act += 1
+
                     if not self.baseAction(act) != 0:
                         break
             else:

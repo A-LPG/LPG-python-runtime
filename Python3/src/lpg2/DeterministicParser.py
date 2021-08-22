@@ -14,6 +14,10 @@ from lpg2.NotDeterministicParseTableException import NotDeterministicParseTableE
 
 
 class DeterministicParser(Stacks):
+    __slots__ = ('taking_actions', 'markerKind', 'monitor', 'START_STATE', 'NUM_RULES', 'NT_OFFSET', 'LA_STATE_OFFSET',
+                 'EOFT_SYMBOL', 'ACCEPT_ACTION', 'ERROR_ACTION', 'ERROR_SYMBOL', 'lastToken', 'currentAction', 'action',
+                 'tokStream', 'prs', 'ra')
+
     def __init__(self, tokStream: TokenStream = None, prs: ParseTable = None, ra: RuleAction = None,
                  monitor: Monitor = None):
         super().__init__()
@@ -149,9 +153,11 @@ class DeterministicParser(Stacks):
 
     def reset(self, tokStream: TokenStream = None, prs: ParseTable = None, ra: RuleAction = None,
               monitor: Monitor = None):
-        self.ra = ra
-        self.prs = prs
-        if prs:
+        if ra is not None:
+            self.ra = ra
+
+        if prs is not None:
+            self.prs = prs
             self.START_STATE = prs.getStartState()
             self.NUM_RULES = prs.getNumRules()
             self.NT_OFFSET = prs.getNtOffset()
@@ -293,12 +299,12 @@ class DeterministicParser(Stacks):
     #
     def errorReset(self):
         gate: int = (0 if self.markerKind == 0 else 1)
-        while (self.stateStackTop >= gate):
-            if (self.recoverableState(self.stateStack[self.stateStackTop])):
+        while self.stateStackTop >= gate:
+            if self.recoverableState(self.stateStack[self.stateStackTop]):
                 break
             self.stateStackTop -= 1
 
-        if (self.stateStackTop < gate):
+        if self.stateStackTop < gate:
             self.resetParserEntry(self.markerKind)
 
         return

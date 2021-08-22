@@ -4,6 +4,7 @@ from abc import ABCMeta, abstractmethod
 
 
 class TokenStream(metaclass=ABCMeta):
+    __slots__ = ()
 
     @abstractmethod
     def getToken(self, end_token: int = None) -> int:

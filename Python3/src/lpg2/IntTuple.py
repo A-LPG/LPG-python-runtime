@@ -15,6 +15,8 @@ from lpg2.Utils import arraycopy
 
 
 class IntTuple(object):
+    __slots__ = ('array', 'top')
+
     #
     # This function is used to reset the size of a dynamic array without
     # allocating or deallocting space. It may be invoked with an integer

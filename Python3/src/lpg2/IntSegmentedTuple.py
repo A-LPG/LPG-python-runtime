@@ -14,6 +14,7 @@ from lpg2.Utils import arraycopy
 
 
 class IntSegmentedTuple(object):
+    __slots__ = ('top', '_size', 'log_blksize', 'base_size', 'base')
 
     def __init__(self, log_blksize_: int = None, base_size_: int = None):
         self.top: int = 0
@@ -101,6 +102,7 @@ class IntSegmentedTuple(object):
     #
     def reset(self, n: int = 0):
         self.top = n
+
     #
     # Return size of the dynamic array.
     #
@@ -172,4 +174,3 @@ class IntSegmentedTuple(object):
                 else:
                     low = mid + 1
         return -low
-
