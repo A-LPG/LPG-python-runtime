@@ -1,0 +1,7 @@
+{
+    "lpg.generation.setting": {
+        "mode": "external",
+        "built_in_template": "python3",
+        "outputDir": "../"
+    }
+}
