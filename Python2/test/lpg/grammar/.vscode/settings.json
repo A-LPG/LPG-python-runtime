@@ -1,0 +1,9 @@
+{
+    "lpg.generation.setting": {
+        "mode": "external",
+         "alternativeExe": "E:/LPG2/Release/lpg2.exe",
+         "use_define_template_directory": "E:/LPG2/lpg-generator-templates-2.1.00/templates/python2",
+         "use_define_include_directory": "E:/LPG2/lpg-generator-templates-2.1.00/include/python2",
+        "outputDir": "../"
+    }
+}
