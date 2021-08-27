@@ -11308,7 +11308,7 @@ class AstToken ( Ast, IAstToken):
 
 '''/**
  *<b>
-#*<li>Rule 3:  identifier ::= IDENTIFIER
+*<li>Rule 3:  identifier ::= IDENTIFIER
  *</b>
  */'''
 class identifier ( AstToken ,Iidentifier):
@@ -11341,11 +11341,11 @@ class identifier ( AstToken ,Iidentifier):
 
 '''/**
  *<em>
-#*<li>Rule 12:  PrimitiveType ::= NumericType
+*<li>Rule 12:  PrimitiveType ::= NumericType
  *</em>
  *<p>
  *<b>
-#*<li>Rule 13:  PrimitiveType ::= boolean
+*<li>Rule 13:  PrimitiveType ::= boolean
  *</b>
  */'''
 class PrimitiveType ( AstToken ,IPrimitiveType):
@@ -11374,7 +11374,7 @@ class PrimitiveType ( AstToken ,IPrimitiveType):
 
 '''/**
  *<b>
-#*<li>Rule 27:  ClassType ::= TypeName TypeArgumentsopt
+*<li>Rule 27:  ClassType ::= TypeName TypeArgumentsopt
  *</b>
  */'''
 class ClassType ( Ast ,IClassType):
@@ -11435,7 +11435,7 @@ class ClassType ( Ast ,IClassType):
 
 '''/**
  *<b>
-#*<li>Rule 28:  InterfaceType ::= TypeName TypeArgumentsopt
+*<li>Rule 28:  InterfaceType ::= TypeName TypeArgumentsopt
  *</b>
  */'''
 class InterfaceType ( Ast ,IInterfaceType):
@@ -11496,11 +11496,11 @@ class InterfaceType ( Ast ,IInterfaceType):
 
 '''/**
  *<em>
-#*<li>Rule 29:  TypeName ::= identifier
+*<li>Rule 29:  TypeName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 30:  TypeName ::= TypeName . identifier
+*<li>Rule 30:  TypeName ::= TypeName . identifier
  *</b>
  */'''
 class TypeName ( Ast ,ITypeName):
@@ -11565,7 +11565,7 @@ class TypeName ( Ast ,ITypeName):
 
 '''/**
  *<b>
-#*<li>Rule 33:  ArrayType ::= Type [ ]
+*<li>Rule 33:  ArrayType ::= Type [ ]
  *</b>
  */'''
 class ArrayType ( Ast ,IArrayType):
@@ -11630,7 +11630,7 @@ class ArrayType ( Ast ,IArrayType):
 
 '''/**
  *<b>
-#*<li>Rule 34:  TypeParameter ::= TypeVariable TypeBoundopt
+*<li>Rule 34:  TypeParameter ::= TypeVariable TypeBoundopt
  *</b>
  */'''
 class TypeParameter ( Ast ,ITypeParameter):
@@ -11691,7 +11691,7 @@ class TypeParameter ( Ast ,ITypeParameter):
 
 '''/**
  *<b>
-#*<li>Rule 35:  TypeBound ::= extends ClassOrInterfaceType AdditionalBoundListopt
+*<li>Rule 35:  TypeBound ::= extends ClassOrInterfaceType AdditionalBoundListopt
  *</b>
  */'''
 class TypeBound ( Ast ,ITypeBound):
@@ -11759,11 +11759,11 @@ class TypeBound ( Ast ,ITypeBound):
 
 '''/**
  *<em>
-#*<li>Rule 36:  AdditionalBoundList ::= AdditionalBound
+*<li>Rule 36:  AdditionalBoundList ::= AdditionalBound
  *</em>
  *<p>
  *<b>
-#*<li>Rule 37:  AdditionalBoundList ::= AdditionalBoundList AdditionalBound
+*<li>Rule 37:  AdditionalBoundList ::= AdditionalBoundList AdditionalBound
  *</b>
  */'''
 class AdditionalBoundList ( Ast ,IAdditionalBoundList):
@@ -11821,7 +11821,7 @@ class AdditionalBoundList ( Ast ,IAdditionalBoundList):
 
 '''/**
  *<b>
-#*<li>Rule 38:  AdditionalBound ::= & InterfaceType
+*<li>Rule 38:  AdditionalBound ::= & InterfaceType
  *</b>
  */'''
 class AdditionalBound ( Ast ,IAdditionalBound):
@@ -11879,7 +11879,7 @@ class AdditionalBound ( Ast ,IAdditionalBound):
 
 '''/**
  *<b>
-#*<li>Rule 39:  TypeArguments ::= < ActualTypeArgumentList >
+*<li>Rule 39:  TypeArguments ::= < ActualTypeArgumentList >
  *</b>
  */'''
 class TypeArguments ( Ast ,ITypeArguments):
@@ -11944,11 +11944,11 @@ class TypeArguments ( Ast ,ITypeArguments):
 
 '''/**
  *<em>
-#*<li>Rule 40:  ActualTypeArgumentList ::= ActualTypeArgument
+*<li>Rule 40:  ActualTypeArgumentList ::= ActualTypeArgument
  *</em>
  *<p>
  *<b>
-#*<li>Rule 41:  ActualTypeArgumentList ::= ActualTypeArgumentList , ActualTypeArgument
+*<li>Rule 41:  ActualTypeArgumentList ::= ActualTypeArgumentList , ActualTypeArgument
  *</b>
  */'''
 class ActualTypeArgumentList ( Ast ,IActualTypeArgumentList):
@@ -12013,7 +12013,7 @@ class ActualTypeArgumentList ( Ast ,IActualTypeArgumentList):
 
 '''/**
  *<b>
-#*<li>Rule 44:  Wildcard ::= ? WildcardBoundsOpt
+*<li>Rule 44:  Wildcard ::= ? WildcardBoundsOpt
  *</b>
  */'''
 class Wildcard ( Ast ,IWildcard):
@@ -12074,11 +12074,11 @@ class Wildcard ( Ast ,IWildcard):
 
 '''/**
  *<em>
-#*<li>Rule 47:  PackageName ::= identifier
+*<li>Rule 47:  PackageName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 48:  PackageName ::= PackageName . identifier
+*<li>Rule 48:  PackageName ::= PackageName . identifier
  *</b>
  */'''
 class PackageName ( Ast ,IPackageName):
@@ -12143,11 +12143,11 @@ class PackageName ( Ast ,IPackageName):
 
 '''/**
  *<em>
-#*<li>Rule 49:  ExpressionName ::= identifier
+*<li>Rule 49:  ExpressionName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 50:  ExpressionName ::= AmbiguousName . identifier
+*<li>Rule 50:  ExpressionName ::= AmbiguousName . identifier
  *</b>
  */'''
 class ExpressionName ( Ast ,IExpressionName):
@@ -12212,11 +12212,11 @@ class ExpressionName ( Ast ,IExpressionName):
 
 '''/**
  *<em>
-#*<li>Rule 51:  MethodName ::= identifier
+*<li>Rule 51:  MethodName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 52:  MethodName ::= AmbiguousName . identifier
+*<li>Rule 52:  MethodName ::= AmbiguousName . identifier
  *</b>
  */'''
 class MethodName ( Ast ,IMethodName):
@@ -12281,11 +12281,11 @@ class MethodName ( Ast ,IMethodName):
 
 '''/**
  *<em>
-#*<li>Rule 53:  PackageOrTypeName ::= identifier
+*<li>Rule 53:  PackageOrTypeName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 54:  PackageOrTypeName ::= PackageOrTypeName . identifier
+*<li>Rule 54:  PackageOrTypeName ::= PackageOrTypeName . identifier
  *</b>
  */'''
 class PackageOrTypeName ( Ast ,IPackageOrTypeName):
@@ -12350,11 +12350,11 @@ class PackageOrTypeName ( Ast ,IPackageOrTypeName):
 
 '''/**
  *<em>
-#*<li>Rule 55:  AmbiguousName ::= identifier
+*<li>Rule 55:  AmbiguousName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 56:  AmbiguousName ::= AmbiguousName . identifier
+*<li>Rule 56:  AmbiguousName ::= AmbiguousName . identifier
  *</b>
  */'''
 class AmbiguousName ( Ast ,IAmbiguousName):
@@ -12419,7 +12419,7 @@ class AmbiguousName ( Ast ,IAmbiguousName):
 
 '''/**
  *<b>
-#*<li>Rule 57:  CompilationUnit ::= PackageDeclarationopt ImportDeclarationsopt TypeDeclarationsopt
+*<li>Rule 57:  CompilationUnit ::= PackageDeclarationopt ImportDeclarationsopt TypeDeclarationsopt
  *</b>
  */'''
 class CompilationUnit ( Ast ,ICompilationUnit):
@@ -12493,11 +12493,11 @@ class CompilationUnit ( Ast ,ICompilationUnit):
 
 '''/**
  *<em>
-#*<li>Rule 58:  ImportDeclarations ::= ImportDeclaration
+*<li>Rule 58:  ImportDeclarations ::= ImportDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 59:  ImportDeclarations ::= ImportDeclarations ImportDeclaration
+*<li>Rule 59:  ImportDeclarations ::= ImportDeclarations ImportDeclaration
  *</b>
  */'''
 class ImportDeclarations ( Ast ,IImportDeclarations):
@@ -12555,11 +12555,11 @@ class ImportDeclarations ( Ast ,IImportDeclarations):
 
 '''/**
  *<em>
-#*<li>Rule 60:  TypeDeclarations ::= TypeDeclaration
+*<li>Rule 60:  TypeDeclarations ::= TypeDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 61:  TypeDeclarations ::= TypeDeclarations TypeDeclaration
+*<li>Rule 61:  TypeDeclarations ::= TypeDeclarations TypeDeclaration
  *</b>
  */'''
 class TypeDeclarations ( Ast ,ITypeDeclarations):
@@ -12617,7 +12617,7 @@ class TypeDeclarations ( Ast ,ITypeDeclarations):
 
 '''/**
  *<b>
-#*<li>Rule 62:  PackageDeclaration ::= Annotationsopt package PackageName ;
+*<li>Rule 62:  PackageDeclaration ::= Annotationsopt package PackageName ;
  *</b>
  */'''
 class PackageDeclaration ( Ast ,IPackageDeclaration):
@@ -12692,7 +12692,7 @@ class PackageDeclaration ( Ast ,IPackageDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 67:  SingleTypeImportDeclaration ::= import TypeName ;
+*<li>Rule 67:  SingleTypeImportDeclaration ::= import TypeName ;
  *</b>
  */'''
 class SingleTypeImportDeclaration ( Ast ,ISingleTypeImportDeclaration):
@@ -12757,7 +12757,7 @@ class SingleTypeImportDeclaration ( Ast ,ISingleTypeImportDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 68:  TypeImportOnDemandDeclaration ::= import PackageOrTypeName . * ;
+*<li>Rule 68:  TypeImportOnDemandDeclaration ::= import PackageOrTypeName . * ;
  *</b>
  */'''
 class TypeImportOnDemandDeclaration ( Ast ,ITypeImportOnDemandDeclaration):
@@ -12836,7 +12836,7 @@ class TypeImportOnDemandDeclaration ( Ast ,ITypeImportOnDemandDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 69:  SingleStaticImportDeclaration ::= import static TypeName . identifier ;
+*<li>Rule 69:  SingleStaticImportDeclaration ::= import static TypeName . identifier ;
  *</b>
  */'''
 class SingleStaticImportDeclaration ( Ast ,ISingleStaticImportDeclaration):
@@ -12922,7 +12922,7 @@ class SingleStaticImportDeclaration ( Ast ,ISingleStaticImportDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 70:  StaticImportOnDemandDeclaration ::= import static TypeName . * ;
+*<li>Rule 70:  StaticImportOnDemandDeclaration ::= import static TypeName . * ;
  *</b>
  */'''
 class StaticImportOnDemandDeclaration ( Ast ,IStaticImportOnDemandDeclaration):
@@ -13008,12 +13008,12 @@ class StaticImportOnDemandDeclaration ( Ast ,IStaticImportOnDemandDeclaration):
 
 '''/**
  *<em>
-#*<li>Rule 71:  TypeDeclaration ::= ClassDeclaration
-#*<li>Rule 72:  TypeDeclaration ::= InterfaceDeclaration
+*<li>Rule 71:  TypeDeclaration ::= ClassDeclaration
+*<li>Rule 72:  TypeDeclaration ::= InterfaceDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 73:  TypeDeclaration ::= ;
+*<li>Rule 73:  TypeDeclaration ::= ;
  *</b>
  */'''
 class TypeDeclaration ( AstToken ,ITypeDeclaration):
@@ -13042,7 +13042,7 @@ class TypeDeclaration ( AstToken ,ITypeDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 76:  NormalClassDeclaration ::= ClassModifiersopt class identifier TypeParametersopt Superopt Interfacesopt ClassBody
+*<li>Rule 76:  NormalClassDeclaration ::= ClassModifiersopt class identifier TypeParametersopt Superopt Interfacesopt ClassBody
  *</b>
  */'''
 class NormalClassDeclaration ( Ast ,INormalClassDeclaration):
@@ -13147,11 +13147,11 @@ class NormalClassDeclaration ( Ast ,INormalClassDeclaration):
 
 '''/**
  *<em>
-#*<li>Rule 77:  ClassModifiers ::= ClassModifier
+*<li>Rule 77:  ClassModifiers ::= ClassModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 78:  ClassModifiers ::= ClassModifiers ClassModifier
+*<li>Rule 78:  ClassModifiers ::= ClassModifiers ClassModifier
  *</b>
  */'''
 class ClassModifiers ( Ast ,IClassModifiers):
@@ -13209,7 +13209,7 @@ class ClassModifiers ( Ast ,IClassModifiers):
 
 '''/**
  *<b>
-#*<li>Rule 87:  TypeParameters ::= < TypeParameterList >
+*<li>Rule 87:  TypeParameters ::= < TypeParameterList >
  *</b>
  */'''
 class TypeParameters ( Ast ,ITypeParameters):
@@ -13274,11 +13274,11 @@ class TypeParameters ( Ast ,ITypeParameters):
 
 '''/**
  *<em>
-#*<li>Rule 88:  TypeParameterList ::= TypeParameter
+*<li>Rule 88:  TypeParameterList ::= TypeParameter
  *</em>
  *<p>
  *<b>
-#*<li>Rule 89:  TypeParameterList ::= TypeParameterList , TypeParameter
+*<li>Rule 89:  TypeParameterList ::= TypeParameterList , TypeParameter
  *</b>
  */'''
 class TypeParameterList ( Ast ,ITypeParameterList):
@@ -13343,7 +13343,7 @@ class TypeParameterList ( Ast ,ITypeParameterList):
 
 '''/**
  *<b>
-#*<li>Rule 90:  Super ::= extends ClassType
+*<li>Rule 90:  Super ::= extends ClassType
  *</b>
  */'''
 class Super ( Ast ,ISuper):
@@ -13401,7 +13401,7 @@ class Super ( Ast ,ISuper):
 
 '''/**
  *<b>
-#*<li>Rule 91:  Interfaces ::= implements InterfaceTypeList
+*<li>Rule 91:  Interfaces ::= implements InterfaceTypeList
  *</b>
  */'''
 class Interfaces ( Ast ,IInterfaces):
@@ -13459,11 +13459,11 @@ class Interfaces ( Ast ,IInterfaces):
 
 '''/**
  *<em>
-#*<li>Rule 92:  InterfaceTypeList ::= InterfaceType
+*<li>Rule 92:  InterfaceTypeList ::= InterfaceType
  *</em>
  *<p>
  *<b>
-#*<li>Rule 93:  InterfaceTypeList ::= InterfaceTypeList , InterfaceType
+*<li>Rule 93:  InterfaceTypeList ::= InterfaceTypeList , InterfaceType
  *</b>
  */'''
 class InterfaceTypeList ( Ast ,IInterfaceTypeList):
@@ -13528,7 +13528,7 @@ class InterfaceTypeList ( Ast ,IInterfaceTypeList):
 
 '''/**
  *<b>
-#*<li>Rule 94:  ClassBody ::= { ClassBodyDeclarationsopt }
+*<li>Rule 94:  ClassBody ::= { ClassBodyDeclarationsopt }
  *</b>
  */'''
 class ClassBody ( Ast ,IClassBody):
@@ -13596,11 +13596,11 @@ class ClassBody ( Ast ,IClassBody):
 
 '''/**
  *<em>
-#*<li>Rule 95:  ClassBodyDeclarations ::= ClassBodyDeclaration
+*<li>Rule 95:  ClassBodyDeclarations ::= ClassBodyDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 96:  ClassBodyDeclarations ::= ClassBodyDeclarations ClassBodyDeclaration
+*<li>Rule 96:  ClassBodyDeclarations ::= ClassBodyDeclarations ClassBodyDeclaration
  *</b>
  */'''
 class ClassBodyDeclarations ( Ast ,IClassBodyDeclarations):
@@ -13658,14 +13658,14 @@ class ClassBodyDeclarations ( Ast ,IClassBodyDeclarations):
 
 '''/**
  *<em>
-#*<li>Rule 101:  ClassMemberDeclaration ::= FieldDeclaration
-#*<li>Rule 102:  ClassMemberDeclaration ::= MethodDeclaration
-#*<li>Rule 103:  ClassMemberDeclaration ::= ClassDeclaration
-#*<li>Rule 104:  ClassMemberDeclaration ::= InterfaceDeclaration
+*<li>Rule 101:  ClassMemberDeclaration ::= FieldDeclaration
+*<li>Rule 102:  ClassMemberDeclaration ::= MethodDeclaration
+*<li>Rule 103:  ClassMemberDeclaration ::= ClassDeclaration
+*<li>Rule 104:  ClassMemberDeclaration ::= InterfaceDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 105:  ClassMemberDeclaration ::= ;
+*<li>Rule 105:  ClassMemberDeclaration ::= ;
  *</b>
  */'''
 class ClassMemberDeclaration ( AstToken ,IClassMemberDeclaration):
@@ -13694,7 +13694,7 @@ class ClassMemberDeclaration ( AstToken ,IClassMemberDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 106:  FieldDeclaration ::= FieldModifiersopt Type VariableDeclarators ;
+*<li>Rule 106:  FieldDeclaration ::= FieldModifiersopt Type VariableDeclarators ;
  *</b>
  */'''
 class FieldDeclaration ( Ast ,IFieldDeclaration):
@@ -13769,11 +13769,11 @@ class FieldDeclaration ( Ast ,IFieldDeclaration):
 
 '''/**
  *<em>
-#*<li>Rule 107:  VariableDeclarators ::= VariableDeclarator
+*<li>Rule 107:  VariableDeclarators ::= VariableDeclarator
  *</em>
  *<p>
  *<b>
-#*<li>Rule 108:  VariableDeclarators ::= VariableDeclarators , VariableDeclarator
+*<li>Rule 108:  VariableDeclarators ::= VariableDeclarators , VariableDeclarator
  *</b>
  */'''
 class VariableDeclarators ( Ast ,IVariableDeclarators):
@@ -13838,11 +13838,11 @@ class VariableDeclarators ( Ast ,IVariableDeclarators):
 
 '''/**
  *<em>
-#*<li>Rule 109:  VariableDeclarator ::= VariableDeclaratorId
+*<li>Rule 109:  VariableDeclarator ::= VariableDeclaratorId
  *</em>
  *<p>
  *<b>
-#*<li>Rule 110:  VariableDeclarator ::= VariableDeclaratorId = VariableInitializer
+*<li>Rule 110:  VariableDeclarator ::= VariableDeclaratorId = VariableInitializer
  *</b>
  */'''
 class VariableDeclarator ( Ast ,IVariableDeclarator):
@@ -13907,11 +13907,11 @@ class VariableDeclarator ( Ast ,IVariableDeclarator):
 
 '''/**
  *<em>
-#*<li>Rule 111:  VariableDeclaratorId ::= identifier
+*<li>Rule 111:  VariableDeclaratorId ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 112:  VariableDeclaratorId ::= VariableDeclaratorId [ ]
+*<li>Rule 112:  VariableDeclaratorId ::= VariableDeclaratorId [ ]
  *</b>
  */'''
 class VariableDeclaratorId ( Ast ,IVariableDeclaratorId):
@@ -13976,11 +13976,11 @@ class VariableDeclaratorId ( Ast ,IVariableDeclaratorId):
 
 '''/**
  *<em>
-#*<li>Rule 115:  FieldModifiers ::= FieldModifier
+*<li>Rule 115:  FieldModifiers ::= FieldModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 116:  FieldModifiers ::= FieldModifiers FieldModifier
+*<li>Rule 116:  FieldModifiers ::= FieldModifiers FieldModifier
  *</b>
  */'''
 class FieldModifiers ( Ast ,IFieldModifiers):
@@ -14038,7 +14038,7 @@ class FieldModifiers ( Ast ,IFieldModifiers):
 
 '''/**
  *<b>
-#*<li>Rule 125:  MethodDeclaration ::= MethodHeader MethodBody
+*<li>Rule 125:  MethodDeclaration ::= MethodHeader MethodBody
  *</b>
  */'''
 class MethodDeclaration ( Ast ,IMethodDeclaration):
@@ -14096,7 +14096,7 @@ class MethodDeclaration ( Ast ,IMethodDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 126:  MethodHeader ::= MethodModifiersopt TypeParametersopt ResultType MethodDeclarator Throwsopt
+*<li>Rule 126:  MethodHeader ::= MethodModifiersopt TypeParametersopt ResultType MethodDeclarator Throwsopt
  *</b>
  */'''
 class MethodHeader ( Ast ,IMethodHeader):
@@ -14184,11 +14184,11 @@ class MethodHeader ( Ast ,IMethodHeader):
 
 '''/**
  *<em>
-#*<li>Rule 127:  ResultType ::= Type
+*<li>Rule 127:  ResultType ::= Type
  *</em>
  *<p>
  *<b>
-#*<li>Rule 128:  ResultType ::= void
+*<li>Rule 128:  ResultType ::= void
  *</b>
  */'''
 class ResultType ( AstToken ,IResultType):
@@ -14217,11 +14217,11 @@ class ResultType ( AstToken ,IResultType):
 
 '''/**
  *<em>
-#*<li>Rule 131:  FormalParameterList ::= LastFormalParameter
+*<li>Rule 131:  FormalParameterList ::= LastFormalParameter
  *</em>
  *<p>
  *<b>
-#*<li>Rule 132:  FormalParameterList ::= FormalParameters , LastFormalParameter
+*<li>Rule 132:  FormalParameterList ::= FormalParameters , LastFormalParameter
  *</b>
  */'''
 class FormalParameterList ( Ast ,IFormalParameterList):
@@ -14286,11 +14286,11 @@ class FormalParameterList ( Ast ,IFormalParameterList):
 
 '''/**
  *<em>
-#*<li>Rule 133:  FormalParameters ::= FormalParameter
+*<li>Rule 133:  FormalParameters ::= FormalParameter
  *</em>
  *<p>
  *<b>
-#*<li>Rule 134:  FormalParameters ::= FormalParameters , FormalParameter
+*<li>Rule 134:  FormalParameters ::= FormalParameters , FormalParameter
  *</b>
  */'''
 class FormalParameters ( Ast ,IFormalParameters):
@@ -14355,7 +14355,7 @@ class FormalParameters ( Ast ,IFormalParameters):
 
 '''/**
  *<b>
-#*<li>Rule 135:  FormalParameter ::= VariableModifiersopt Type VariableDeclaratorId
+*<li>Rule 135:  FormalParameter ::= VariableModifiersopt Type VariableDeclaratorId
  *</b>
  */'''
 class FormalParameter ( Ast ,IFormalParameter):
@@ -14423,11 +14423,11 @@ class FormalParameter ( Ast ,IFormalParameter):
 
 '''/**
  *<em>
-#*<li>Rule 136:  VariableModifiers ::= VariableModifier
+*<li>Rule 136:  VariableModifiers ::= VariableModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 137:  VariableModifiers ::= VariableModifiers VariableModifier
+*<li>Rule 137:  VariableModifiers ::= VariableModifiers VariableModifier
  *</b>
  */'''
 class VariableModifiers ( Ast ,IVariableModifiers):
@@ -14485,11 +14485,11 @@ class VariableModifiers ( Ast ,IVariableModifiers):
 
 '''/**
  *<em>
-#*<li>Rule 139:  VariableModifier ::= Annotations
+*<li>Rule 139:  VariableModifier ::= Annotations
  *</em>
  *<p>
  *<b>
-#*<li>Rule 138:  VariableModifier ::= final
+*<li>Rule 138:  VariableModifier ::= final
  *</b>
  */'''
 class VariableModifier ( AstToken ,IVariableModifier):
@@ -14518,7 +14518,7 @@ class VariableModifier ( AstToken ,IVariableModifier):
 
 '''/**
  *<b>
-#*<li>Rule 140:  LastFormalParameter ::= VariableModifiersopt Type ...opt VariableDeclaratorId
+*<li>Rule 140:  LastFormalParameter ::= VariableModifiersopt Type ...opt VariableDeclaratorId
  *</b>
  */'''
 class LastFormalParameter ( Ast ,ILastFormalParameter):
@@ -14596,11 +14596,11 @@ class LastFormalParameter ( Ast ,ILastFormalParameter):
 
 '''/**
  *<em>
-#*<li>Rule 141:  MethodModifiers ::= MethodModifier
+*<li>Rule 141:  MethodModifiers ::= MethodModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 142:  MethodModifiers ::= MethodModifiers MethodModifier
+*<li>Rule 142:  MethodModifiers ::= MethodModifiers MethodModifier
  *</b>
  */'''
 class MethodModifiers ( Ast ,IMethodModifiers):
@@ -14658,7 +14658,7 @@ class MethodModifiers ( Ast ,IMethodModifiers):
 
 '''/**
  *<b>
-#*<li>Rule 153:  Throws ::= throws ExceptionTypeList
+*<li>Rule 153:  Throws ::= throws ExceptionTypeList
  *</b>
  */'''
 class Throws ( Ast ,IThrows):
@@ -14716,11 +14716,11 @@ class Throws ( Ast ,IThrows):
 
 '''/**
  *<em>
-#*<li>Rule 154:  ExceptionTypeList ::= ExceptionType
+*<li>Rule 154:  ExceptionTypeList ::= ExceptionType
  *</em>
  *<p>
  *<b>
-#*<li>Rule 155:  ExceptionTypeList ::= ExceptionTypeList , ExceptionType
+*<li>Rule 155:  ExceptionTypeList ::= ExceptionTypeList , ExceptionType
  *</b>
  */'''
 class ExceptionTypeList ( Ast ,IExceptionTypeList):
@@ -14785,11 +14785,11 @@ class ExceptionTypeList ( Ast ,IExceptionTypeList):
 
 '''/**
  *<em>
-#*<li>Rule 158:  MethodBody ::= Block
+*<li>Rule 158:  MethodBody ::= Block
  *</em>
  *<p>
  *<b>
-#*<li>Rule 159:  MethodBody ::= ;
+*<li>Rule 159:  MethodBody ::= ;
  *</b>
  */'''
 class MethodBody ( AstToken ,IMethodBody):
@@ -14818,7 +14818,7 @@ class MethodBody ( AstToken ,IMethodBody):
 
 '''/**
  *<b>
-#*<li>Rule 161:  StaticInitializer ::= static Block
+*<li>Rule 161:  StaticInitializer ::= static Block
  *</b>
  */'''
 class StaticInitializer ( Ast ,IStaticInitializer):
@@ -14876,7 +14876,7 @@ class StaticInitializer ( Ast ,IStaticInitializer):
 
 '''/**
  *<b>
-#*<li>Rule 162:  ConstructorDeclaration ::= ConstructorModifiersopt ConstructorDeclarator Throwsopt ConstructorBody
+*<li>Rule 162:  ConstructorDeclaration ::= ConstructorModifiersopt ConstructorDeclarator Throwsopt ConstructorBody
  *</b>
  */'''
 class ConstructorDeclaration ( Ast ,IConstructorDeclaration):
@@ -14954,7 +14954,7 @@ class ConstructorDeclaration ( Ast ,IConstructorDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 163:  ConstructorDeclarator ::= TypeParametersopt SimpleTypeName ( FormalParameterListopt )
+*<li>Rule 163:  ConstructorDeclarator ::= TypeParametersopt SimpleTypeName ( FormalParameterListopt )
  *</b>
  */'''
 class ConstructorDeclarator ( Ast ,IConstructorDeclarator):
@@ -15039,11 +15039,11 @@ class ConstructorDeclarator ( Ast ,IConstructorDeclarator):
 
 '''/**
  *<em>
-#*<li>Rule 165:  ConstructorModifiers ::= ConstructorModifier
+*<li>Rule 165:  ConstructorModifiers ::= ConstructorModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 166:  ConstructorModifiers ::= ConstructorModifiers ConstructorModifier
+*<li>Rule 166:  ConstructorModifiers ::= ConstructorModifiers ConstructorModifier
  *</b>
  */'''
 class ConstructorModifiers ( Ast ,IConstructorModifiers):
@@ -15101,7 +15101,7 @@ class ConstructorModifiers ( Ast ,IConstructorModifiers):
 
 '''/**
  *<b>
-#*<li>Rule 171:  ConstructorBody ::= { ExplicitConstructorInvocationopt BlockStatementsopt }
+*<li>Rule 171:  ConstructorBody ::= { ExplicitConstructorInvocationopt BlockStatementsopt }
  *</b>
  */'''
 class ConstructorBody ( Ast ,IConstructorBody):
@@ -15179,7 +15179,7 @@ class ConstructorBody ( Ast ,IConstructorBody):
 
 '''/**
  *<b>
-#*<li>Rule 175:  EnumDeclaration ::= ClassModifiersopt enum identifier Interfacesopt EnumBody
+*<li>Rule 175:  EnumDeclaration ::= ClassModifiersopt enum identifier Interfacesopt EnumBody
  *</b>
  */'''
 class EnumDeclaration ( Ast ,IEnumDeclaration):
@@ -15264,7 +15264,7 @@ class EnumDeclaration ( Ast ,IEnumDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 176:  EnumBody ::= { EnumConstantsopt ,opt EnumBodyDeclarationsopt }
+*<li>Rule 176:  EnumBody ::= { EnumConstantsopt ,opt EnumBodyDeclarationsopt }
  *</b>
  */'''
 class EnumBody ( Ast ,IEnumBody):
@@ -15352,11 +15352,11 @@ class EnumBody ( Ast ,IEnumBody):
 
 '''/**
  *<em>
-#*<li>Rule 177:  EnumConstants ::= EnumConstant
+*<li>Rule 177:  EnumConstants ::= EnumConstant
  *</em>
  *<p>
  *<b>
-#*<li>Rule 178:  EnumConstants ::= EnumConstants , EnumConstant
+*<li>Rule 178:  EnumConstants ::= EnumConstants , EnumConstant
  *</b>
  */'''
 class EnumConstants ( Ast ,IEnumConstants):
@@ -15421,11 +15421,11 @@ class EnumConstants ( Ast ,IEnumConstants):
 
 '''/**
  *<em>
-#*<li>Rule 307:  EnumConstant ::= identifier
+*<li>Rule 307:  EnumConstant ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 179:  EnumConstant ::= Annotationsopt identifier Argumentsopt ClassBodyopt
+*<li>Rule 179:  EnumConstant ::= Annotationsopt identifier Argumentsopt ClassBodyopt
  *</b>
  */'''
 class EnumConstant ( Ast ,IEnumConstant):
@@ -15506,7 +15506,7 @@ class EnumConstant ( Ast ,IEnumConstant):
 
 '''/**
  *<b>
-#*<li>Rule 180:  Arguments ::= ( ArgumentListopt )
+*<li>Rule 180:  Arguments ::= ( ArgumentListopt )
  *</b>
  */'''
 class Arguments ( Ast ,IArguments):
@@ -15574,7 +15574,7 @@ class Arguments ( Ast ,IArguments):
 
 '''/**
  *<b>
-#*<li>Rule 181:  EnumBodyDeclarations ::= ; ClassBodyDeclarationsopt
+*<li>Rule 181:  EnumBodyDeclarations ::= ; ClassBodyDeclarationsopt
  *</b>
  */'''
 class EnumBodyDeclarations ( Ast ,IEnumBodyDeclarations):
@@ -15635,7 +15635,7 @@ class EnumBodyDeclarations ( Ast ,IEnumBodyDeclarations):
 
 '''/**
  *<b>
-#*<li>Rule 184:  NormalInterfaceDeclaration ::= InterfaceModifiersopt interface identifier TypeParametersopt ExtendsInterfacesopt InterfaceBody
+*<li>Rule 184:  NormalInterfaceDeclaration ::= InterfaceModifiersopt interface identifier TypeParametersopt ExtendsInterfacesopt InterfaceBody
  *</b>
  */'''
 class NormalInterfaceDeclaration ( Ast ,INormalInterfaceDeclaration):
@@ -15730,11 +15730,11 @@ class NormalInterfaceDeclaration ( Ast ,INormalInterfaceDeclaration):
 
 '''/**
  *<em>
-#*<li>Rule 185:  InterfaceModifiers ::= InterfaceModifier
+*<li>Rule 185:  InterfaceModifiers ::= InterfaceModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 186:  InterfaceModifiers ::= InterfaceModifiers InterfaceModifier
+*<li>Rule 186:  InterfaceModifiers ::= InterfaceModifiers InterfaceModifier
  *</b>
  */'''
 class InterfaceModifiers ( Ast ,IInterfaceModifiers):
@@ -15792,7 +15792,7 @@ class InterfaceModifiers ( Ast ,IInterfaceModifiers):
 
 '''/**
  *<b>
-#*<li>Rule 196:  InterfaceBody ::= { InterfaceMemberDeclarationsopt }
+*<li>Rule 196:  InterfaceBody ::= { InterfaceMemberDeclarationsopt }
  *</b>
  */'''
 class InterfaceBody ( Ast ,IInterfaceBody):
@@ -15860,11 +15860,11 @@ class InterfaceBody ( Ast ,IInterfaceBody):
 
 '''/**
  *<em>
-#*<li>Rule 197:  InterfaceMemberDeclarations ::= InterfaceMemberDeclaration
+*<li>Rule 197:  InterfaceMemberDeclarations ::= InterfaceMemberDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 198:  InterfaceMemberDeclarations ::= InterfaceMemberDeclarations InterfaceMemberDeclaration
+*<li>Rule 198:  InterfaceMemberDeclarations ::= InterfaceMemberDeclarations InterfaceMemberDeclaration
  *</b>
  */'''
 class InterfaceMemberDeclarations ( Ast ,IInterfaceMemberDeclarations):
@@ -15922,14 +15922,14 @@ class InterfaceMemberDeclarations ( Ast ,IInterfaceMemberDeclarations):
 
 '''/**
  *<em>
-#*<li>Rule 199:  InterfaceMemberDeclaration ::= ConstantDeclaration
-#*<li>Rule 200:  InterfaceMemberDeclaration ::= AbstractMethodDeclaration
-#*<li>Rule 201:  InterfaceMemberDeclaration ::= ClassDeclaration
-#*<li>Rule 202:  InterfaceMemberDeclaration ::= InterfaceDeclaration
+*<li>Rule 199:  InterfaceMemberDeclaration ::= ConstantDeclaration
+*<li>Rule 200:  InterfaceMemberDeclaration ::= AbstractMethodDeclaration
+*<li>Rule 201:  InterfaceMemberDeclaration ::= ClassDeclaration
+*<li>Rule 202:  InterfaceMemberDeclaration ::= InterfaceDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 203:  InterfaceMemberDeclaration ::= ;
+*<li>Rule 203:  InterfaceMemberDeclaration ::= ;
  *</b>
  */'''
 class InterfaceMemberDeclaration ( AstToken ,IInterfaceMemberDeclaration):
@@ -15958,7 +15958,7 @@ class InterfaceMemberDeclaration ( AstToken ,IInterfaceMemberDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 204:  ConstantDeclaration ::= ConstantModifiersopt Type VariableDeclarators
+*<li>Rule 204:  ConstantDeclaration ::= ConstantModifiersopt Type VariableDeclarators
  *</b>
  */'''
 class ConstantDeclaration ( Ast ,IConstantDeclaration):
@@ -16026,11 +16026,11 @@ class ConstantDeclaration ( Ast ,IConstantDeclaration):
 
 '''/**
  *<em>
-#*<li>Rule 205:  ConstantModifiers ::= ConstantModifier
+*<li>Rule 205:  ConstantModifiers ::= ConstantModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 206:  ConstantModifiers ::= ConstantModifiers ConstantModifier
+*<li>Rule 206:  ConstantModifiers ::= ConstantModifiers ConstantModifier
  *</b>
  */'''
 class ConstantModifiers ( Ast ,IConstantModifiers):
@@ -16088,7 +16088,7 @@ class ConstantModifiers ( Ast ,IConstantModifiers):
 
 '''/**
  *<b>
-#*<li>Rule 211:  AbstractMethodDeclaration ::= AbstractMethodModifiersopt TypeParametersopt ResultType MethodDeclarator Throwsopt ;
+*<li>Rule 211:  AbstractMethodDeclaration ::= AbstractMethodModifiersopt TypeParametersopt ResultType MethodDeclarator Throwsopt ;
  *</b>
  */'''
 class AbstractMethodDeclaration ( Ast ,IAbstractMethodDeclaration):
@@ -16183,11 +16183,11 @@ class AbstractMethodDeclaration ( Ast ,IAbstractMethodDeclaration):
 
 '''/**
  *<em>
-#*<li>Rule 212:  AbstractMethodModifiers ::= AbstractMethodModifier
+*<li>Rule 212:  AbstractMethodModifiers ::= AbstractMethodModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 213:  AbstractMethodModifiers ::= AbstractMethodModifiers AbstractMethodModifier
+*<li>Rule 213:  AbstractMethodModifiers ::= AbstractMethodModifiers AbstractMethodModifier
  *</b>
  */'''
 class AbstractMethodModifiers ( Ast ,IAbstractMethodModifiers):
@@ -16245,7 +16245,7 @@ class AbstractMethodModifiers ( Ast ,IAbstractMethodModifiers):
 
 '''/**
  *<b>
-#*<li>Rule 217:  AnnotationTypeDeclaration ::= InterfaceModifiersopt @ interface identifier AnnotationTypeBody
+*<li>Rule 217:  AnnotationTypeDeclaration ::= InterfaceModifiersopt @ interface identifier AnnotationTypeBody
  *</b>
  */'''
 class AnnotationTypeDeclaration ( Ast ,IAnnotationTypeDeclaration):
@@ -16327,7 +16327,7 @@ class AnnotationTypeDeclaration ( Ast ,IAnnotationTypeDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 218:  AnnotationTypeBody ::= { AnnotationTypeElementDeclarationsopt }
+*<li>Rule 218:  AnnotationTypeBody ::= { AnnotationTypeElementDeclarationsopt }
  *</b>
  */'''
 class AnnotationTypeBody ( Ast ,IAnnotationTypeBody):
@@ -16395,11 +16395,11 @@ class AnnotationTypeBody ( Ast ,IAnnotationTypeBody):
 
 '''/**
  *<em>
-#*<li>Rule 219:  AnnotationTypeElementDeclarations ::= AnnotationTypeElementDeclaration
+*<li>Rule 219:  AnnotationTypeElementDeclarations ::= AnnotationTypeElementDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 220:  AnnotationTypeElementDeclarations ::= AnnotationTypeElementDeclarations AnnotationTypeElementDeclaration
+*<li>Rule 220:  AnnotationTypeElementDeclarations ::= AnnotationTypeElementDeclarations AnnotationTypeElementDeclaration
  *</b>
  */'''
 class AnnotationTypeElementDeclarations ( Ast ,IAnnotationTypeElementDeclarations):
@@ -16457,7 +16457,7 @@ class AnnotationTypeElementDeclarations ( Ast ,IAnnotationTypeElementDeclaration
 
 '''/**
  *<b>
-#*<li>Rule 228:  DefaultValue ::= default ElementValue
+*<li>Rule 228:  DefaultValue ::= default ElementValue
  *</b>
  */'''
 class DefaultValue ( Ast ,IDefaultValue):
@@ -16515,11 +16515,11 @@ class DefaultValue ( Ast ,IDefaultValue):
 
 '''/**
  *<em>
-#*<li>Rule 229:  Annotations ::= Annotation
+*<li>Rule 229:  Annotations ::= Annotation
  *</em>
  *<p>
  *<b>
-#*<li>Rule 230:  Annotations ::= Annotations Annotation
+*<li>Rule 230:  Annotations ::= Annotations Annotation
  *</b>
  */'''
 class Annotations ( Ast ,IAnnotations):
@@ -16577,7 +16577,7 @@ class Annotations ( Ast ,IAnnotations):
 
 '''/**
  *<b>
-#*<li>Rule 234:  NormalAnnotation ::= @ TypeName ( ElementValuePairsopt )
+*<li>Rule 234:  NormalAnnotation ::= @ TypeName ( ElementValuePairsopt )
  *</b>
  */'''
 class NormalAnnotation ( Ast ,INormalAnnotation):
@@ -16659,11 +16659,11 @@ class NormalAnnotation ( Ast ,INormalAnnotation):
 
 '''/**
  *<em>
-#*<li>Rule 235:  ElementValuePairs ::= ElementValuePair
+*<li>Rule 235:  ElementValuePairs ::= ElementValuePair
  *</em>
  *<p>
  *<b>
-#*<li>Rule 236:  ElementValuePairs ::= ElementValuePairs , ElementValuePair
+*<li>Rule 236:  ElementValuePairs ::= ElementValuePairs , ElementValuePair
  *</b>
  */'''
 class ElementValuePairs ( Ast ,IElementValuePairs):
@@ -16728,7 +16728,7 @@ class ElementValuePairs ( Ast ,IElementValuePairs):
 
 '''/**
  *<b>
-#*<li>Rule 237:  ElementValuePair ::= SimpleName = ElementValue
+*<li>Rule 237:  ElementValuePair ::= SimpleName = ElementValue
  *</b>
  */'''
 class ElementValuePair ( Ast ,IElementValuePair):
@@ -16793,7 +16793,7 @@ class ElementValuePair ( Ast ,IElementValuePair):
 
 '''/**
  *<b>
-#*<li>Rule 242:  ElementValueArrayInitializer ::= { ElementValuesopt ,opt }
+*<li>Rule 242:  ElementValueArrayInitializer ::= { ElementValuesopt ,opt }
  *</b>
  */'''
 class ElementValueArrayInitializer ( Ast ,IElementValueArrayInitializer):
@@ -16871,11 +16871,11 @@ class ElementValueArrayInitializer ( Ast ,IElementValueArrayInitializer):
 
 '''/**
  *<em>
-#*<li>Rule 243:  ElementValues ::= ElementValue
+*<li>Rule 243:  ElementValues ::= ElementValue
  *</em>
  *<p>
  *<b>
-#*<li>Rule 244:  ElementValues ::= ElementValues , ElementValue
+*<li>Rule 244:  ElementValues ::= ElementValues , ElementValue
  *</b>
  */'''
 class ElementValues ( Ast ,IElementValues):
@@ -16940,7 +16940,7 @@ class ElementValues ( Ast ,IElementValues):
 
 '''/**
  *<b>
-#*<li>Rule 245:  MarkerAnnotation ::= @ TypeName
+*<li>Rule 245:  MarkerAnnotation ::= @ TypeName
  *</b>
  */'''
 class MarkerAnnotation ( Ast ,IMarkerAnnotation):
@@ -16998,7 +16998,7 @@ class MarkerAnnotation ( Ast ,IMarkerAnnotation):
 
 '''/**
  *<b>
-#*<li>Rule 246:  SingleElementAnnotation ::= @ TypeName ( ElementValue )
+*<li>Rule 246:  SingleElementAnnotation ::= @ TypeName ( ElementValue )
  *</b>
  */'''
 class SingleElementAnnotation ( Ast ,ISingleElementAnnotation):
@@ -17077,7 +17077,7 @@ class SingleElementAnnotation ( Ast ,ISingleElementAnnotation):
 
 '''/**
  *<b>
-#*<li>Rule 247:  ArrayInitializer ::= { VariableInitializersopt ,opt }
+*<li>Rule 247:  ArrayInitializer ::= { VariableInitializersopt ,opt }
  *</b>
  */'''
 class ArrayInitializer ( Ast ,IArrayInitializer):
@@ -17155,11 +17155,11 @@ class ArrayInitializer ( Ast ,IArrayInitializer):
 
 '''/**
  *<em>
-#*<li>Rule 248:  VariableInitializers ::= VariableInitializer
+*<li>Rule 248:  VariableInitializers ::= VariableInitializer
  *</em>
  *<p>
  *<b>
-#*<li>Rule 249:  VariableInitializers ::= VariableInitializers , VariableInitializer
+*<li>Rule 249:  VariableInitializers ::= VariableInitializers , VariableInitializer
  *</b>
  */'''
 class VariableInitializers ( Ast ,IVariableInitializers):
@@ -17224,7 +17224,7 @@ class VariableInitializers ( Ast ,IVariableInitializers):
 
 '''/**
  *<b>
-#*<li>Rule 250:  Block ::= { BlockStatementsopt }
+*<li>Rule 250:  Block ::= { BlockStatementsopt }
  *</b>
  */'''
 class Block ( Ast ,IBlock):
@@ -17292,11 +17292,11 @@ class Block ( Ast ,IBlock):
 
 '''/**
  *<em>
-#*<li>Rule 251:  BlockStatements ::= BlockStatement
+*<li>Rule 251:  BlockStatements ::= BlockStatement
  *</em>
  *<p>
  *<b>
-#*<li>Rule 252:  BlockStatements ::= BlockStatements BlockStatement
+*<li>Rule 252:  BlockStatements ::= BlockStatements BlockStatement
  *</b>
  */'''
 class BlockStatements ( Ast ,IBlockStatements):
@@ -17354,7 +17354,7 @@ class BlockStatements ( Ast ,IBlockStatements):
 
 '''/**
  *<b>
-#*<li>Rule 256:  LocalVariableDeclarationStatement ::= LocalVariableDeclaration ;
+*<li>Rule 256:  LocalVariableDeclarationStatement ::= LocalVariableDeclaration ;
  *</b>
  */'''
 class LocalVariableDeclarationStatement ( Ast ,ILocalVariableDeclarationStatement):
@@ -17412,7 +17412,7 @@ class LocalVariableDeclarationStatement ( Ast ,ILocalVariableDeclarationStatemen
 
 '''/**
  *<b>
-#*<li>Rule 257:  LocalVariableDeclaration ::= VariableModifiersopt Type VariableDeclarators
+*<li>Rule 257:  LocalVariableDeclaration ::= VariableModifiersopt Type VariableDeclarators
  *</b>
  */'''
 class LocalVariableDeclaration ( Ast ,ILocalVariableDeclaration):
@@ -17480,7 +17480,7 @@ class LocalVariableDeclaration ( Ast ,ILocalVariableDeclaration):
 
 '''/**
  *<b>
-#*<li>Rule 281:  IfThenStatement ::= if ( Expression ) Statement
+*<li>Rule 281:  IfThenStatement ::= if ( Expression ) Statement
  *</b>
  */'''
 class IfThenStatement ( Ast ,IIfThenStatement):
@@ -17559,7 +17559,7 @@ class IfThenStatement ( Ast ,IIfThenStatement):
 
 '''/**
  *<b>
-#*<li>Rule 282:  IfThenElseStatement ::= if ( Expression ) StatementNoShortIf else Statement
+*<li>Rule 282:  IfThenElseStatement ::= if ( Expression ) StatementNoShortIf else Statement
  *</b>
  */'''
 class IfThenElseStatement ( Ast ,IIfThenElseStatement):
@@ -17652,7 +17652,7 @@ class IfThenElseStatement ( Ast ,IIfThenElseStatement):
 
 '''/**
  *<b>
-#*<li>Rule 283:  IfThenElseStatementNoShortIf ::= if ( Expression ) StatementNoShortIf else StatementNoShortIf
+*<li>Rule 283:  IfThenElseStatementNoShortIf ::= if ( Expression ) StatementNoShortIf else StatementNoShortIf
  *</b>
  */'''
 class IfThenElseStatementNoShortIf ( Ast ,IIfThenElseStatementNoShortIf):
@@ -17745,7 +17745,7 @@ class IfThenElseStatementNoShortIf ( Ast ,IIfThenElseStatementNoShortIf):
 
 '''/**
  *<b>
-#*<li>Rule 284:  EmptyStatement ::= ;
+*<li>Rule 284:  EmptyStatement ::= ;
  *</b>
  */'''
 class EmptyStatement ( AstToken ,IEmptyStatement):
@@ -17774,7 +17774,7 @@ class EmptyStatement ( AstToken ,IEmptyStatement):
 
 '''/**
  *<b>
-#*<li>Rule 285:  LabeledStatement ::= identifier : Statement
+*<li>Rule 285:  LabeledStatement ::= identifier : Statement
  *</b>
  */'''
 class LabeledStatement ( Ast ,ILabeledStatement):
@@ -17839,7 +17839,7 @@ class LabeledStatement ( Ast ,ILabeledStatement):
 
 '''/**
  *<b>
-#*<li>Rule 286:  LabeledStatementNoShortIf ::= identifier : StatementNoShortIf
+*<li>Rule 286:  LabeledStatementNoShortIf ::= identifier : StatementNoShortIf
  *</b>
  */'''
 class LabeledStatementNoShortIf ( Ast ,ILabeledStatementNoShortIf):
@@ -17904,7 +17904,7 @@ class LabeledStatementNoShortIf ( Ast ,ILabeledStatementNoShortIf):
 
 '''/**
  *<b>
-#*<li>Rule 287:  ExpressionStatement ::= StatementExpression ;
+*<li>Rule 287:  ExpressionStatement ::= StatementExpression ;
  *</b>
  */'''
 class ExpressionStatement ( Ast ,IExpressionStatement):
@@ -17962,7 +17962,7 @@ class ExpressionStatement ( Ast ,IExpressionStatement):
 
 '''/**
  *<b>
-#*<li>Rule 297:  SwitchStatement ::= switch ( Expression ) SwitchBlock
+*<li>Rule 297:  SwitchStatement ::= switch ( Expression ) SwitchBlock
  *</b>
  */'''
 class SwitchStatement ( Ast ,ISwitchStatement):
@@ -18041,7 +18041,7 @@ class SwitchStatement ( Ast ,ISwitchStatement):
 
 '''/**
  *<b>
-#*<li>Rule 298:  SwitchBlock ::= { SwitchBlockStatementGroupsopt SwitchLabelsopt }
+*<li>Rule 298:  SwitchBlock ::= { SwitchBlockStatementGroupsopt SwitchLabelsopt }
  *</b>
  */'''
 class SwitchBlock ( Ast ,ISwitchBlock):
@@ -18119,11 +18119,11 @@ class SwitchBlock ( Ast ,ISwitchBlock):
 
 '''/**
  *<em>
-#*<li>Rule 299:  SwitchBlockStatementGroups ::= SwitchBlockStatementGroup
+*<li>Rule 299:  SwitchBlockStatementGroups ::= SwitchBlockStatementGroup
  *</em>
  *<p>
  *<b>
-#*<li>Rule 300:  SwitchBlockStatementGroups ::= SwitchBlockStatementGroups SwitchBlockStatementGroup
+*<li>Rule 300:  SwitchBlockStatementGroups ::= SwitchBlockStatementGroups SwitchBlockStatementGroup
  *</b>
  */'''
 class SwitchBlockStatementGroups ( Ast ,ISwitchBlockStatementGroups):
@@ -18181,7 +18181,7 @@ class SwitchBlockStatementGroups ( Ast ,ISwitchBlockStatementGroups):
 
 '''/**
  *<b>
-#*<li>Rule 301:  SwitchBlockStatementGroup ::= SwitchLabels BlockStatements
+*<li>Rule 301:  SwitchBlockStatementGroup ::= SwitchLabels BlockStatements
  *</b>
  */'''
 class SwitchBlockStatementGroup ( Ast ,ISwitchBlockStatementGroup):
@@ -18239,11 +18239,11 @@ class SwitchBlockStatementGroup ( Ast ,ISwitchBlockStatementGroup):
 
 '''/**
  *<em>
-#*<li>Rule 302:  SwitchLabels ::= SwitchLabel
+*<li>Rule 302:  SwitchLabels ::= SwitchLabel
  *</em>
  *<p>
  *<b>
-#*<li>Rule 303:  SwitchLabels ::= SwitchLabels SwitchLabel
+*<li>Rule 303:  SwitchLabels ::= SwitchLabels SwitchLabel
  *</b>
  */'''
 class SwitchLabels ( Ast ,ISwitchLabels):
@@ -18301,7 +18301,7 @@ class SwitchLabels ( Ast ,ISwitchLabels):
 
 '''/**
  *<b>
-#*<li>Rule 308:  WhileStatement ::= while ( Expression ) Statement
+*<li>Rule 308:  WhileStatement ::= while ( Expression ) Statement
  *</b>
  */'''
 class WhileStatement ( Ast ,IWhileStatement):
@@ -18380,7 +18380,7 @@ class WhileStatement ( Ast ,IWhileStatement):
 
 '''/**
  *<b>
-#*<li>Rule 309:  WhileStatementNoShortIf ::= while ( Expression ) StatementNoShortIf
+*<li>Rule 309:  WhileStatementNoShortIf ::= while ( Expression ) StatementNoShortIf
  *</b>
  */'''
 class WhileStatementNoShortIf ( Ast ,IWhileStatementNoShortIf):
@@ -18459,7 +18459,7 @@ class WhileStatementNoShortIf ( Ast ,IWhileStatementNoShortIf):
 
 '''/**
  *<b>
-#*<li>Rule 310:  DoStatement ::= do Statement while ( Expression ) ;
+*<li>Rule 310:  DoStatement ::= do Statement while ( Expression ) ;
  *</b>
  */'''
 class DoStatement ( Ast ,IDoStatement):
@@ -18552,7 +18552,7 @@ class DoStatement ( Ast ,IDoStatement):
 
 '''/**
  *<b>
-#*<li>Rule 313:  BasicForStatement ::= for ( ForInitopt ; Expressionopt ; ForUpdateopt ) Statement
+*<li>Rule 313:  BasicForStatement ::= for ( ForInitopt ; Expressionopt ; ForUpdateopt ) Statement
  *</b>
  */'''
 class BasicForStatement ( Ast ,IBasicForStatement):
@@ -18668,7 +18668,7 @@ class BasicForStatement ( Ast ,IBasicForStatement):
 
 '''/**
  *<b>
-#*<li>Rule 314:  ForStatementNoShortIf ::= for ( ForInitopt ; Expressionopt ; ForUpdateopt ) StatementNoShortIf
+*<li>Rule 314:  ForStatementNoShortIf ::= for ( ForInitopt ; Expressionopt ; ForUpdateopt ) StatementNoShortIf
  *</b>
  */'''
 class ForStatementNoShortIf ( Ast ,IForStatementNoShortIf):
@@ -18784,11 +18784,11 @@ class ForStatementNoShortIf ( Ast ,IForStatementNoShortIf):
 
 '''/**
  *<em>
-#*<li>Rule 318:  StatementExpressionList ::= StatementExpression
+*<li>Rule 318:  StatementExpressionList ::= StatementExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 319:  StatementExpressionList ::= StatementExpressionList , StatementExpression
+*<li>Rule 319:  StatementExpressionList ::= StatementExpressionList , StatementExpression
  *</b>
  */'''
 class StatementExpressionList ( Ast ,IStatementExpressionList):
@@ -18853,7 +18853,7 @@ class StatementExpressionList ( Ast ,IStatementExpressionList):
 
 '''/**
  *<b>
-#*<li>Rule 320:  EnhancedForStatement ::= for ( FormalParameter : Expression ) Statement
+*<li>Rule 320:  EnhancedForStatement ::= for ( FormalParameter : Expression ) Statement
  *</b>
  */'''
 class EnhancedForStatement ( Ast ,IEnhancedForStatement):
@@ -18946,7 +18946,7 @@ class EnhancedForStatement ( Ast ,IEnhancedForStatement):
 
 '''/**
  *<b>
-#*<li>Rule 321:  BreakStatement ::= break identifieropt ;
+*<li>Rule 321:  BreakStatement ::= break identifieropt ;
  *</b>
  */'''
 class BreakStatement ( Ast ,IBreakStatement):
@@ -19014,7 +19014,7 @@ class BreakStatement ( Ast ,IBreakStatement):
 
 '''/**
  *<b>
-#*<li>Rule 322:  ContinueStatement ::= continue identifieropt ;
+*<li>Rule 322:  ContinueStatement ::= continue identifieropt ;
  *</b>
  */'''
 class ContinueStatement ( Ast ,IContinueStatement):
@@ -19082,7 +19082,7 @@ class ContinueStatement ( Ast ,IContinueStatement):
 
 '''/**
  *<b>
-#*<li>Rule 323:  ReturnStatement ::= return Expressionopt ;
+*<li>Rule 323:  ReturnStatement ::= return Expressionopt ;
  *</b>
  */'''
 class ReturnStatement ( Ast ,IReturnStatement):
@@ -19150,7 +19150,7 @@ class ReturnStatement ( Ast ,IReturnStatement):
 
 '''/**
  *<b>
-#*<li>Rule 324:  ThrowStatement ::= throw Expression ;
+*<li>Rule 324:  ThrowStatement ::= throw Expression ;
  *</b>
  */'''
 class ThrowStatement ( Ast ,IThrowStatement):
@@ -19215,7 +19215,7 @@ class ThrowStatement ( Ast ,IThrowStatement):
 
 '''/**
  *<b>
-#*<li>Rule 325:  SynchronizedStatement ::= synchronized ( Expression ) Block
+*<li>Rule 325:  SynchronizedStatement ::= synchronized ( Expression ) Block
  *</b>
  */'''
 class SynchronizedStatement ( Ast ,ISynchronizedStatement):
@@ -19294,11 +19294,11 @@ class SynchronizedStatement ( Ast ,ISynchronizedStatement):
 
 '''/**
  *<em>
-#*<li>Rule 328:  Catches ::= CatchClause
+*<li>Rule 328:  Catches ::= CatchClause
  *</em>
  *<p>
  *<b>
-#*<li>Rule 329:  Catches ::= Catches CatchClause
+*<li>Rule 329:  Catches ::= Catches CatchClause
  *</b>
  */'''
 class Catches ( Ast ,ICatches):
@@ -19356,7 +19356,7 @@ class Catches ( Ast ,ICatches):
 
 '''/**
  *<b>
-#*<li>Rule 330:  CatchClause ::= catch ( FormalParameter ) Block
+*<li>Rule 330:  CatchClause ::= catch ( FormalParameter ) Block
  *</b>
  */'''
 class CatchClause ( Ast ,ICatchClause):
@@ -19435,7 +19435,7 @@ class CatchClause ( Ast ,ICatchClause):
 
 '''/**
  *<b>
-#*<li>Rule 331:  Finally ::= finally Block
+*<li>Rule 331:  Finally ::= finally Block
  *</b>
  */'''
 class Finally ( Ast ,IFinally):
@@ -19493,11 +19493,11 @@ class Finally ( Ast ,IFinally):
 
 '''/**
  *<em>
-#*<li>Rule 356:  ArgumentList ::= Expression
+*<li>Rule 356:  ArgumentList ::= Expression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 357:  ArgumentList ::= ArgumentList , Expression
+*<li>Rule 357:  ArgumentList ::= ArgumentList , Expression
  *</b>
  */'''
 class ArgumentList ( Ast ,IArgumentList):
@@ -19562,11 +19562,11 @@ class ArgumentList ( Ast ,IArgumentList):
 
 '''/**
  *<em>
-#*<li>Rule 362:  DimExprs ::= DimExpr
+*<li>Rule 362:  DimExprs ::= DimExpr
  *</em>
  *<p>
  *<b>
-#*<li>Rule 363:  DimExprs ::= DimExprs DimExpr
+*<li>Rule 363:  DimExprs ::= DimExprs DimExpr
  *</b>
  */'''
 class DimExprs ( Ast ,IDimExprs):
@@ -19624,7 +19624,7 @@ class DimExprs ( Ast ,IDimExprs):
 
 '''/**
  *<b>
-#*<li>Rule 364:  DimExpr ::= [ Expression ]
+*<li>Rule 364:  DimExpr ::= [ Expression ]
  *</b>
  */'''
 class DimExpr ( Ast ,IDimExpr):
@@ -19689,7 +19689,7 @@ class DimExpr ( Ast ,IDimExpr):
 
 '''/**
  *<b>
-#*<li>Rule 381:  PostIncrementExpression ::= PostfixExpression ++
+*<li>Rule 381:  PostIncrementExpression ::= PostfixExpression ++
  *</b>
  */'''
 class PostIncrementExpression ( Ast ,IPostIncrementExpression):
@@ -19747,7 +19747,7 @@ class PostIncrementExpression ( Ast ,IPostIncrementExpression):
 
 '''/**
  *<b>
-#*<li>Rule 382:  PostDecrementExpression ::= PostfixExpression --
+*<li>Rule 382:  PostDecrementExpression ::= PostfixExpression --
  *</b>
  */'''
 class PostDecrementExpression ( Ast ,IPostDecrementExpression):
@@ -19805,7 +19805,7 @@ class PostDecrementExpression ( Ast ,IPostDecrementExpression):
 
 '''/**
  *<b>
-#*<li>Rule 388:  PreIncrementExpression ::= ++ UnaryExpression
+*<li>Rule 388:  PreIncrementExpression ::= ++ UnaryExpression
  *</b>
  */'''
 class PreIncrementExpression ( Ast ,IPreIncrementExpression):
@@ -19863,7 +19863,7 @@ class PreIncrementExpression ( Ast ,IPreIncrementExpression):
 
 '''/**
  *<b>
-#*<li>Rule 389:  PreDecrementExpression ::= -- UnaryExpression
+*<li>Rule 389:  PreDecrementExpression ::= -- UnaryExpression
  *</b>
  */'''
 class PreDecrementExpression ( Ast ,IPreDecrementExpression):
@@ -19921,11 +19921,11 @@ class PreDecrementExpression ( Ast ,IPreDecrementExpression):
 
 '''/**
  *<em>
-#*<li>Rule 416:  AndExpression ::= EqualityExpression
+*<li>Rule 416:  AndExpression ::= EqualityExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 417:  AndExpression ::= AndExpression & EqualityExpression
+*<li>Rule 417:  AndExpression ::= AndExpression & EqualityExpression
  *</b>
  */'''
 class AndExpression ( Ast ,IAndExpression):
@@ -19990,11 +19990,11 @@ class AndExpression ( Ast ,IAndExpression):
 
 '''/**
  *<em>
-#*<li>Rule 418:  ExclusiveOrExpression ::= AndExpression
+*<li>Rule 418:  ExclusiveOrExpression ::= AndExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 419:  ExclusiveOrExpression ::= ExclusiveOrExpression ^ AndExpression
+*<li>Rule 419:  ExclusiveOrExpression ::= ExclusiveOrExpression ^ AndExpression
  *</b>
  */'''
 class ExclusiveOrExpression ( Ast ,IExclusiveOrExpression):
@@ -20059,11 +20059,11 @@ class ExclusiveOrExpression ( Ast ,IExclusiveOrExpression):
 
 '''/**
  *<em>
-#*<li>Rule 420:  InclusiveOrExpression ::= ExclusiveOrExpression
+*<li>Rule 420:  InclusiveOrExpression ::= ExclusiveOrExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 421:  InclusiveOrExpression ::= InclusiveOrExpression | ExclusiveOrExpression
+*<li>Rule 421:  InclusiveOrExpression ::= InclusiveOrExpression | ExclusiveOrExpression
  *</b>
  */'''
 class InclusiveOrExpression ( Ast ,IInclusiveOrExpression):
@@ -20128,11 +20128,11 @@ class InclusiveOrExpression ( Ast ,IInclusiveOrExpression):
 
 '''/**
  *<em>
-#*<li>Rule 422:  ConditionalAndExpression ::= InclusiveOrExpression
+*<li>Rule 422:  ConditionalAndExpression ::= InclusiveOrExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 423:  ConditionalAndExpression ::= ConditionalAndExpression && InclusiveOrExpression
+*<li>Rule 423:  ConditionalAndExpression ::= ConditionalAndExpression && InclusiveOrExpression
  *</b>
  */'''
 class ConditionalAndExpression ( Ast ,IConditionalAndExpression):
@@ -20197,11 +20197,11 @@ class ConditionalAndExpression ( Ast ,IConditionalAndExpression):
 
 '''/**
  *<em>
-#*<li>Rule 424:  ConditionalOrExpression ::= ConditionalAndExpression
+*<li>Rule 424:  ConditionalOrExpression ::= ConditionalAndExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 425:  ConditionalOrExpression ::= ConditionalOrExpression || ConditionalAndExpression
+*<li>Rule 425:  ConditionalOrExpression ::= ConditionalOrExpression || ConditionalAndExpression
  *</b>
  */'''
 class ConditionalOrExpression ( Ast ,IConditionalOrExpression):
@@ -20266,11 +20266,11 @@ class ConditionalOrExpression ( Ast ,IConditionalOrExpression):
 
 '''/**
  *<em>
-#*<li>Rule 426:  ConditionalExpression ::= ConditionalOrExpression
+*<li>Rule 426:  ConditionalExpression ::= ConditionalOrExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 427:  ConditionalExpression ::= ConditionalOrExpression ? Expression : ConditionalExpression
+*<li>Rule 427:  ConditionalExpression ::= ConditionalOrExpression ? Expression : ConditionalExpression
  *</b>
  */'''
 class ConditionalExpression ( Ast ,IConditionalExpression):
@@ -20349,7 +20349,7 @@ class ConditionalExpression ( Ast ,IConditionalExpression):
 
 '''/**
  *<b>
-#*<li>Rule 430:  Assignment ::= LeftHandSide AssignmentOperator AssignmentExpression
+*<li>Rule 430:  Assignment ::= LeftHandSide AssignmentOperator AssignmentExpression
  *</b>
  */'''
 class Assignment ( Ast ,IAssignment):
@@ -20414,11 +20414,11 @@ class Assignment ( Ast ,IAssignment):
 
 '''/**
  *<em>
-#*<li>Rule 492:  ,opt ::= $Empty
+*<li>Rule 492:  ,opt ::= $Empty
  *</em>
  *<p>
  *<b>
-#*<li>Rule 493:  ,opt ::= ,
+*<li>Rule 493:  ,opt ::= ,
  *</b>
  */'''
 class Commaopt ( AstToken ,ICommaopt):
@@ -20447,11 +20447,11 @@ class Commaopt ( AstToken ,ICommaopt):
 
 '''/**
  *<em>
-#*<li>Rule 504:  ...opt ::= $Empty
+*<li>Rule 504:  ...opt ::= $Empty
  *</em>
  *<p>
  *<b>
-#*<li>Rule 505:  ...opt ::= ...
+*<li>Rule 505:  ...opt ::= ...
  *</b>
  */'''
 class Ellipsisopt ( AstToken ,IEllipsisopt):
@@ -20480,7 +20480,7 @@ class Ellipsisopt ( AstToken ,IEllipsisopt):
 
 '''/**
  *<b>
-#*<li>Rule 5:  LPGUserAction ::= $BeginAction BlockStatementsopt $EndAction
+*<li>Rule 5:  LPGUserAction ::= $BeginAction BlockStatementsopt $EndAction
  *</b>
  */'''
 class LPGUserAction0 ( Ast ,ILPGUserAction):
@@ -20548,7 +20548,7 @@ class LPGUserAction0 ( Ast ,ILPGUserAction):
 
 '''/**
  *<b>
-#*<li>Rule 6:  LPGUserAction ::= $BeginJava BlockStatementsopt $EndJava
+*<li>Rule 6:  LPGUserAction ::= $BeginJava BlockStatementsopt $EndJava
  *</b>
  */'''
 class LPGUserAction1 ( Ast ,ILPGUserAction):
@@ -20616,7 +20616,7 @@ class LPGUserAction1 ( Ast ,ILPGUserAction):
 
 '''/**
  *<b>
-#*<li>Rule 7:  LPGUserAction ::= $NoAction
+*<li>Rule 7:  LPGUserAction ::= $NoAction
  *</b>
  */'''
 class LPGUserAction2 ( AstToken ,ILPGUserAction):
@@ -20645,7 +20645,7 @@ class LPGUserAction2 ( AstToken ,ILPGUserAction):
 
 '''/**
  *<b>
-#*<li>Rule 8:  LPGUserAction ::= $NullAction
+*<li>Rule 8:  LPGUserAction ::= $NullAction
  *</b>
  */'''
 class LPGUserAction3 ( AstToken ,ILPGUserAction):
@@ -20674,7 +20674,7 @@ class LPGUserAction3 ( AstToken ,ILPGUserAction):
 
 '''/**
  *<b>
-#*<li>Rule 9:  LPGUserAction ::= $BadAction
+*<li>Rule 9:  LPGUserAction ::= $BadAction
  *</b>
  */'''
 class LPGUserAction4 ( AstToken ,ILPGUserAction):
@@ -20703,7 +20703,7 @@ class LPGUserAction4 ( AstToken ,ILPGUserAction):
 
 '''/**
  *<b>
-#*<li>Rule 16:  IntegralType ::= byte
+*<li>Rule 16:  IntegralType ::= byte
  *</b>
  */'''
 class IntegralType0 ( AstToken ,IIntegralType):
@@ -20732,7 +20732,7 @@ class IntegralType0 ( AstToken ,IIntegralType):
 
 '''/**
  *<b>
-#*<li>Rule 17:  IntegralType ::= short
+*<li>Rule 17:  IntegralType ::= short
  *</b>
  */'''
 class IntegralType1 ( AstToken ,IIntegralType):
@@ -20761,7 +20761,7 @@ class IntegralType1 ( AstToken ,IIntegralType):
 
 '''/**
  *<b>
-#*<li>Rule 18:  IntegralType ::= int
+*<li>Rule 18:  IntegralType ::= int
  *</b>
  */'''
 class IntegralType2 ( AstToken ,IIntegralType):
@@ -20790,7 +20790,7 @@ class IntegralType2 ( AstToken ,IIntegralType):
 
 '''/**
  *<b>
-#*<li>Rule 19:  IntegralType ::= long
+*<li>Rule 19:  IntegralType ::= long
  *</b>
  */'''
 class IntegralType3 ( AstToken ,IIntegralType):
@@ -20819,7 +20819,7 @@ class IntegralType3 ( AstToken ,IIntegralType):
 
 '''/**
  *<b>
-#*<li>Rule 20:  IntegralType ::= char
+*<li>Rule 20:  IntegralType ::= char
  *</b>
  */'''
 class IntegralType4 ( AstToken ,IIntegralType):
@@ -20848,7 +20848,7 @@ class IntegralType4 ( AstToken ,IIntegralType):
 
 '''/**
  *<b>
-#*<li>Rule 21:  FloatingPointType ::= float
+*<li>Rule 21:  FloatingPointType ::= float
  *</b>
  */'''
 class FloatingPointType0 ( AstToken ,IFloatingPointType):
@@ -20877,7 +20877,7 @@ class FloatingPointType0 ( AstToken ,IFloatingPointType):
 
 '''/**
  *<b>
-#*<li>Rule 22:  FloatingPointType ::= double
+*<li>Rule 22:  FloatingPointType ::= double
  *</b>
  */'''
 class FloatingPointType1 ( AstToken ,IFloatingPointType):
@@ -20906,7 +20906,7 @@ class FloatingPointType1 ( AstToken ,IFloatingPointType):
 
 '''/**
  *<b>
-#*<li>Rule 45:  WildcardBounds ::= extends ReferenceType
+*<li>Rule 45:  WildcardBounds ::= extends ReferenceType
  *</b>
  */'''
 class WildcardBounds0 ( Ast ,IWildcardBounds):
@@ -20964,7 +20964,7 @@ class WildcardBounds0 ( Ast ,IWildcardBounds):
 
 '''/**
  *<b>
-#*<li>Rule 46:  WildcardBounds ::= super ReferenceType
+*<li>Rule 46:  WildcardBounds ::= super ReferenceType
  *</b>
  */'''
 class WildcardBounds1 ( Ast ,IWildcardBounds):
@@ -21022,7 +21022,7 @@ class WildcardBounds1 ( Ast ,IWildcardBounds):
 
 '''/**
  *<b>
-#*<li>Rule 80:  ClassModifier ::= public
+*<li>Rule 80:  ClassModifier ::= public
  *</b>
  */'''
 class ClassModifier0 ( AstToken ,IClassModifier):
@@ -21051,7 +21051,7 @@ class ClassModifier0 ( AstToken ,IClassModifier):
 
 '''/**
  *<b>
-#*<li>Rule 81:  ClassModifier ::= protected
+*<li>Rule 81:  ClassModifier ::= protected
  *</b>
  */'''
 class ClassModifier1 ( AstToken ,IClassModifier):
@@ -21080,7 +21080,7 @@ class ClassModifier1 ( AstToken ,IClassModifier):
 
 '''/**
  *<b>
-#*<li>Rule 82:  ClassModifier ::= private
+*<li>Rule 82:  ClassModifier ::= private
  *</b>
  */'''
 class ClassModifier2 ( AstToken ,IClassModifier):
@@ -21109,7 +21109,7 @@ class ClassModifier2 ( AstToken ,IClassModifier):
 
 '''/**
  *<b>
-#*<li>Rule 83:  ClassModifier ::= abstract
+*<li>Rule 83:  ClassModifier ::= abstract
  *</b>
  */'''
 class ClassModifier3 ( AstToken ,IClassModifier):
@@ -21138,7 +21138,7 @@ class ClassModifier3 ( AstToken ,IClassModifier):
 
 '''/**
  *<b>
-#*<li>Rule 84:  ClassModifier ::= static
+*<li>Rule 84:  ClassModifier ::= static
  *</b>
  */'''
 class ClassModifier4 ( AstToken ,IClassModifier):
@@ -21167,7 +21167,7 @@ class ClassModifier4 ( AstToken ,IClassModifier):
 
 '''/**
  *<b>
-#*<li>Rule 85:  ClassModifier ::= final
+*<li>Rule 85:  ClassModifier ::= final
  *</b>
  */'''
 class ClassModifier5 ( AstToken ,IClassModifier):
@@ -21196,7 +21196,7 @@ class ClassModifier5 ( AstToken ,IClassModifier):
 
 '''/**
  *<b>
-#*<li>Rule 86:  ClassModifier ::= strictfp
+*<li>Rule 86:  ClassModifier ::= strictfp
  *</b>
  */'''
 class ClassModifier6 ( AstToken ,IClassModifier):
@@ -21225,7 +21225,7 @@ class ClassModifier6 ( AstToken ,IClassModifier):
 
 '''/**
  *<b>
-#*<li>Rule 118:  FieldModifier ::= public
+*<li>Rule 118:  FieldModifier ::= public
  *</b>
  */'''
 class FieldModifier0 ( AstToken ,IFieldModifier):
@@ -21254,7 +21254,7 @@ class FieldModifier0 ( AstToken ,IFieldModifier):
 
 '''/**
  *<b>
-#*<li>Rule 119:  FieldModifier ::= protected
+*<li>Rule 119:  FieldModifier ::= protected
  *</b>
  */'''
 class FieldModifier1 ( AstToken ,IFieldModifier):
@@ -21283,7 +21283,7 @@ class FieldModifier1 ( AstToken ,IFieldModifier):
 
 '''/**
  *<b>
-#*<li>Rule 120:  FieldModifier ::= private
+*<li>Rule 120:  FieldModifier ::= private
  *</b>
  */'''
 class FieldModifier2 ( AstToken ,IFieldModifier):
@@ -21312,7 +21312,7 @@ class FieldModifier2 ( AstToken ,IFieldModifier):
 
 '''/**
  *<b>
-#*<li>Rule 121:  FieldModifier ::= static
+*<li>Rule 121:  FieldModifier ::= static
  *</b>
  */'''
 class FieldModifier3 ( AstToken ,IFieldModifier):
@@ -21341,7 +21341,7 @@ class FieldModifier3 ( AstToken ,IFieldModifier):
 
 '''/**
  *<b>
-#*<li>Rule 122:  FieldModifier ::= final
+*<li>Rule 122:  FieldModifier ::= final
  *</b>
  */'''
 class FieldModifier4 ( AstToken ,IFieldModifier):
@@ -21370,7 +21370,7 @@ class FieldModifier4 ( AstToken ,IFieldModifier):
 
 '''/**
  *<b>
-#*<li>Rule 123:  FieldModifier ::= transient
+*<li>Rule 123:  FieldModifier ::= transient
  *</b>
  */'''
 class FieldModifier5 ( AstToken ,IFieldModifier):
@@ -21399,7 +21399,7 @@ class FieldModifier5 ( AstToken ,IFieldModifier):
 
 '''/**
  *<b>
-#*<li>Rule 124:  FieldModifier ::= volatile
+*<li>Rule 124:  FieldModifier ::= volatile
  *</b>
  */'''
 class FieldModifier6 ( AstToken ,IFieldModifier):
@@ -21428,7 +21428,7 @@ class FieldModifier6 ( AstToken ,IFieldModifier):
 
 '''/**
  *<b>
-#*<li>Rule 129:  MethodDeclarator ::= identifier ( FormalParameterListopt )
+*<li>Rule 129:  MethodDeclarator ::= identifier ( FormalParameterListopt )
  *</b>
  */'''
 class MethodDeclarator0 ( Ast ,IMethodDeclarator):
@@ -21503,7 +21503,7 @@ class MethodDeclarator0 ( Ast ,IMethodDeclarator):
 
 '''/**
  *<b>
-#*<li>Rule 130:  MethodDeclarator ::= MethodDeclarator [ ]
+*<li>Rule 130:  MethodDeclarator ::= MethodDeclarator [ ]
  *</b>
  */'''
 class MethodDeclarator1 ( Ast ,IMethodDeclarator):
@@ -21568,7 +21568,7 @@ class MethodDeclarator1 ( Ast ,IMethodDeclarator):
 
 '''/**
  *<b>
-#*<li>Rule 144:  MethodModifier ::= public
+*<li>Rule 144:  MethodModifier ::= public
  *</b>
  */'''
 class MethodModifier0 ( AstToken ,IMethodModifier):
@@ -21597,7 +21597,7 @@ class MethodModifier0 ( AstToken ,IMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 145:  MethodModifier ::= protected
+*<li>Rule 145:  MethodModifier ::= protected
  *</b>
  */'''
 class MethodModifier1 ( AstToken ,IMethodModifier):
@@ -21626,7 +21626,7 @@ class MethodModifier1 ( AstToken ,IMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 146:  MethodModifier ::= private
+*<li>Rule 146:  MethodModifier ::= private
  *</b>
  */'''
 class MethodModifier2 ( AstToken ,IMethodModifier):
@@ -21655,7 +21655,7 @@ class MethodModifier2 ( AstToken ,IMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 147:  MethodModifier ::= abstract
+*<li>Rule 147:  MethodModifier ::= abstract
  *</b>
  */'''
 class MethodModifier3 ( AstToken ,IMethodModifier):
@@ -21684,7 +21684,7 @@ class MethodModifier3 ( AstToken ,IMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 148:  MethodModifier ::= static
+*<li>Rule 148:  MethodModifier ::= static
  *</b>
  */'''
 class MethodModifier4 ( AstToken ,IMethodModifier):
@@ -21713,7 +21713,7 @@ class MethodModifier4 ( AstToken ,IMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 149:  MethodModifier ::= final
+*<li>Rule 149:  MethodModifier ::= final
  *</b>
  */'''
 class MethodModifier5 ( AstToken ,IMethodModifier):
@@ -21742,7 +21742,7 @@ class MethodModifier5 ( AstToken ,IMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 150:  MethodModifier ::= synchronized
+*<li>Rule 150:  MethodModifier ::= synchronized
  *</b>
  */'''
 class MethodModifier6 ( AstToken ,IMethodModifier):
@@ -21771,7 +21771,7 @@ class MethodModifier6 ( AstToken ,IMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 151:  MethodModifier ::= native
+*<li>Rule 151:  MethodModifier ::= native
  *</b>
  */'''
 class MethodModifier7 ( AstToken ,IMethodModifier):
@@ -21800,7 +21800,7 @@ class MethodModifier7 ( AstToken ,IMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 152:  MethodModifier ::= strictfp
+*<li>Rule 152:  MethodModifier ::= strictfp
  *</b>
  */'''
 class MethodModifier8 ( AstToken ,IMethodModifier):
@@ -21829,7 +21829,7 @@ class MethodModifier8 ( AstToken ,IMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 168:  ConstructorModifier ::= public
+*<li>Rule 168:  ConstructorModifier ::= public
  *</b>
  */'''
 class ConstructorModifier0 ( AstToken ,IConstructorModifier):
@@ -21858,7 +21858,7 @@ class ConstructorModifier0 ( AstToken ,IConstructorModifier):
 
 '''/**
  *<b>
-#*<li>Rule 169:  ConstructorModifier ::= protected
+*<li>Rule 169:  ConstructorModifier ::= protected
  *</b>
  */'''
 class ConstructorModifier1 ( AstToken ,IConstructorModifier):
@@ -21887,7 +21887,7 @@ class ConstructorModifier1 ( AstToken ,IConstructorModifier):
 
 '''/**
  *<b>
-#*<li>Rule 170:  ConstructorModifier ::= private
+*<li>Rule 170:  ConstructorModifier ::= private
  *</b>
  */'''
 class ConstructorModifier2 ( AstToken ,IConstructorModifier):
@@ -21916,7 +21916,7 @@ class ConstructorModifier2 ( AstToken ,IConstructorModifier):
 
 '''/**
  *<b>
-#*<li>Rule 172:  ExplicitConstructorInvocation ::= TypeArgumentsopt this ( ArgumentListopt ) ;
+*<li>Rule 172:  ExplicitConstructorInvocation ::= TypeArgumentsopt this ( ArgumentListopt ) ;
  *</b>
  */'''
 class ExplicitConstructorInvocation0 ( Ast ,IExplicitConstructorInvocation):
@@ -22008,7 +22008,7 @@ class ExplicitConstructorInvocation0 ( Ast ,IExplicitConstructorInvocation):
 
 '''/**
  *<b>
-#*<li>Rule 173:  ExplicitConstructorInvocation ::= TypeArgumentsopt super ( ArgumentListopt ) ;
+*<li>Rule 173:  ExplicitConstructorInvocation ::= TypeArgumentsopt super ( ArgumentListopt ) ;
  *</b>
  */'''
 class ExplicitConstructorInvocation1 ( Ast ,IExplicitConstructorInvocation):
@@ -22100,7 +22100,7 @@ class ExplicitConstructorInvocation1 ( Ast ,IExplicitConstructorInvocation):
 
 '''/**
  *<b>
-#*<li>Rule 174:  ExplicitConstructorInvocation ::= Primary . TypeArgumentsopt super ( ArgumentListopt ) ;
+*<li>Rule 174:  ExplicitConstructorInvocation ::= Primary . TypeArgumentsopt super ( ArgumentListopt ) ;
  *</b>
  */'''
 class ExplicitConstructorInvocation2 ( Ast ,IExplicitConstructorInvocation):
@@ -22206,7 +22206,7 @@ class ExplicitConstructorInvocation2 ( Ast ,IExplicitConstructorInvocation):
 
 '''/**
  *<b>
-#*<li>Rule 188:  InterfaceModifier ::= public
+*<li>Rule 188:  InterfaceModifier ::= public
  *</b>
  */'''
 class InterfaceModifier0 ( AstToken ,IInterfaceModifier):
@@ -22235,7 +22235,7 @@ class InterfaceModifier0 ( AstToken ,IInterfaceModifier):
 
 '''/**
  *<b>
-#*<li>Rule 189:  InterfaceModifier ::= protected
+*<li>Rule 189:  InterfaceModifier ::= protected
  *</b>
  */'''
 class InterfaceModifier1 ( AstToken ,IInterfaceModifier):
@@ -22264,7 +22264,7 @@ class InterfaceModifier1 ( AstToken ,IInterfaceModifier):
 
 '''/**
  *<b>
-#*<li>Rule 190:  InterfaceModifier ::= private
+*<li>Rule 190:  InterfaceModifier ::= private
  *</b>
  */'''
 class InterfaceModifier2 ( AstToken ,IInterfaceModifier):
@@ -22293,7 +22293,7 @@ class InterfaceModifier2 ( AstToken ,IInterfaceModifier):
 
 '''/**
  *<b>
-#*<li>Rule 191:  InterfaceModifier ::= abstract
+*<li>Rule 191:  InterfaceModifier ::= abstract
  *</b>
  */'''
 class InterfaceModifier3 ( AstToken ,IInterfaceModifier):
@@ -22322,7 +22322,7 @@ class InterfaceModifier3 ( AstToken ,IInterfaceModifier):
 
 '''/**
  *<b>
-#*<li>Rule 192:  InterfaceModifier ::= static
+*<li>Rule 192:  InterfaceModifier ::= static
  *</b>
  */'''
 class InterfaceModifier4 ( AstToken ,IInterfaceModifier):
@@ -22351,7 +22351,7 @@ class InterfaceModifier4 ( AstToken ,IInterfaceModifier):
 
 '''/**
  *<b>
-#*<li>Rule 193:  InterfaceModifier ::= strictfp
+*<li>Rule 193:  InterfaceModifier ::= strictfp
  *</b>
  */'''
 class InterfaceModifier5 ( AstToken ,IInterfaceModifier):
@@ -22380,7 +22380,7 @@ class InterfaceModifier5 ( AstToken ,IInterfaceModifier):
 
 '''/**
  *<b>
-#*<li>Rule 194:  ExtendsInterfaces ::= extends InterfaceType
+*<li>Rule 194:  ExtendsInterfaces ::= extends InterfaceType
  *</b>
  */'''
 class ExtendsInterfaces0 ( Ast ,IExtendsInterfaces):
@@ -22438,7 +22438,7 @@ class ExtendsInterfaces0 ( Ast ,IExtendsInterfaces):
 
 '''/**
  *<b>
-#*<li>Rule 195:  ExtendsInterfaces ::= ExtendsInterfaces , InterfaceType
+*<li>Rule 195:  ExtendsInterfaces ::= ExtendsInterfaces , InterfaceType
  *</b>
  */'''
 class ExtendsInterfaces1 ( Ast ,IExtendsInterfaces):
@@ -22503,7 +22503,7 @@ class ExtendsInterfaces1 ( Ast ,IExtendsInterfaces):
 
 '''/**
  *<b>
-#*<li>Rule 208:  ConstantModifier ::= public
+*<li>Rule 208:  ConstantModifier ::= public
  *</b>
  */'''
 class ConstantModifier0 ( AstToken ,IConstantModifier):
@@ -22532,7 +22532,7 @@ class ConstantModifier0 ( AstToken ,IConstantModifier):
 
 '''/**
  *<b>
-#*<li>Rule 209:  ConstantModifier ::= static
+*<li>Rule 209:  ConstantModifier ::= static
  *</b>
  */'''
 class ConstantModifier1 ( AstToken ,IConstantModifier):
@@ -22561,7 +22561,7 @@ class ConstantModifier1 ( AstToken ,IConstantModifier):
 
 '''/**
  *<b>
-#*<li>Rule 210:  ConstantModifier ::= final
+*<li>Rule 210:  ConstantModifier ::= final
  *</b>
  */'''
 class ConstantModifier2 ( AstToken ,IConstantModifier):
@@ -22590,7 +22590,7 @@ class ConstantModifier2 ( AstToken ,IConstantModifier):
 
 '''/**
  *<b>
-#*<li>Rule 215:  AbstractMethodModifier ::= public
+*<li>Rule 215:  AbstractMethodModifier ::= public
  *</b>
  */'''
 class AbstractMethodModifier0 ( AstToken ,IAbstractMethodModifier):
@@ -22619,7 +22619,7 @@ class AbstractMethodModifier0 ( AstToken ,IAbstractMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 216:  AbstractMethodModifier ::= abstract
+*<li>Rule 216:  AbstractMethodModifier ::= abstract
  *</b>
  */'''
 class AbstractMethodModifier1 ( AstToken ,IAbstractMethodModifier):
@@ -22648,7 +22648,7 @@ class AbstractMethodModifier1 ( AstToken ,IAbstractMethodModifier):
 
 '''/**
  *<b>
-#*<li>Rule 221:  AnnotationTypeElementDeclaration ::= AbstractMethodModifiersopt Type identifier ( ) DefaultValueopt ;
+*<li>Rule 221:  AnnotationTypeElementDeclaration ::= AbstractMethodModifiersopt Type identifier ( ) DefaultValueopt ;
  *</b>
  */'''
 class AnnotationTypeElementDeclaration0 ( Ast ,IAnnotationTypeElementDeclaration):
@@ -22747,7 +22747,7 @@ class AnnotationTypeElementDeclaration0 ( Ast ,IAnnotationTypeElementDeclaration
 
 '''/**
  *<b>
-#*<li>Rule 227:  AnnotationTypeElementDeclaration ::= ;
+*<li>Rule 227:  AnnotationTypeElementDeclaration ::= ;
  *</b>
  */'''
 class AnnotationTypeElementDeclaration1 ( AstToken ,IAnnotationTypeElementDeclaration):
@@ -22776,7 +22776,7 @@ class AnnotationTypeElementDeclaration1 ( AstToken ,IAnnotationTypeElementDeclar
 
 '''/**
  *<b>
-#*<li>Rule 295:  AssertStatement ::= assert Expression ;
+*<li>Rule 295:  AssertStatement ::= assert Expression ;
  *</b>
  */'''
 class AssertStatement0 ( Ast ,IAssertStatement):
@@ -22841,7 +22841,7 @@ class AssertStatement0 ( Ast ,IAssertStatement):
 
 '''/**
  *<b>
-#*<li>Rule 296:  AssertStatement ::= assert Expression : Expression ;
+*<li>Rule 296:  AssertStatement ::= assert Expression : Expression ;
  *</b>
  */'''
 class AssertStatement1 ( Ast ,IAssertStatement):
@@ -22920,7 +22920,7 @@ class AssertStatement1 ( Ast ,IAssertStatement):
 
 '''/**
  *<b>
-#*<li>Rule 304:  SwitchLabel ::= case ConstantExpression :
+*<li>Rule 304:  SwitchLabel ::= case ConstantExpression :
  *</b>
  */'''
 class SwitchLabel0 ( Ast ,ISwitchLabel):
@@ -22985,7 +22985,7 @@ class SwitchLabel0 ( Ast ,ISwitchLabel):
 
 '''/**
  *<b>
-#*<li>Rule 305:  SwitchLabel ::= case EnumConstant :
+*<li>Rule 305:  SwitchLabel ::= case EnumConstant :
  *</b>
  */'''
 class SwitchLabel1 ( Ast ,ISwitchLabel):
@@ -23050,7 +23050,7 @@ class SwitchLabel1 ( Ast ,ISwitchLabel):
 
 '''/**
  *<b>
-#*<li>Rule 306:  SwitchLabel ::= default :
+*<li>Rule 306:  SwitchLabel ::= default :
  *</b>
  */'''
 class SwitchLabel2 ( Ast ,ISwitchLabel):
@@ -23108,7 +23108,7 @@ class SwitchLabel2 ( Ast ,ISwitchLabel):
 
 '''/**
  *<b>
-#*<li>Rule 326:  TryStatement ::= try Block Catches
+*<li>Rule 326:  TryStatement ::= try Block Catches
  *</b>
  */'''
 class TryStatement0 ( Ast ,ITryStatement):
@@ -23173,7 +23173,7 @@ class TryStatement0 ( Ast ,ITryStatement):
 
 '''/**
  *<b>
-#*<li>Rule 327:  TryStatement ::= try Block Catchesopt Finally
+*<li>Rule 327:  TryStatement ::= try Block Catchesopt Finally
  *</b>
  */'''
 class TryStatement1 ( Ast ,ITryStatement):
@@ -23248,7 +23248,7 @@ class TryStatement1 ( Ast ,ITryStatement):
 
 '''/**
  *<b>
-#*<li>Rule 335:  PrimaryNoNewArray ::= Type . class
+*<li>Rule 335:  PrimaryNoNewArray ::= Type . class
  *</b>
  */'''
 class PrimaryNoNewArray0 ( Ast ,IPrimaryNoNewArray):
@@ -23313,7 +23313,7 @@ class PrimaryNoNewArray0 ( Ast ,IPrimaryNoNewArray):
 
 '''/**
  *<b>
-#*<li>Rule 336:  PrimaryNoNewArray ::= void . class
+*<li>Rule 336:  PrimaryNoNewArray ::= void . class
  *</b>
  */'''
 class PrimaryNoNewArray1 ( Ast ,IPrimaryNoNewArray):
@@ -23378,7 +23378,7 @@ class PrimaryNoNewArray1 ( Ast ,IPrimaryNoNewArray):
 
 '''/**
  *<b>
-#*<li>Rule 337:  PrimaryNoNewArray ::= this
+*<li>Rule 337:  PrimaryNoNewArray ::= this
  *</b>
  */'''
 class PrimaryNoNewArray2 ( AstToken ,IPrimaryNoNewArray):
@@ -23407,7 +23407,7 @@ class PrimaryNoNewArray2 ( AstToken ,IPrimaryNoNewArray):
 
 '''/**
  *<b>
-#*<li>Rule 338:  PrimaryNoNewArray ::= ClassName . this
+*<li>Rule 338:  PrimaryNoNewArray ::= ClassName . this
  *</b>
  */'''
 class PrimaryNoNewArray3 ( Ast ,IPrimaryNoNewArray):
@@ -23472,7 +23472,7 @@ class PrimaryNoNewArray3 ( Ast ,IPrimaryNoNewArray):
 
 '''/**
  *<b>
-#*<li>Rule 339:  PrimaryNoNewArray ::= ( Expression )
+*<li>Rule 339:  PrimaryNoNewArray ::= ( Expression )
  *</b>
  */'''
 class PrimaryNoNewArray4 ( Ast ,IPrimaryNoNewArray):
@@ -23537,7 +23537,7 @@ class PrimaryNoNewArray4 ( Ast ,IPrimaryNoNewArray):
 
 '''/**
  *<b>
-#*<li>Rule 344:  Literal ::= IntegerLiteral
+*<li>Rule 344:  Literal ::= IntegerLiteral
  *</b>
  */'''
 class Literal0 ( AstToken ,ILiteral):
@@ -23566,7 +23566,7 @@ class Literal0 ( AstToken ,ILiteral):
 
 '''/**
  *<b>
-#*<li>Rule 345:  Literal ::= LongLiteral
+*<li>Rule 345:  Literal ::= LongLiteral
  *</b>
  */'''
 class Literal1 ( AstToken ,ILiteral):
@@ -23595,7 +23595,7 @@ class Literal1 ( AstToken ,ILiteral):
 
 '''/**
  *<b>
-#*<li>Rule 346:  Literal ::= FloatingPointLiteral
+*<li>Rule 346:  Literal ::= FloatingPointLiteral
  *</b>
  */'''
 class Literal2 ( AstToken ,ILiteral):
@@ -23624,7 +23624,7 @@ class Literal2 ( AstToken ,ILiteral):
 
 '''/**
  *<b>
-#*<li>Rule 347:  Literal ::= DoubleLiteral
+*<li>Rule 347:  Literal ::= DoubleLiteral
  *</b>
  */'''
 class Literal3 ( AstToken ,ILiteral):
@@ -23653,7 +23653,7 @@ class Literal3 ( AstToken ,ILiteral):
 
 '''/**
  *<b>
-#*<li>Rule 349:  Literal ::= CharacterLiteral
+*<li>Rule 349:  Literal ::= CharacterLiteral
  *</b>
  */'''
 class Literal4 ( AstToken ,ILiteral):
@@ -23682,7 +23682,7 @@ class Literal4 ( AstToken ,ILiteral):
 
 '''/**
  *<b>
-#*<li>Rule 350:  Literal ::= StringLiteral
+*<li>Rule 350:  Literal ::= StringLiteral
  *</b>
  */'''
 class Literal5 ( AstToken ,ILiteral):
@@ -23711,7 +23711,7 @@ class Literal5 ( AstToken ,ILiteral):
 
 '''/**
  *<b>
-#*<li>Rule 351:  Literal ::= null
+*<li>Rule 351:  Literal ::= null
  *</b>
  */'''
 class Literal6 ( AstToken ,ILiteral):
@@ -23740,7 +23740,7 @@ class Literal6 ( AstToken ,ILiteral):
 
 '''/**
  *<b>
-#*<li>Rule 352:  BooleanLiteral ::= true
+*<li>Rule 352:  BooleanLiteral ::= true
  *</b>
  */'''
 class BooleanLiteral0 ( AstToken ,IBooleanLiteral):
@@ -23769,7 +23769,7 @@ class BooleanLiteral0 ( AstToken ,IBooleanLiteral):
 
 '''/**
  *<b>
-#*<li>Rule 353:  BooleanLiteral ::= false
+*<li>Rule 353:  BooleanLiteral ::= false
  *</b>
  */'''
 class BooleanLiteral1 ( AstToken ,IBooleanLiteral):
@@ -23798,7 +23798,7 @@ class BooleanLiteral1 ( AstToken ,IBooleanLiteral):
 
 '''/**
  *<b>
-#*<li>Rule 354:  ClassInstanceCreationExpression ::= new TypeArgumentsopt ClassOrInterfaceType TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
+*<li>Rule 354:  ClassInstanceCreationExpression ::= new TypeArgumentsopt ClassOrInterfaceType TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
  *</b>
  */'''
 class ClassInstanceCreationExpression0 ( Ast ,IClassInstanceCreationExpression):
@@ -23910,7 +23910,7 @@ class ClassInstanceCreationExpression0 ( Ast ,IClassInstanceCreationExpression):
 
 '''/**
  *<b>
-#*<li>Rule 355:  ClassInstanceCreationExpression ::= Primary . new TypeArgumentsopt identifier TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
+*<li>Rule 355:  ClassInstanceCreationExpression ::= Primary . new TypeArgumentsopt identifier TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
  *</b>
  */'''
 class ClassInstanceCreationExpression1 ( Ast ,IClassInstanceCreationExpression):
@@ -24036,7 +24036,7 @@ class ClassInstanceCreationExpression1 ( Ast ,IClassInstanceCreationExpression):
 
 '''/**
  *<b>
-#*<li>Rule 358:  ArrayCreationExpression ::= new PrimitiveType DimExprs Dimsopt
+*<li>Rule 358:  ArrayCreationExpression ::= new PrimitiveType DimExprs Dimsopt
  *</b>
  */'''
 class ArrayCreationExpression0 ( Ast ,IArrayCreationExpression):
@@ -24111,7 +24111,7 @@ class ArrayCreationExpression0 ( Ast ,IArrayCreationExpression):
 
 '''/**
  *<b>
-#*<li>Rule 359:  ArrayCreationExpression ::= new ClassOrInterfaceType DimExprs Dimsopt
+*<li>Rule 359:  ArrayCreationExpression ::= new ClassOrInterfaceType DimExprs Dimsopt
  *</b>
  */'''
 class ArrayCreationExpression1 ( Ast ,IArrayCreationExpression):
@@ -24186,7 +24186,7 @@ class ArrayCreationExpression1 ( Ast ,IArrayCreationExpression):
 
 '''/**
  *<b>
-#*<li>Rule 360:  ArrayCreationExpression ::= new PrimitiveType Dims ArrayInitializer
+*<li>Rule 360:  ArrayCreationExpression ::= new PrimitiveType Dims ArrayInitializer
  *</b>
  */'''
 class ArrayCreationExpression2 ( Ast ,IArrayCreationExpression):
@@ -24258,7 +24258,7 @@ class ArrayCreationExpression2 ( Ast ,IArrayCreationExpression):
 
 '''/**
  *<b>
-#*<li>Rule 361:  ArrayCreationExpression ::= new ClassOrInterfaceType Dims ArrayInitializer
+*<li>Rule 361:  ArrayCreationExpression ::= new ClassOrInterfaceType Dims ArrayInitializer
  *</b>
  */'''
 class ArrayCreationExpression3 ( Ast ,IArrayCreationExpression):
@@ -24330,7 +24330,7 @@ class ArrayCreationExpression3 ( Ast ,IArrayCreationExpression):
 
 '''/**
  *<b>
-#*<li>Rule 365:  Dims ::= [ ]
+*<li>Rule 365:  Dims ::= [ ]
  *</b>
  */'''
 class Dims0 ( Ast ,IDims):
@@ -24388,7 +24388,7 @@ class Dims0 ( Ast ,IDims):
 
 '''/**
  *<b>
-#*<li>Rule 366:  Dims ::= Dims [ ]
+*<li>Rule 366:  Dims ::= Dims [ ]
  *</b>
  */'''
 class Dims1 ( Ast ,IDims):
@@ -24453,7 +24453,7 @@ class Dims1 ( Ast ,IDims):
 
 '''/**
  *<b>
-#*<li>Rule 367:  FieldAccess ::= Primary . identifier
+*<li>Rule 367:  FieldAccess ::= Primary . identifier
  *</b>
  */'''
 class FieldAccess0 ( Ast ,IFieldAccess):
@@ -24518,7 +24518,7 @@ class FieldAccess0 ( Ast ,IFieldAccess):
 
 '''/**
  *<b>
-#*<li>Rule 368:  FieldAccess ::= super . identifier
+*<li>Rule 368:  FieldAccess ::= super . identifier
  *</b>
  */'''
 class FieldAccess1 ( Ast ,IFieldAccess):
@@ -24583,7 +24583,7 @@ class FieldAccess1 ( Ast ,IFieldAccess):
 
 '''/**
  *<b>
-#*<li>Rule 369:  FieldAccess ::= ClassName . super . identifier
+*<li>Rule 369:  FieldAccess ::= ClassName . super . identifier
  *</b>
  */'''
 class FieldAccess2 ( Ast ,IFieldAccess):
@@ -24662,7 +24662,7 @@ class FieldAccess2 ( Ast ,IFieldAccess):
 
 '''/**
  *<b>
-#*<li>Rule 370:  MethodInvocation ::= MethodName ( ArgumentListopt )
+*<li>Rule 370:  MethodInvocation ::= MethodName ( ArgumentListopt )
  *</b>
  */'''
 class MethodInvocation0 ( Ast ,IMethodInvocation):
@@ -24737,7 +24737,7 @@ class MethodInvocation0 ( Ast ,IMethodInvocation):
 
 '''/**
  *<b>
-#*<li>Rule 371:  MethodInvocation ::= Primary . TypeArgumentsopt identifier ( ArgumentListopt )
+*<li>Rule 371:  MethodInvocation ::= Primary . TypeArgumentsopt identifier ( ArgumentListopt )
  *</b>
  */'''
 class MethodInvocation1 ( Ast ,IMethodInvocation):
@@ -24836,7 +24836,7 @@ class MethodInvocation1 ( Ast ,IMethodInvocation):
 
 '''/**
  *<b>
-#*<li>Rule 372:  MethodInvocation ::= super . TypeArgumentsopt identifier ( ArgumentListopt )
+*<li>Rule 372:  MethodInvocation ::= super . TypeArgumentsopt identifier ( ArgumentListopt )
  *</b>
  */'''
 class MethodInvocation2 ( Ast ,IMethodInvocation):
@@ -24935,7 +24935,7 @@ class MethodInvocation2 ( Ast ,IMethodInvocation):
 
 '''/**
  *<b>
-#*<li>Rule 373:  MethodInvocation ::= ClassName . super . TypeArgumentsopt identifier ( ArgumentListopt )
+*<li>Rule 373:  MethodInvocation ::= ClassName . super . TypeArgumentsopt identifier ( ArgumentListopt )
  *</b>
  */'''
 class MethodInvocation3 ( Ast ,IMethodInvocation):
@@ -25048,7 +25048,7 @@ class MethodInvocation3 ( Ast ,IMethodInvocation):
 
 '''/**
  *<b>
-#*<li>Rule 374:  MethodInvocation ::= TypeName . TypeArguments identifier ( ArgumentListopt )
+*<li>Rule 374:  MethodInvocation ::= TypeName . TypeArguments identifier ( ArgumentListopt )
  *</b>
  */'''
 class MethodInvocation4 ( Ast ,IMethodInvocation):
@@ -25144,7 +25144,7 @@ class MethodInvocation4 ( Ast ,IMethodInvocation):
 
 '''/**
  *<b>
-#*<li>Rule 375:  ArrayAccess ::= ExpressionName [ Expression ]
+*<li>Rule 375:  ArrayAccess ::= ExpressionName [ Expression ]
  *</b>
  */'''
 class ArrayAccess0 ( Ast ,IArrayAccess):
@@ -25216,7 +25216,7 @@ class ArrayAccess0 ( Ast ,IArrayAccess):
 
 '''/**
  *<b>
-#*<li>Rule 376:  ArrayAccess ::= PrimaryNoNewArray [ Expression ]
+*<li>Rule 376:  ArrayAccess ::= PrimaryNoNewArray [ Expression ]
  *</b>
  */'''
 class ArrayAccess1 ( Ast ,IArrayAccess):
@@ -25288,7 +25288,7 @@ class ArrayAccess1 ( Ast ,IArrayAccess):
 
 '''/**
  *<b>
-#*<li>Rule 385:  UnaryExpression ::= + UnaryExpression
+*<li>Rule 385:  UnaryExpression ::= + UnaryExpression
  *</b>
  */'''
 class UnaryExpression0 ( Ast ,IUnaryExpression):
@@ -25346,7 +25346,7 @@ class UnaryExpression0 ( Ast ,IUnaryExpression):
 
 '''/**
  *<b>
-#*<li>Rule 386:  UnaryExpression ::= - UnaryExpression
+*<li>Rule 386:  UnaryExpression ::= - UnaryExpression
  *</b>
  */'''
 class UnaryExpression1 ( Ast ,IUnaryExpression):
@@ -25404,7 +25404,7 @@ class UnaryExpression1 ( Ast ,IUnaryExpression):
 
 '''/**
  *<b>
-#*<li>Rule 391:  UnaryExpressionNotPlusMinus ::= ~ UnaryExpression
+*<li>Rule 391:  UnaryExpressionNotPlusMinus ::= ~ UnaryExpression
  *</b>
  */'''
 class UnaryExpressionNotPlusMinus0 ( Ast ,IUnaryExpressionNotPlusMinus):
@@ -25462,7 +25462,7 @@ class UnaryExpressionNotPlusMinus0 ( Ast ,IUnaryExpressionNotPlusMinus):
 
 '''/**
  *<b>
-#*<li>Rule 392:  UnaryExpressionNotPlusMinus ::= ! UnaryExpression
+*<li>Rule 392:  UnaryExpressionNotPlusMinus ::= ! UnaryExpression
  *</b>
  */'''
 class UnaryExpressionNotPlusMinus1 ( Ast ,IUnaryExpressionNotPlusMinus):
@@ -25520,7 +25520,7 @@ class UnaryExpressionNotPlusMinus1 ( Ast ,IUnaryExpressionNotPlusMinus):
 
 '''/**
  *<b>
-#*<li>Rule 394:  CastExpression ::= ( PrimitiveType Dimsopt ) UnaryExpression
+*<li>Rule 394:  CastExpression ::= ( PrimitiveType Dimsopt ) UnaryExpression
  *</b>
  */'''
 class CastExpression0 ( Ast ,ICastExpression):
@@ -25602,7 +25602,7 @@ class CastExpression0 ( Ast ,ICastExpression):
 
 '''/**
  *<b>
-#*<li>Rule 395:  CastExpression ::= ( ReferenceType ) UnaryExpressionNotPlusMinus
+*<li>Rule 395:  CastExpression ::= ( ReferenceType ) UnaryExpressionNotPlusMinus
  *</b>
  */'''
 class CastExpression1 ( Ast ,ICastExpression):
@@ -25674,7 +25674,7 @@ class CastExpression1 ( Ast ,ICastExpression):
 
 '''/**
  *<b>
-#*<li>Rule 397:  MultiplicativeExpression ::= MultiplicativeExpression * UnaryExpression
+*<li>Rule 397:  MultiplicativeExpression ::= MultiplicativeExpression * UnaryExpression
  *</b>
  */'''
 class MultiplicativeExpression0 ( Ast ,IMultiplicativeExpression):
@@ -25739,7 +25739,7 @@ class MultiplicativeExpression0 ( Ast ,IMultiplicativeExpression):
 
 '''/**
  *<b>
-#*<li>Rule 398:  MultiplicativeExpression ::= MultiplicativeExpression / UnaryExpression
+*<li>Rule 398:  MultiplicativeExpression ::= MultiplicativeExpression / UnaryExpression
  *</b>
  */'''
 class MultiplicativeExpression1 ( Ast ,IMultiplicativeExpression):
@@ -25804,7 +25804,7 @@ class MultiplicativeExpression1 ( Ast ,IMultiplicativeExpression):
 
 '''/**
  *<b>
-#*<li>Rule 399:  MultiplicativeExpression ::= MultiplicativeExpression % UnaryExpression
+*<li>Rule 399:  MultiplicativeExpression ::= MultiplicativeExpression % UnaryExpression
  *</b>
  */'''
 class MultiplicativeExpression2 ( Ast ,IMultiplicativeExpression):
@@ -25869,7 +25869,7 @@ class MultiplicativeExpression2 ( Ast ,IMultiplicativeExpression):
 
 '''/**
  *<b>
-#*<li>Rule 401:  AdditiveExpression ::= AdditiveExpression + MultiplicativeExpression
+*<li>Rule 401:  AdditiveExpression ::= AdditiveExpression + MultiplicativeExpression
  *</b>
  */'''
 class AdditiveExpression0 ( Ast ,IAdditiveExpression):
@@ -25934,7 +25934,7 @@ class AdditiveExpression0 ( Ast ,IAdditiveExpression):
 
 '''/**
  *<b>
-#*<li>Rule 402:  AdditiveExpression ::= AdditiveExpression - MultiplicativeExpression
+*<li>Rule 402:  AdditiveExpression ::= AdditiveExpression - MultiplicativeExpression
  *</b>
  */'''
 class AdditiveExpression1 ( Ast ,IAdditiveExpression):
@@ -25999,7 +25999,7 @@ class AdditiveExpression1 ( Ast ,IAdditiveExpression):
 
 '''/**
  *<b>
-#*<li>Rule 404:  ShiftExpression ::= ShiftExpression << AdditiveExpression
+*<li>Rule 404:  ShiftExpression ::= ShiftExpression << AdditiveExpression
  *</b>
  */'''
 class ShiftExpression0 ( Ast ,IShiftExpression):
@@ -26064,7 +26064,7 @@ class ShiftExpression0 ( Ast ,IShiftExpression):
 
 '''/**
  *<b>
-#*<li>Rule 405:  ShiftExpression ::= ShiftExpression > > AdditiveExpression
+*<li>Rule 405:  ShiftExpression ::= ShiftExpression > > AdditiveExpression
  *</b>
  */'''
 class ShiftExpression1 ( Ast ,IShiftExpression):
@@ -26136,7 +26136,7 @@ class ShiftExpression1 ( Ast ,IShiftExpression):
 
 '''/**
  *<b>
-#*<li>Rule 406:  ShiftExpression ::= ShiftExpression > > > AdditiveExpression
+*<li>Rule 406:  ShiftExpression ::= ShiftExpression > > > AdditiveExpression
  *</b>
  */'''
 class ShiftExpression2 ( Ast ,IShiftExpression):
@@ -26215,7 +26215,7 @@ class ShiftExpression2 ( Ast ,IShiftExpression):
 
 '''/**
  *<b>
-#*<li>Rule 408:  RelationalExpression ::= RelationalExpression < ShiftExpression
+*<li>Rule 408:  RelationalExpression ::= RelationalExpression < ShiftExpression
  *</b>
  */'''
 class RelationalExpression0 ( Ast ,IRelationalExpression):
@@ -26280,7 +26280,7 @@ class RelationalExpression0 ( Ast ,IRelationalExpression):
 
 '''/**
  *<b>
-#*<li>Rule 409:  RelationalExpression ::= RelationalExpression > ShiftExpression
+*<li>Rule 409:  RelationalExpression ::= RelationalExpression > ShiftExpression
  *</b>
  */'''
 class RelationalExpression1 ( Ast ,IRelationalExpression):
@@ -26345,7 +26345,7 @@ class RelationalExpression1 ( Ast ,IRelationalExpression):
 
 '''/**
  *<b>
-#*<li>Rule 410:  RelationalExpression ::= RelationalExpression <= ShiftExpression
+*<li>Rule 410:  RelationalExpression ::= RelationalExpression <= ShiftExpression
  *</b>
  */'''
 class RelationalExpression2 ( Ast ,IRelationalExpression):
@@ -26410,7 +26410,7 @@ class RelationalExpression2 ( Ast ,IRelationalExpression):
 
 '''/**
  *<b>
-#*<li>Rule 411:  RelationalExpression ::= RelationalExpression > = ShiftExpression
+*<li>Rule 411:  RelationalExpression ::= RelationalExpression > = ShiftExpression
  *</b>
  */'''
 class RelationalExpression3 ( Ast ,IRelationalExpression):
@@ -26482,7 +26482,7 @@ class RelationalExpression3 ( Ast ,IRelationalExpression):
 
 '''/**
  *<b>
-#*<li>Rule 412:  RelationalExpression ::= RelationalExpression instanceof ReferenceType
+*<li>Rule 412:  RelationalExpression ::= RelationalExpression instanceof ReferenceType
  *</b>
  */'''
 class RelationalExpression4 ( Ast ,IRelationalExpression):
@@ -26547,7 +26547,7 @@ class RelationalExpression4 ( Ast ,IRelationalExpression):
 
 '''/**
  *<b>
-#*<li>Rule 414:  EqualityExpression ::= EqualityExpression == RelationalExpression
+*<li>Rule 414:  EqualityExpression ::= EqualityExpression == RelationalExpression
  *</b>
  */'''
 class EqualityExpression0 ( Ast ,IEqualityExpression):
@@ -26612,7 +26612,7 @@ class EqualityExpression0 ( Ast ,IEqualityExpression):
 
 '''/**
  *<b>
-#*<li>Rule 415:  EqualityExpression ::= EqualityExpression != RelationalExpression
+*<li>Rule 415:  EqualityExpression ::= EqualityExpression != RelationalExpression
  *</b>
  */'''
 class EqualityExpression1 ( Ast ,IEqualityExpression):
@@ -26677,7 +26677,7 @@ class EqualityExpression1 ( Ast ,IEqualityExpression):
 
 '''/**
  *<b>
-#*<li>Rule 434:  AssignmentOperator ::= =
+*<li>Rule 434:  AssignmentOperator ::= =
  *</b>
  */'''
 class AssignmentOperator0 ( AstToken ,IAssignmentOperator):
@@ -26706,7 +26706,7 @@ class AssignmentOperator0 ( AstToken ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 435:  AssignmentOperator ::= *=
+*<li>Rule 435:  AssignmentOperator ::= *=
  *</b>
  */'''
 class AssignmentOperator1 ( AstToken ,IAssignmentOperator):
@@ -26735,7 +26735,7 @@ class AssignmentOperator1 ( AstToken ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 436:  AssignmentOperator ::= /=
+*<li>Rule 436:  AssignmentOperator ::= /=
  *</b>
  */'''
 class AssignmentOperator2 ( AstToken ,IAssignmentOperator):
@@ -26764,7 +26764,7 @@ class AssignmentOperator2 ( AstToken ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 437:  AssignmentOperator ::= %=
+*<li>Rule 437:  AssignmentOperator ::= %=
  *</b>
  */'''
 class AssignmentOperator3 ( AstToken ,IAssignmentOperator):
@@ -26793,7 +26793,7 @@ class AssignmentOperator3 ( AstToken ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 438:  AssignmentOperator ::= +=
+*<li>Rule 438:  AssignmentOperator ::= +=
  *</b>
  */'''
 class AssignmentOperator4 ( AstToken ,IAssignmentOperator):
@@ -26822,7 +26822,7 @@ class AssignmentOperator4 ( AstToken ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 439:  AssignmentOperator ::= -=
+*<li>Rule 439:  AssignmentOperator ::= -=
  *</b>
  */'''
 class AssignmentOperator5 ( AstToken ,IAssignmentOperator):
@@ -26851,7 +26851,7 @@ class AssignmentOperator5 ( AstToken ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 440:  AssignmentOperator ::= <<=
+*<li>Rule 440:  AssignmentOperator ::= <<=
  *</b>
  */'''
 class AssignmentOperator6 ( AstToken ,IAssignmentOperator):
@@ -26880,7 +26880,7 @@ class AssignmentOperator6 ( AstToken ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 441:  AssignmentOperator ::= > > =
+*<li>Rule 441:  AssignmentOperator ::= > > =
  *</b>
  */'''
 class AssignmentOperator7 ( Ast ,IAssignmentOperator):
@@ -26945,7 +26945,7 @@ class AssignmentOperator7 ( Ast ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 442:  AssignmentOperator ::= > > > =
+*<li>Rule 442:  AssignmentOperator ::= > > > =
  *</b>
  */'''
 class AssignmentOperator8 ( Ast ,IAssignmentOperator):
@@ -27017,7 +27017,7 @@ class AssignmentOperator8 ( Ast ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 443:  AssignmentOperator ::= &=
+*<li>Rule 443:  AssignmentOperator ::= &=
  *</b>
  */'''
 class AssignmentOperator9 ( AstToken ,IAssignmentOperator):
@@ -27046,7 +27046,7 @@ class AssignmentOperator9 ( AstToken ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 444:  AssignmentOperator ::= ^=
+*<li>Rule 444:  AssignmentOperator ::= ^=
  *</b>
  */'''
 class AssignmentOperator10 ( AstToken ,IAssignmentOperator):
@@ -27075,7 +27075,7 @@ class AssignmentOperator10 ( AstToken ,IAssignmentOperator):
 
 '''/**
  *<b>
-#*<li>Rule 445:  AssignmentOperator ::= |=
+*<li>Rule 445:  AssignmentOperator ::= |=
  *</b>
  */'''
 class AssignmentOperator11 ( AstToken ,IAssignmentOperator):

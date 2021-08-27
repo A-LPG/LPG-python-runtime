@@ -2824,7 +2824,7 @@ class ASTNodeToken ( ASTNode, IASTNodeToken):
 
 '''/**
  *<b>
-#*<li>Rule 1:  LPG ::= options_segment LPG_INPUT
+*<li>Rule 1:  LPG ::= options_segment LPG_INPUT
  *</b>
  */'''
 class LPG ( ASTNode ,ILPG):
@@ -2885,8 +2885,8 @@ class LPG ( ASTNode ,ILPG):
 
 '''/**
  *<b>
-#*<li>Rule 2:  LPG_INPUT ::= $Empty
-#*<li>Rule 3:  LPG_INPUT ::= LPG_INPUT LPG_item
+*<li>Rule 2:  LPG_INPUT ::= $Empty
+*<li>Rule 3:  LPG_INPUT ::= LPG_INPUT LPG_item
  *</b>
  */'''
 class LPG_itemList ( AbstractASTNodeList, ILPG_INPUT):
@@ -2938,7 +2938,7 @@ class LPG_itemList ( AbstractASTNodeList, ILPG_INPUT):
 
 '''/**
  *<b>
-#*<li>Rule 4:  LPG_item ::= ALIAS_KEY$ alias_segment END_KEY_OPT$
+*<li>Rule 4:  LPG_item ::= ALIAS_KEY$ alias_segment END_KEY_OPT$
  *</b>
  */'''
 class AliasSeg ( ASTNode ,ILPG_item):
@@ -2987,7 +2987,7 @@ class AliasSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 5:  LPG_item ::= AST_KEY$ ast_segment END_KEY_OPT$
+*<li>Rule 5:  LPG_item ::= AST_KEY$ ast_segment END_KEY_OPT$
  *</b>
  */'''
 class AstSeg ( ASTNode ,ILPG_item):
@@ -3036,7 +3036,7 @@ class AstSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 6:  LPG_item ::= DEFINE_KEY$ define_segment END_KEY_OPT$
+*<li>Rule 6:  LPG_item ::= DEFINE_KEY$ define_segment END_KEY_OPT$
  *</b>
  */'''
 class DefineSeg ( ASTNode ,ILPG_item):
@@ -3085,7 +3085,7 @@ class DefineSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 7:  LPG_item ::= EOF_KEY$ eof_segment END_KEY_OPT$
+*<li>Rule 7:  LPG_item ::= EOF_KEY$ eof_segment END_KEY_OPT$
  *</b>
  */'''
 class EofSeg ( ASTNode ,ILPG_item):
@@ -3134,7 +3134,7 @@ class EofSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 8:  LPG_item ::= EOL_KEY$ eol_segment END_KEY_OPT$
+*<li>Rule 8:  LPG_item ::= EOL_KEY$ eol_segment END_KEY_OPT$
  *</b>
  */'''
 class EolSeg ( ASTNode ,ILPG_item):
@@ -3183,7 +3183,7 @@ class EolSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 9:  LPG_item ::= ERROR_KEY$ error_segment END_KEY_OPT$
+*<li>Rule 9:  LPG_item ::= ERROR_KEY$ error_segment END_KEY_OPT$
  *</b>
  */'''
 class ErrorSeg ( ASTNode ,ILPG_item):
@@ -3232,7 +3232,7 @@ class ErrorSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 10:  LPG_item ::= EXPORT_KEY$ export_segment END_KEY_OPT$
+*<li>Rule 10:  LPG_item ::= EXPORT_KEY$ export_segment END_KEY_OPT$
  *</b>
  */'''
 class ExportSeg ( ASTNode ,ILPG_item):
@@ -3281,7 +3281,7 @@ class ExportSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 11:  LPG_item ::= GLOBALS_KEY$ globals_segment END_KEY_OPT$
+*<li>Rule 11:  LPG_item ::= GLOBALS_KEY$ globals_segment END_KEY_OPT$
  *</b>
  */'''
 class GlobalsSeg ( ASTNode ,ILPG_item):
@@ -3330,7 +3330,7 @@ class GlobalsSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 12:  LPG_item ::= HEADERS_KEY$ headers_segment END_KEY_OPT$
+*<li>Rule 12:  LPG_item ::= HEADERS_KEY$ headers_segment END_KEY_OPT$
  *</b>
  */'''
 class HeadersSeg ( ASTNode ,ILPG_item):
@@ -3379,7 +3379,7 @@ class HeadersSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 13:  LPG_item ::= IDENTIFIER_KEY$ identifier_segment END_KEY_OPT$
+*<li>Rule 13:  LPG_item ::= IDENTIFIER_KEY$ identifier_segment END_KEY_OPT$
  *</b>
  */'''
 class IdentifierSeg ( ASTNode ,ILPG_item):
@@ -3428,7 +3428,7 @@ class IdentifierSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 14:  LPG_item ::= IMPORT_KEY$ import_segment END_KEY_OPT$
+*<li>Rule 14:  LPG_item ::= IMPORT_KEY$ import_segment END_KEY_OPT$
  *</b>
  */'''
 class ImportSeg ( ASTNode ,ILPG_item):
@@ -3477,7 +3477,7 @@ class ImportSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 15:  LPG_item ::= INCLUDE_KEY$ include_segment END_KEY_OPT$
+*<li>Rule 15:  LPG_item ::= INCLUDE_KEY$ include_segment END_KEY_OPT$
  *</b>
  */'''
 class IncludeSeg ( ASTNode ,ILPG_item):
@@ -3526,7 +3526,7 @@ class IncludeSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 16:  LPG_item ::= KEYWORDS_KEY$ keywords_segment END_KEY_OPT$
+*<li>Rule 16:  LPG_item ::= KEYWORDS_KEY$ keywords_segment END_KEY_OPT$
  *</b>
  */'''
 class KeywordsSeg ( ASTNode ,ILPG_item):
@@ -3575,7 +3575,7 @@ class KeywordsSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 17:  LPG_item ::= NAMES_KEY$ names_segment END_KEY_OPT$
+*<li>Rule 17:  LPG_item ::= NAMES_KEY$ names_segment END_KEY_OPT$
  *</b>
  */'''
 class NamesSeg ( ASTNode ,ILPG_item):
@@ -3624,7 +3624,7 @@ class NamesSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 18:  LPG_item ::= NOTICE_KEY$ notice_segment END_KEY_OPT$
+*<li>Rule 18:  LPG_item ::= NOTICE_KEY$ notice_segment END_KEY_OPT$
  *</b>
  */'''
 class NoticeSeg ( ASTNode ,ILPG_item):
@@ -3673,7 +3673,7 @@ class NoticeSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 19:  LPG_item ::= RULES_KEY$ rules_segment END_KEY_OPT$
+*<li>Rule 19:  LPG_item ::= RULES_KEY$ rules_segment END_KEY_OPT$
  *</b>
  */'''
 class RulesSeg ( ASTNode ,ILPG_item):
@@ -3722,7 +3722,7 @@ class RulesSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 20:  LPG_item ::= SOFT_KEYWORDS_KEY$ keywords_segment END_KEY_OPT$
+*<li>Rule 20:  LPG_item ::= SOFT_KEYWORDS_KEY$ keywords_segment END_KEY_OPT$
  *</b>
  */'''
 class SoftKeywordsSeg ( ASTNode ,ILPG_item):
@@ -3771,7 +3771,7 @@ class SoftKeywordsSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 21:  LPG_item ::= START_KEY$ start_segment END_KEY_OPT$
+*<li>Rule 21:  LPG_item ::= START_KEY$ start_segment END_KEY_OPT$
  *</b>
  */'''
 class StartSeg ( ASTNode ,ILPG_item):
@@ -3820,7 +3820,7 @@ class StartSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 22:  LPG_item ::= TERMINALS_KEY$ terminals_segment END_KEY_OPT$
+*<li>Rule 22:  LPG_item ::= TERMINALS_KEY$ terminals_segment END_KEY_OPT$
  *</b>
  */'''
 class TerminalsSeg ( ASTNode ,ILPG_item):
@@ -3869,7 +3869,7 @@ class TerminalsSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 23:  LPG_item ::= TRAILERS_KEY$ trailers_segment END_KEY_OPT$
+*<li>Rule 23:  LPG_item ::= TRAILERS_KEY$ trailers_segment END_KEY_OPT$
  *</b>
  */'''
 class TrailersSeg ( ASTNode ,ILPG_item):
@@ -3918,7 +3918,7 @@ class TrailersSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 24:  LPG_item ::= TYPES_KEY$ types_segment END_KEY_OPT$
+*<li>Rule 24:  LPG_item ::= TYPES_KEY$ types_segment END_KEY_OPT$
  *</b>
  */'''
 class TypesSeg ( ASTNode ,ILPG_item):
@@ -3967,7 +3967,7 @@ class TypesSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 25:  LPG_item ::= RECOVER_KEY$ recover_segment END_KEY_OPT$
+*<li>Rule 25:  LPG_item ::= RECOVER_KEY$ recover_segment END_KEY_OPT$
  *</b>
  */'''
 class RecoverSeg ( ASTNode ,ILPG_item):
@@ -4016,7 +4016,7 @@ class RecoverSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 26:  LPG_item ::= DISJOINTPREDECESSORSETS_KEY$ predecessor_segment END_KEY_OPT$
+*<li>Rule 26:  LPG_item ::= DISJOINTPREDECESSORSETS_KEY$ predecessor_segment END_KEY_OPT$
  *</b>
  */'''
 class PredecessorSeg ( ASTNode ,ILPG_item):
@@ -4065,8 +4065,8 @@ class PredecessorSeg ( ASTNode ,ILPG_item):
 
 '''/**
  *<b>
-#*<li>Rule 27:  options_segment ::= $Empty
-#*<li>Rule 28:  options_segment ::= options_segment option_spec
+*<li>Rule 27:  options_segment ::= $Empty
+*<li>Rule 28:  options_segment ::= options_segment option_spec
  *</b>
  */'''
 class option_specList ( AbstractASTNodeList, Ioptions_segment):
@@ -4120,7 +4120,7 @@ class option_specList ( AbstractASTNodeList, Ioptions_segment):
 
 '''/**
  *<b>
-#*<li>Rule 29:  option_spec ::= OPTIONS_KEY$ option_list
+*<li>Rule 29:  option_spec ::= OPTIONS_KEY$ option_list
  *</b>
  */'''
 class option_spec ( ASTNode ,Ioption_spec):
@@ -4169,8 +4169,8 @@ class option_spec ( ASTNode ,Ioption_spec):
 
 '''/**
  *<b>
-#*<li>Rule 30:  option_list ::= option
-#*<li>Rule 31:  option_list ::= option_list ,$ option
+*<li>Rule 30:  option_list ::= option
+*<li>Rule 31:  option_list ::= option_list ,$ option
  *</b>
  */'''
 class optionList ( AbstractASTNodeList, Ioption_list):
@@ -4224,7 +4224,7 @@ class optionList ( AbstractASTNodeList, Ioption_list):
 
 '''/**
  *<b>
-#*<li>Rule 32:  option ::= SYMBOL option_value
+*<li>Rule 32:  option ::= SYMBOL option_value
  *</b>
  */'''
 class option ( ASTNode ,Ioption):
@@ -4285,14 +4285,14 @@ class option ( ASTNode ,Ioption):
 
 '''/**
  *<b>
-#*<li>Rule 36:  symbol_list ::= SYMBOL
-#*<li>Rule 37:  symbol_list ::= symbol_list ,$ SYMBOL
-#*<li>Rule 75:  drop_symbols ::= SYMBOL
-#*<li>Rule 76:  drop_symbols ::= drop_symbols SYMBOL
-#*<li>Rule 136:  barSymbolList ::= SYMBOL
-#*<li>Rule 137:  barSymbolList ::= barSymbolList |$ SYMBOL
-#*<li>Rule 141:  recover_segment ::= $Empty
-#*<li>Rule 142:  recover_segment ::= recover_segment recover_symbol
+*<li>Rule 36:  symbol_list ::= SYMBOL
+*<li>Rule 37:  symbol_list ::= symbol_list ,$ SYMBOL
+*<li>Rule 75:  drop_symbols ::= SYMBOL
+*<li>Rule 76:  drop_symbols ::= drop_symbols SYMBOL
+*<li>Rule 136:  barSymbolList ::= SYMBOL
+*<li>Rule 137:  barSymbolList ::= barSymbolList |$ SYMBOL
+*<li>Rule 141:  recover_segment ::= $Empty
+*<li>Rule 142:  recover_segment ::= recover_segment recover_symbol
  *</b>
  */'''
 class SYMBOLList ( AbstractASTNodeList, Isymbol_list, Idrop_symbols, IbarSymbolList, Irecover_segment):
@@ -4346,8 +4346,8 @@ class SYMBOLList ( AbstractASTNodeList, Isymbol_list, Idrop_symbols, IbarSymbolL
 
 '''/**
  *<b>
-#*<li>Rule 38:  alias_segment ::= aliasSpec
-#*<li>Rule 39:  alias_segment ::= alias_segment aliasSpec
+*<li>Rule 38:  alias_segment ::= aliasSpec
+*<li>Rule 39:  alias_segment ::= alias_segment aliasSpec
  *</b>
  */'''
 class aliasSpecList ( AbstractASTNodeList, Ialias_segment):
@@ -4399,7 +4399,7 @@ class aliasSpecList ( AbstractASTNodeList, Ialias_segment):
 
 '''/**
  *<b>
-#*<li>Rule 46:  alias_lhs_macro_name ::= MACRO_NAME
+*<li>Rule 46:  alias_lhs_macro_name ::= MACRO_NAME
  *</b>
  */'''
 class alias_lhs_macro_name ( ASTNodeToken ,Ialias_lhs_macro_name):
@@ -4428,8 +4428,8 @@ class alias_lhs_macro_name ( ASTNodeToken ,Ialias_lhs_macro_name):
 
 '''/**
  *<b>
-#*<li>Rule 55:  define_segment ::= defineSpec
-#*<li>Rule 56:  define_segment ::= define_segment defineSpec
+*<li>Rule 55:  define_segment ::= defineSpec
+*<li>Rule 56:  define_segment ::= define_segment defineSpec
  *</b>
  */'''
 class defineSpecList ( AbstractASTNodeList, Idefine_segment):
@@ -4483,7 +4483,7 @@ class defineSpecList ( AbstractASTNodeList, Idefine_segment):
 
 '''/**
  *<b>
-#*<li>Rule 57:  defineSpec ::= macro_name_symbol macro_segment
+*<li>Rule 57:  defineSpec ::= macro_name_symbol macro_segment
  *</b>
  */'''
 class defineSpec ( ASTNode ,IdefineSpec):
@@ -4541,7 +4541,7 @@ class defineSpec ( ASTNode ,IdefineSpec):
 
 '''/**
  *<b>
-#*<li>Rule 60:  macro_segment ::= BLOCK
+*<li>Rule 60:  macro_segment ::= BLOCK
  *</b>
  */'''
 class macro_segment ( ASTNodeToken ,Imacro_segment):
@@ -4570,8 +4570,8 @@ class macro_segment ( ASTNodeToken ,Imacro_segment):
 
 '''/**
  *<b>
-#*<li>Rule 64:  export_segment ::= terminal_symbol
-#*<li>Rule 65:  export_segment ::= export_segment terminal_symbol
+*<li>Rule 64:  export_segment ::= terminal_symbol
+*<li>Rule 65:  export_segment ::= export_segment terminal_symbol
  *</b>
  */'''
 class terminal_symbolList ( AbstractASTNodeList, Iexport_segment):
@@ -4623,12 +4623,12 @@ class terminal_symbolList ( AbstractASTNodeList, Iexport_segment):
 
 '''/**
  *<b>
-#*<li>Rule 66:  globals_segment ::= action_segment
-#*<li>Rule 67:  globals_segment ::= globals_segment action_segment
-#*<li>Rule 96:  notice_segment ::= action_segment
-#*<li>Rule 97:  notice_segment ::= notice_segment action_segment
-#*<li>Rule 146:  action_segment_list ::= $Empty
-#*<li>Rule 147:  action_segment_list ::= action_segment_list action_segment
+*<li>Rule 66:  globals_segment ::= action_segment
+*<li>Rule 67:  globals_segment ::= globals_segment action_segment
+*<li>Rule 96:  notice_segment ::= action_segment
+*<li>Rule 97:  notice_segment ::= notice_segment action_segment
+*<li>Rule 146:  action_segment_list ::= $Empty
+*<li>Rule 147:  action_segment_list ::= action_segment_list action_segment
  *</b>
  */'''
 class action_segmentList ( AbstractASTNodeList, Iglobals_segment, Inotice_segment, Iaction_segment_list):
@@ -4682,7 +4682,7 @@ class action_segmentList ( AbstractASTNodeList, Iglobals_segment, Inotice_segmen
 
 '''/**
  *<b>
-#*<li>Rule 70:  import_segment ::= SYMBOL drop_command_list
+*<li>Rule 70:  import_segment ::= SYMBOL drop_command_list
  *</b>
  */'''
 class import_segment ( ASTNode ,Iimport_segment):
@@ -4740,8 +4740,8 @@ class import_segment ( ASTNode ,Iimport_segment):
 
 '''/**
  *<b>
-#*<li>Rule 71:  drop_command_list ::= $Empty
-#*<li>Rule 72:  drop_command_list ::= drop_command_list drop_command
+*<li>Rule 71:  drop_command_list ::= $Empty
+*<li>Rule 72:  drop_command_list ::= drop_command_list drop_command
  *</b>
  */'''
 class drop_commandList ( AbstractASTNodeList, Idrop_command_list):
@@ -4793,8 +4793,8 @@ class drop_commandList ( AbstractASTNodeList, Idrop_command_list):
 
 '''/**
  *<b>
-#*<li>Rule 77:  drop_rules ::= drop_rule
-#*<li>Rule 78:  drop_rules ::= drop_rules drop_rule
+*<li>Rule 77:  drop_rules ::= drop_rule
+*<li>Rule 78:  drop_rules ::= drop_rules drop_rule
  *</b>
  */'''
 class drop_ruleList ( AbstractASTNodeList, Idrop_rules):
@@ -4848,7 +4848,7 @@ class drop_ruleList ( AbstractASTNodeList, Idrop_rules):
 
 '''/**
  *<b>
-#*<li>Rule 79:  drop_rule ::= SYMBOL optMacroName produces ruleList
+*<li>Rule 79:  drop_rule ::= SYMBOL optMacroName produces ruleList
  *</b>
  */'''
 class drop_rule ( ASTNode ,Idrop_rule):
@@ -4923,11 +4923,11 @@ class drop_rule ( ASTNode ,Idrop_rule):
 
 '''/**
  *<em>
-#*<li>Rule 80:  optMacroName ::= $Empty
+*<li>Rule 80:  optMacroName ::= $Empty
  *</em>
  *<p>
  *<b>
-#*<li>Rule 81:  optMacroName ::= MACRO_NAME
+*<li>Rule 81:  optMacroName ::= MACRO_NAME
  *</b>
  */'''
 class optMacroName ( ASTNodeToken ,IoptMacroName):
@@ -4956,7 +4956,7 @@ class optMacroName ( ASTNodeToken ,IoptMacroName):
 
 '''/**
  *<b>
-#*<li>Rule 82:  include_segment ::= SYMBOL
+*<li>Rule 82:  include_segment ::= SYMBOL
  *</b>
  */'''
 class include_segment ( ASTNodeToken ,Iinclude_segment):
@@ -4985,8 +4985,8 @@ class include_segment ( ASTNodeToken ,Iinclude_segment):
 
 '''/**
  *<b>
-#*<li>Rule 83:  keywords_segment ::= keywordSpec
-#*<li>Rule 84:  keywords_segment ::= keywords_segment keywordSpec
+*<li>Rule 83:  keywords_segment ::= keywordSpec
+*<li>Rule 84:  keywords_segment ::= keywords_segment keywordSpec
  *</b>
  */'''
 class keywordSpecList ( AbstractASTNodeList, Ikeywords_segment):
@@ -5038,11 +5038,11 @@ class keywordSpecList ( AbstractASTNodeList, Ikeywords_segment):
 
 '''/**
  *<em>
-#*<li>Rule 85:  keywordSpec ::= terminal_symbol
+*<li>Rule 85:  keywordSpec ::= terminal_symbol
  *</em>
  *<p>
  *<b>
-#*<li>Rule 86:  keywordSpec ::= terminal_symbol produces name
+*<li>Rule 86:  keywordSpec ::= terminal_symbol produces name
  *</b>
  */'''
 class keywordSpec ( ASTNode ,IkeywordSpec):
@@ -5107,8 +5107,8 @@ class keywordSpec ( ASTNode ,IkeywordSpec):
 
 '''/**
  *<b>
-#*<li>Rule 87:  names_segment ::= nameSpec
-#*<li>Rule 88:  names_segment ::= names_segment nameSpec
+*<li>Rule 87:  names_segment ::= nameSpec
+*<li>Rule 88:  names_segment ::= names_segment nameSpec
  *</b>
  */'''
 class nameSpecList ( AbstractASTNodeList, Inames_segment):
@@ -5162,7 +5162,7 @@ class nameSpecList ( AbstractASTNodeList, Inames_segment):
 
 '''/**
  *<b>
-#*<li>Rule 89:  nameSpec ::= name produces name
+*<li>Rule 89:  nameSpec ::= name produces name
  *</b>
  */'''
 class nameSpec ( ASTNode ,InameSpec):
@@ -5227,7 +5227,7 @@ class nameSpec ( ASTNode ,InameSpec):
 
 '''/**
  *<b>
-#*<li>Rule 98:  rules_segment ::= action_segment_list nonTermList
+*<li>Rule 98:  rules_segment ::= action_segment_list nonTermList
  *</b>
  */'''
 class rules_segment ( ASTNode ,Irules_segment):
@@ -5285,8 +5285,8 @@ class rules_segment ( ASTNode ,Irules_segment):
 
 '''/**
  *<b>
-#*<li>Rule 99:  nonTermList ::= $Empty
-#*<li>Rule 100:  nonTermList ::= nonTermList nonTerm
+*<li>Rule 99:  nonTermList ::= $Empty
+*<li>Rule 100:  nonTermList ::= nonTermList nonTerm
  *</b>
  */'''
 class nonTermList ( AbstractASTNodeList, InonTermList):
@@ -5340,7 +5340,7 @@ class nonTermList ( AbstractASTNodeList, InonTermList):
 
 '''/**
  *<b>
-#*<li>Rule 101:  nonTerm ::= ruleNameWithAttributes produces ruleList
+*<li>Rule 101:  nonTerm ::= ruleNameWithAttributes produces ruleList
  *</b>
  */'''
 class nonTerm ( ASTNode ,InonTerm):
@@ -5405,9 +5405,9 @@ class nonTerm ( ASTNode ,InonTerm):
 
 '''/**
  *<b>
-#*<li>Rule 102:  ruleNameWithAttributes ::= SYMBOL
-#*<li>Rule 103:  ruleNameWithAttributes ::= SYMBOL MACRO_NAME$className
-#*<li>Rule 104:  ruleNameWithAttributes ::= SYMBOL MACRO_NAME$className MACRO_NAME$arrayElement
+*<li>Rule 102:  ruleNameWithAttributes ::= SYMBOL
+*<li>Rule 103:  ruleNameWithAttributes ::= SYMBOL MACRO_NAME$className
+*<li>Rule 104:  ruleNameWithAttributes ::= SYMBOL MACRO_NAME$className MACRO_NAME$arrayElement
  *</b>
  */'''
 class RuleName ( ASTNode, IruleNameWithAttributes):
@@ -5475,8 +5475,8 @@ class RuleName ( ASTNode, IruleNameWithAttributes):
 
 '''/**
  *<b>
-#*<li>Rule 105:  ruleList ::= rule
-#*<li>Rule 106:  ruleList ::= ruleList |$ rule
+*<li>Rule 105:  ruleList ::= rule
+*<li>Rule 106:  ruleList ::= ruleList |$ rule
  *</b>
  */'''
 class ruleList ( AbstractASTNodeList, IruleList):
@@ -5530,7 +5530,7 @@ class ruleList ( AbstractASTNodeList, IruleList):
 
 '''/**
  *<b>
-#*<li>Rule 111:  rule ::= symWithAttrsList opt_action_segment
+*<li>Rule 111:  rule ::= symWithAttrsList opt_action_segment
  *</b>
  */'''
 class rule ( ASTNode ,Irule):
@@ -5591,8 +5591,8 @@ class rule ( ASTNode ,Irule):
 
 '''/**
  *<b>
-#*<li>Rule 112:  symWithAttrsList ::= $Empty
-#*<li>Rule 113:  symWithAttrsList ::= symWithAttrsList symWithAttrs
+*<li>Rule 112:  symWithAttrsList ::= $Empty
+*<li>Rule 113:  symWithAttrsList ::= symWithAttrsList symWithAttrs
  *</b>
  */'''
 class symWithAttrsList ( AbstractASTNodeList, IsymWithAttrsList):
@@ -5644,8 +5644,8 @@ class symWithAttrsList ( AbstractASTNodeList, IsymWithAttrsList):
 
 '''/**
  *<b>
-#*<li>Rule 116:  optAttrList ::= $Empty
-#*<li>Rule 117:  optAttrList ::= MACRO_NAME
+*<li>Rule 116:  optAttrList ::= $Empty
+*<li>Rule 117:  optAttrList ::= MACRO_NAME
  *</b>
  */'''
 class symAttrs ( ASTNode, IoptAttrList):
@@ -5696,7 +5696,7 @@ class symAttrs ( ASTNode, IoptAttrList):
 
 '''/**
  *<b>
-#*<li>Rule 120:  action_segment ::= BLOCK
+*<li>Rule 120:  action_segment ::= BLOCK
  *</b>
  */'''
 class action_segment ( ASTNodeToken ,Iaction_segment):
@@ -5729,8 +5729,8 @@ class action_segment ( ASTNodeToken ,Iaction_segment):
 
 '''/**
  *<b>
-#*<li>Rule 121:  start_segment ::= start_symbol
-#*<li>Rule 122:  start_segment ::= start_segment start_symbol
+*<li>Rule 121:  start_segment ::= start_symbol
+*<li>Rule 122:  start_segment ::= start_segment start_symbol
  *</b>
  */'''
 class start_symbolList ( AbstractASTNodeList, Istart_segment):
@@ -5782,8 +5782,8 @@ class start_symbolList ( AbstractASTNodeList, Istart_segment):
 
 '''/**
  *<b>
-#*<li>Rule 125:  terminals_segment ::= terminal
-#*<li>Rule 126:  terminals_segment ::= terminals_segment terminal
+*<li>Rule 125:  terminals_segment ::= terminal
+*<li>Rule 126:  terminals_segment ::= terminals_segment terminal
  *</b>
  */'''
 class terminalList ( AbstractASTNodeList, Iterminals_segment):
@@ -5837,7 +5837,7 @@ class terminalList ( AbstractASTNodeList, Iterminals_segment):
 
 '''/**
  *<b>
-#*<li>Rule 127:  terminal ::= terminal_symbol optTerminalAlias
+*<li>Rule 127:  terminal ::= terminal_symbol optTerminalAlias
  *</b>
  */'''
 class terminal ( ASTNode ,Iterminal):
@@ -5898,11 +5898,11 @@ class terminal ( ASTNode ,Iterminal):
 
 '''/**
  *<em>
-#*<li>Rule 128:  optTerminalAlias ::= $Empty
+*<li>Rule 128:  optTerminalAlias ::= $Empty
  *</em>
  *<p>
  *<b>
-#*<li>Rule 129:  optTerminalAlias ::= produces name
+*<li>Rule 129:  optTerminalAlias ::= produces name
  *</b>
  */'''
 class optTerminalAlias ( ASTNode ,IoptTerminalAlias):
@@ -5960,8 +5960,8 @@ class optTerminalAlias ( ASTNode ,IoptTerminalAlias):
 
 '''/**
  *<b>
-#*<li>Rule 133:  types_segment ::= type_declarations
-#*<li>Rule 134:  types_segment ::= types_segment type_declarations
+*<li>Rule 133:  types_segment ::= type_declarations
+*<li>Rule 134:  types_segment ::= types_segment type_declarations
  *</b>
  */'''
 class type_declarationsList ( AbstractASTNodeList, Itypes_segment):
@@ -6015,7 +6015,7 @@ class type_declarationsList ( AbstractASTNodeList, Itypes_segment):
 
 '''/**
  *<b>
-#*<li>Rule 135:  type_declarations ::= SYMBOL produces barSymbolList opt_action_segment
+*<li>Rule 135:  type_declarations ::= SYMBOL produces barSymbolList opt_action_segment
  *</b>
  */'''
 class type_declarations ( ASTNode ,Itype_declarations):
@@ -6090,8 +6090,8 @@ class type_declarations ( ASTNode ,Itype_declarations):
 
 '''/**
  *<b>
-#*<li>Rule 138:  predecessor_segment ::= $Empty
-#*<li>Rule 139:  predecessor_segment ::= predecessor_segment symbol_pair
+*<li>Rule 138:  predecessor_segment ::= $Empty
+*<li>Rule 139:  predecessor_segment ::= predecessor_segment symbol_pair
  *</b>
  */'''
 class symbol_pairList ( AbstractASTNodeList, Ipredecessor_segment):
@@ -6145,7 +6145,7 @@ class symbol_pairList ( AbstractASTNodeList, Ipredecessor_segment):
 
 '''/**
  *<b>
-#*<li>Rule 140:  symbol_pair ::= SYMBOL SYMBOL
+*<li>Rule 140:  symbol_pair ::= SYMBOL SYMBOL
  *</b>
  */'''
 class symbol_pair ( ASTNode ,Isymbol_pair):
@@ -6203,7 +6203,7 @@ class symbol_pair ( ASTNode ,Isymbol_pair):
 
 '''/**
  *<b>
-#*<li>Rule 143:  recover_symbol ::= SYMBOL
+*<li>Rule 143:  recover_symbol ::= SYMBOL
  *</b>
  */'''
 class recover_symbol ( ASTNodeToken ,Irecover_symbol):
@@ -6232,11 +6232,11 @@ class recover_symbol ( ASTNodeToken ,Irecover_symbol):
 
 '''/**
  *<em>
-#*<li>Rule 144:  END_KEY_OPT ::= $Empty
+*<li>Rule 144:  END_KEY_OPT ::= $Empty
  *</em>
  *<p>
  *<b>
-#*<li>Rule 145:  END_KEY_OPT ::= END_KEY
+*<li>Rule 145:  END_KEY_OPT ::= END_KEY
  *</b>
  */'''
 class END_KEY_OPT ( ASTNodeToken ,IEND_KEY_OPT):
@@ -6265,7 +6265,7 @@ class END_KEY_OPT ( ASTNodeToken ,IEND_KEY_OPT):
 
 '''/**
  *<b>
-#*<li>Rule 34:  option_value ::= =$ SYMBOL
+*<li>Rule 34:  option_value ::= =$ SYMBOL
  *</b>
  */'''
 class option_value0 ( ASTNode ,Ioption_value):
@@ -6314,7 +6314,7 @@ class option_value0 ( ASTNode ,Ioption_value):
 
 '''/**
  *<b>
-#*<li>Rule 35:  option_value ::= =$ ($ symbol_list )$
+*<li>Rule 35:  option_value ::= =$ ($ symbol_list )$
  *</b>
  */'''
 class option_value1 ( ASTNode ,Ioption_value):
@@ -6363,7 +6363,7 @@ class option_value1 ( ASTNode ,Ioption_value):
 
 '''/**
  *<b>
-#*<li>Rule 40:  aliasSpec ::= ERROR_KEY produces alias_rhs
+*<li>Rule 40:  aliasSpec ::= ERROR_KEY produces alias_rhs
  *</b>
  */'''
 class aliasSpec0 ( ASTNode ,IaliasSpec):
@@ -6428,7 +6428,7 @@ class aliasSpec0 ( ASTNode ,IaliasSpec):
 
 '''/**
  *<b>
-#*<li>Rule 41:  aliasSpec ::= EOL_KEY produces alias_rhs
+*<li>Rule 41:  aliasSpec ::= EOL_KEY produces alias_rhs
  *</b>
  */'''
 class aliasSpec1 ( ASTNode ,IaliasSpec):
@@ -6493,7 +6493,7 @@ class aliasSpec1 ( ASTNode ,IaliasSpec):
 
 '''/**
  *<b>
-#*<li>Rule 42:  aliasSpec ::= EOF_KEY produces alias_rhs
+*<li>Rule 42:  aliasSpec ::= EOF_KEY produces alias_rhs
  *</b>
  */'''
 class aliasSpec2 ( ASTNode ,IaliasSpec):
@@ -6558,7 +6558,7 @@ class aliasSpec2 ( ASTNode ,IaliasSpec):
 
 '''/**
  *<b>
-#*<li>Rule 43:  aliasSpec ::= IDENTIFIER_KEY produces alias_rhs
+*<li>Rule 43:  aliasSpec ::= IDENTIFIER_KEY produces alias_rhs
  *</b>
  */'''
 class aliasSpec3 ( ASTNode ,IaliasSpec):
@@ -6623,7 +6623,7 @@ class aliasSpec3 ( ASTNode ,IaliasSpec):
 
 '''/**
  *<b>
-#*<li>Rule 44:  aliasSpec ::= SYMBOL produces alias_rhs
+*<li>Rule 44:  aliasSpec ::= SYMBOL produces alias_rhs
  *</b>
  */'''
 class aliasSpec4 ( ASTNode ,IaliasSpec):
@@ -6688,7 +6688,7 @@ class aliasSpec4 ( ASTNode ,IaliasSpec):
 
 '''/**
  *<b>
-#*<li>Rule 45:  aliasSpec ::= alias_lhs_macro_name produces alias_rhs
+*<li>Rule 45:  aliasSpec ::= alias_lhs_macro_name produces alias_rhs
  *</b>
  */'''
 class aliasSpec5 ( ASTNode ,IaliasSpec):
@@ -6753,7 +6753,7 @@ class aliasSpec5 ( ASTNode ,IaliasSpec):
 
 '''/**
  *<b>
-#*<li>Rule 47:  alias_rhs ::= SYMBOL
+*<li>Rule 47:  alias_rhs ::= SYMBOL
  *</b>
  */'''
 class alias_rhs0 ( ASTNodeToken ,Ialias_rhs):
@@ -6782,7 +6782,7 @@ class alias_rhs0 ( ASTNodeToken ,Ialias_rhs):
 
 '''/**
  *<b>
-#*<li>Rule 48:  alias_rhs ::= MACRO_NAME
+*<li>Rule 48:  alias_rhs ::= MACRO_NAME
  *</b>
  */'''
 class alias_rhs1 ( ASTNodeToken ,Ialias_rhs):
@@ -6811,7 +6811,7 @@ class alias_rhs1 ( ASTNodeToken ,Ialias_rhs):
 
 '''/**
  *<b>
-#*<li>Rule 49:  alias_rhs ::= ERROR_KEY
+*<li>Rule 49:  alias_rhs ::= ERROR_KEY
  *</b>
  */'''
 class alias_rhs2 ( ASTNodeToken ,Ialias_rhs):
@@ -6840,7 +6840,7 @@ class alias_rhs2 ( ASTNodeToken ,Ialias_rhs):
 
 '''/**
  *<b>
-#*<li>Rule 50:  alias_rhs ::= EOL_KEY
+*<li>Rule 50:  alias_rhs ::= EOL_KEY
  *</b>
  */'''
 class alias_rhs3 ( ASTNodeToken ,Ialias_rhs):
@@ -6869,7 +6869,7 @@ class alias_rhs3 ( ASTNodeToken ,Ialias_rhs):
 
 '''/**
  *<b>
-#*<li>Rule 51:  alias_rhs ::= EOF_KEY
+*<li>Rule 51:  alias_rhs ::= EOF_KEY
  *</b>
  */'''
 class alias_rhs4 ( ASTNodeToken ,Ialias_rhs):
@@ -6898,7 +6898,7 @@ class alias_rhs4 ( ASTNodeToken ,Ialias_rhs):
 
 '''/**
  *<b>
-#*<li>Rule 52:  alias_rhs ::= EMPTY_KEY
+*<li>Rule 52:  alias_rhs ::= EMPTY_KEY
  *</b>
  */'''
 class alias_rhs5 ( ASTNodeToken ,Ialias_rhs):
@@ -6927,7 +6927,7 @@ class alias_rhs5 ( ASTNodeToken ,Ialias_rhs):
 
 '''/**
  *<b>
-#*<li>Rule 53:  alias_rhs ::= IDENTIFIER_KEY
+*<li>Rule 53:  alias_rhs ::= IDENTIFIER_KEY
  *</b>
  */'''
 class alias_rhs6 ( ASTNodeToken ,Ialias_rhs):
@@ -6956,7 +6956,7 @@ class alias_rhs6 ( ASTNodeToken ,Ialias_rhs):
 
 '''/**
  *<b>
-#*<li>Rule 58:  macro_name_symbol ::= MACRO_NAME
+*<li>Rule 58:  macro_name_symbol ::= MACRO_NAME
  *</b>
  */'''
 class macro_name_symbol0 ( ASTNodeToken ,Imacro_name_symbol):
@@ -6985,7 +6985,7 @@ class macro_name_symbol0 ( ASTNodeToken ,Imacro_name_symbol):
 
 '''/**
  *<b>
-#*<li>Rule 59:  macro_name_symbol ::= SYMBOL
+*<li>Rule 59:  macro_name_symbol ::= SYMBOL
  *</b>
  */'''
 class macro_name_symbol1 ( ASTNodeToken ,Imacro_name_symbol):
@@ -7014,7 +7014,7 @@ class macro_name_symbol1 ( ASTNodeToken ,Imacro_name_symbol):
 
 '''/**
  *<b>
-#*<li>Rule 73:  drop_command ::= DROPSYMBOLS_KEY drop_symbols
+*<li>Rule 73:  drop_command ::= DROPSYMBOLS_KEY drop_symbols
  *</b>
  */'''
 class drop_command0 ( ASTNode ,Idrop_command):
@@ -7072,7 +7072,7 @@ class drop_command0 ( ASTNode ,Idrop_command):
 
 '''/**
  *<b>
-#*<li>Rule 74:  drop_command ::= DROPRULES_KEY drop_rules
+*<li>Rule 74:  drop_command ::= DROPRULES_KEY drop_rules
  *</b>
  */'''
 class drop_command1 ( ASTNode ,Idrop_command):
@@ -7130,7 +7130,7 @@ class drop_command1 ( ASTNode ,Idrop_command):
 
 '''/**
  *<b>
-#*<li>Rule 90:  name ::= SYMBOL
+*<li>Rule 90:  name ::= SYMBOL
  *</b>
  */'''
 class name0 ( ASTNodeToken ,Iname):
@@ -7159,7 +7159,7 @@ class name0 ( ASTNodeToken ,Iname):
 
 '''/**
  *<b>
-#*<li>Rule 91:  name ::= MACRO_NAME
+*<li>Rule 91:  name ::= MACRO_NAME
  *</b>
  */'''
 class name1 ( ASTNodeToken ,Iname):
@@ -7188,7 +7188,7 @@ class name1 ( ASTNodeToken ,Iname):
 
 '''/**
  *<b>
-#*<li>Rule 92:  name ::= EMPTY_KEY
+*<li>Rule 92:  name ::= EMPTY_KEY
  *</b>
  */'''
 class name2 ( ASTNodeToken ,Iname):
@@ -7217,7 +7217,7 @@ class name2 ( ASTNodeToken ,Iname):
 
 '''/**
  *<b>
-#*<li>Rule 93:  name ::= ERROR_KEY
+*<li>Rule 93:  name ::= ERROR_KEY
  *</b>
  */'''
 class name3 ( ASTNodeToken ,Iname):
@@ -7246,7 +7246,7 @@ class name3 ( ASTNodeToken ,Iname):
 
 '''/**
  *<b>
-#*<li>Rule 94:  name ::= EOL_KEY
+*<li>Rule 94:  name ::= EOL_KEY
  *</b>
  */'''
 class name4 ( ASTNodeToken ,Iname):
@@ -7275,7 +7275,7 @@ class name4 ( ASTNodeToken ,Iname):
 
 '''/**
  *<b>
-#*<li>Rule 95:  name ::= IDENTIFIER_KEY
+*<li>Rule 95:  name ::= IDENTIFIER_KEY
  *</b>
  */'''
 class name5 ( ASTNodeToken ,Iname):
@@ -7304,7 +7304,7 @@ class name5 ( ASTNodeToken ,Iname):
 
 '''/**
  *<b>
-#*<li>Rule 107:  produces ::= ::=
+*<li>Rule 107:  produces ::= ::=
  *</b>
  */'''
 class produces0 ( ASTNodeToken ,Iproduces):
@@ -7333,7 +7333,7 @@ class produces0 ( ASTNodeToken ,Iproduces):
 
 '''/**
  *<b>
-#*<li>Rule 108:  produces ::= ::=?
+*<li>Rule 108:  produces ::= ::=?
  *</b>
  */'''
 class produces1 ( ASTNodeToken ,Iproduces):
@@ -7362,7 +7362,7 @@ class produces1 ( ASTNodeToken ,Iproduces):
 
 '''/**
  *<b>
-#*<li>Rule 109:  produces ::= ->
+*<li>Rule 109:  produces ::= ->
  *</b>
  */'''
 class produces2 ( ASTNodeToken ,Iproduces):
@@ -7391,7 +7391,7 @@ class produces2 ( ASTNodeToken ,Iproduces):
 
 '''/**
  *<b>
-#*<li>Rule 110:  produces ::= ->?
+*<li>Rule 110:  produces ::= ->?
  *</b>
  */'''
 class produces3 ( ASTNodeToken ,Iproduces):
@@ -7420,7 +7420,7 @@ class produces3 ( ASTNodeToken ,Iproduces):
 
 '''/**
  *<b>
-#*<li>Rule 114:  symWithAttrs ::= EMPTY_KEY
+*<li>Rule 114:  symWithAttrs ::= EMPTY_KEY
  *</b>
  */'''
 class symWithAttrs0 ( ASTNodeToken ,IsymWithAttrs):
@@ -7449,7 +7449,7 @@ class symWithAttrs0 ( ASTNodeToken ,IsymWithAttrs):
 
 '''/**
  *<b>
-#*<li>Rule 115:  symWithAttrs ::= SYMBOL optAttrList
+*<li>Rule 115:  symWithAttrs ::= SYMBOL optAttrList
  *</b>
  */'''
 class symWithAttrs1 ( ASTNode ,IsymWithAttrs):
@@ -7510,7 +7510,7 @@ class symWithAttrs1 ( ASTNode ,IsymWithAttrs):
 
 '''/**
  *<b>
-#*<li>Rule 123:  start_symbol ::= SYMBOL
+*<li>Rule 123:  start_symbol ::= SYMBOL
  *</b>
  */'''
 class start_symbol0 ( ASTNodeToken ,Istart_symbol):
@@ -7539,7 +7539,7 @@ class start_symbol0 ( ASTNodeToken ,Istart_symbol):
 
 '''/**
  *<b>
-#*<li>Rule 124:  start_symbol ::= MACRO_NAME
+*<li>Rule 124:  start_symbol ::= MACRO_NAME
  *</b>
  */'''
 class start_symbol1 ( ASTNodeToken ,Istart_symbol):
@@ -7568,7 +7568,7 @@ class start_symbol1 ( ASTNodeToken ,Istart_symbol):
 
 '''/**
  *<b>
-#*<li>Rule 130:  terminal_symbol ::= SYMBOL
+*<li>Rule 130:  terminal_symbol ::= SYMBOL
  *</b>
  */'''
 class terminal_symbol0 ( ASTNodeToken ,Iterminal_symbol):
@@ -7597,7 +7597,7 @@ class terminal_symbol0 ( ASTNodeToken ,Iterminal_symbol):
 
 '''/**
  *<b>
-#*<li>Rule 131:  terminal_symbol ::= MACRO_NAME
+*<li>Rule 131:  terminal_symbol ::= MACRO_NAME
  *</b>
  */'''
 class terminal_symbol1 ( ASTNodeToken ,Iterminal_symbol):
