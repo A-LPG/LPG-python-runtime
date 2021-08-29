@@ -7,7 +7,7 @@ class ConfigurationElement(object):
     __slots__ = ('next', 'last_element', 'stack_top', 'action_length',
                  'conflict_index', 'curtok', 'act')
 
-    def __init__(self, info: str = None):
+    def __init__(self):
         self.next: ConfigurationElement = None
         self.last_element: StateElement = None
         self.stack_top: int = 0

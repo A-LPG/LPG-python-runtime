@@ -49,8 +49,8 @@ class ArrayList(object):
     def clear(self):
         self.content = []
 
-    def remove(self, indexOrElem):
-        self.content.remove(indexOrElem)
+    def remove(self, elem):
+        self.content.remove(elem)
         return True
 
     def removeAll(self):
@@ -105,7 +105,7 @@ class ArrayList(object):
         size = self.size()
         for i in range(size):
             if self.content[size - i - 1] == element:
-                return size - i - i
+                return size - i - 1
         return -1
 
 
