@@ -98,6 +98,6 @@ class LPGParsersym(object):
                  "ERROR_TOKEN"
              ]
 
-   numTokenKinds   = 48
+   numTokenKinds   = 47
    isValidForParser  = True
 

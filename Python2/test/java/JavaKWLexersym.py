@@ -129,6 +129,6 @@ class JavaKWLexersym(object):
                  "Z"
              ]
 
-   numTokenKinds   = 57
+   numTokenKinds   = 56
    isValidForParser  = True
 

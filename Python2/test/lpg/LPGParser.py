@@ -2923,7 +2923,7 @@ class LPG_itemList ( AbstractASTNodeList, ILPG_INPUT):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitLPG_itemList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -2932,7 +2932,7 @@ class LPG_itemList ( AbstractASTNodeList, ILPG_INPUT):
                     element.accept(v)
                 
             
-            v.endVisit(self)
+            v.endVisitLPG_itemList(self)
         
     
 
@@ -4103,7 +4103,7 @@ class option_specList ( AbstractASTNodeList, Ioptions_segment):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitoption_specList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -4114,7 +4114,7 @@ class option_specList ( AbstractASTNodeList, Ioptions_segment):
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitoption_specList(self)
         
     
 
@@ -4207,7 +4207,7 @@ class optionList ( AbstractASTNodeList, Ioption_list):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitoptionList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -4218,7 +4218,7 @@ class optionList ( AbstractASTNodeList, Ioption_list):
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitoptionList(self)
         
     
 
@@ -4329,7 +4329,7 @@ class SYMBOLList ( AbstractASTNodeList, Isymbol_list, Idrop_symbols, IbarSymbolL
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitSYMBOLList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -4340,7 +4340,7 @@ class SYMBOLList ( AbstractASTNodeList, Isymbol_list, Idrop_symbols, IbarSymbolL
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitSYMBOLList(self)
         
     
 
@@ -4384,7 +4384,7 @@ class aliasSpecList ( AbstractASTNodeList, Ialias_segment):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitaliasSpecList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -4393,7 +4393,7 @@ class aliasSpecList ( AbstractASTNodeList, Ialias_segment):
                     element.accept(v)
                 
             
-            v.endVisit(self)
+            v.endVisitaliasSpecList(self)
         
     
 
@@ -4466,7 +4466,7 @@ class defineSpecList ( AbstractASTNodeList, Idefine_segment):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitdefineSpecList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -4477,7 +4477,7 @@ class defineSpecList ( AbstractASTNodeList, Idefine_segment):
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitdefineSpecList(self)
         
     
 
@@ -4608,7 +4608,7 @@ class terminal_symbolList ( AbstractASTNodeList, Iexport_segment):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitterminal_symbolList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -4617,7 +4617,7 @@ class terminal_symbolList ( AbstractASTNodeList, Iexport_segment):
                     element.accept(v)
                 
             
-            v.endVisit(self)
+            v.endVisitterminal_symbolList(self)
         
     
 
@@ -4665,7 +4665,7 @@ class action_segmentList ( AbstractASTNodeList, Iglobals_segment, Inotice_segmen
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitaction_segmentList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -4676,7 +4676,7 @@ class action_segmentList ( AbstractASTNodeList, Iglobals_segment, Inotice_segmen
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitaction_segmentList(self)
         
     
 
@@ -4778,7 +4778,7 @@ class drop_commandList ( AbstractASTNodeList, Idrop_command_list):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitdrop_commandList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -4787,7 +4787,7 @@ class drop_commandList ( AbstractASTNodeList, Idrop_command_list):
                     element.accept(v)
                 
             
-            v.endVisit(self)
+            v.endVisitdrop_commandList(self)
         
     
 
@@ -4831,7 +4831,7 @@ class drop_ruleList ( AbstractASTNodeList, Idrop_rules):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitdrop_ruleList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -4842,7 +4842,7 @@ class drop_ruleList ( AbstractASTNodeList, Idrop_rules):
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitdrop_ruleList(self)
         
     
 
@@ -5023,7 +5023,7 @@ class keywordSpecList ( AbstractASTNodeList, Ikeywords_segment):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitkeywordSpecList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -5032,7 +5032,7 @@ class keywordSpecList ( AbstractASTNodeList, Ikeywords_segment):
                     element.accept(v)
                 
             
-            v.endVisit(self)
+            v.endVisitkeywordSpecList(self)
         
     
 
@@ -5145,7 +5145,7 @@ class nameSpecList ( AbstractASTNodeList, Inames_segment):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitnameSpecList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -5156,7 +5156,7 @@ class nameSpecList ( AbstractASTNodeList, Inames_segment):
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitnameSpecList(self)
         
     
 
@@ -5323,7 +5323,7 @@ class nonTermList ( AbstractASTNodeList, InonTermList):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitnonTermList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -5334,7 +5334,7 @@ class nonTermList ( AbstractASTNodeList, InonTermList):
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitnonTermList(self)
         
     
 
@@ -5513,7 +5513,7 @@ class ruleList ( AbstractASTNodeList, IruleList):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitruleList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -5524,7 +5524,7 @@ class ruleList ( AbstractASTNodeList, IruleList):
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitruleList(self)
         
     
 
@@ -5629,7 +5629,7 @@ class symWithAttrsList ( AbstractASTNodeList, IsymWithAttrsList):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitsymWithAttrsList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -5638,7 +5638,7 @@ class symWithAttrsList ( AbstractASTNodeList, IsymWithAttrsList):
                     element.accept(v)
                 
             
-            v.endVisit(self)
+            v.endVisitsymWithAttrsList(self)
         
     
 
@@ -5767,7 +5767,7 @@ class start_symbolList ( AbstractASTNodeList, Istart_segment):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitstart_symbolList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -5776,7 +5776,7 @@ class start_symbolList ( AbstractASTNodeList, Istart_segment):
                     element.accept(v)
                 
             
-            v.endVisit(self)
+            v.endVisitstart_symbolList(self)
         
     
 
@@ -5820,7 +5820,7 @@ class terminalList ( AbstractASTNodeList, Iterminals_segment):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitterminalList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -5831,7 +5831,7 @@ class terminalList ( AbstractASTNodeList, Iterminals_segment):
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitterminalList(self)
         
     
 
@@ -5998,7 +5998,7 @@ class type_declarationsList ( AbstractASTNodeList, Itypes_segment):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visittype_declarationsList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -6009,7 +6009,7 @@ class type_declarationsList ( AbstractASTNodeList, Itypes_segment):
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisittype_declarationsList(self)
         
     
 
@@ -6128,7 +6128,7 @@ class symbol_pairList ( AbstractASTNodeList, Ipredecessor_segment):
         
         def enter(self, v) : 
         
-            checkChildren = v.visit(self)
+            checkChildren = v.visitsymbol_pairList(self)
             if checkChildren:
             
                 for i in range(self.size()):
@@ -6139,7 +6139,7 @@ class symbol_pairList ( AbstractASTNodeList, Ipredecessor_segment):
                     v.postVisit(element)
                 
             
-            v.endVisit(self)
+            v.endVisitsymbol_pairList(self)
         
     
 
@@ -8668,7 +8668,7 @@ class AbstractVisitor(Visitor):
             elif (isinstance(n, start_symbol1)): self.endVisitstart_symbol1( n)
             elif (isinstance(n, terminal_symbol0)): self.endVisitterminal_symbol0( n)
             elif (isinstance(n, terminal_symbol1)): self.endVisitterminal_symbol1( n)
-            raise ValueError("visit(" + n.toString() + ")")
+            else: raise ValueError("visit(" + n.toString() + ")")
         
     
 
