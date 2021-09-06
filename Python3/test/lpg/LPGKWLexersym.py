@@ -77,6 +77,6 @@ class LPGKWLexersym(object):
                  "z"
              ]
 
-   numTokenKinds : int  = 31
+   numTokenKinds : int  = 30
    isValidForParser : bool = True
 

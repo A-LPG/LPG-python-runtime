@@ -257,6 +257,6 @@ class JavaParsersym(object):
                  "ERROR_TOKEN"
              ]
 
-   numTokenKinds : int  = 120
+   numTokenKinds : int  = 119
    isValidForParser : bool = True
 

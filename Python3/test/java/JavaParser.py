@@ -6566,7 +6566,10 @@ class IRootForJavaParser(object):
         def  getLeftIToken(self) -> IToken : raise TypeError('Can not instantiate abstract class  with abstract methods')
         def  getRightIToken(self) -> IToken : raise TypeError('Can not instantiate abstract class  with abstract methods')
 
-        def  accept(self, v: IAstVisitor ):pass
+        def  acceptWithVisitor(self, v) : pass
+        def  acceptWithArg(self, v, o) : pass
+        def  acceptWithResult(self, v):pass 
+        def  acceptWithResultArgument(self, v, o) : pass
     
 
 '''/**
@@ -11216,7 +11219,11 @@ class Ast(IAst):
          */'''
         def   getAllChildren(self) -> ArrayList : raise TypeError('Can not instantiate abstract class  with abstract methods')
 
-        def  accept(self, v: IAstVisitor ):pass
+        def  acceptWithVisitor(self, v) : pass
+        def  acceptWithArg(self, v, o) : pass
+        def  acceptWithResult(self, v):pass 
+        def  acceptWithResultArgument(self, v, o) : pass
+        def  accept(self, v : IAstVisitor ) :  pass
     
 
 class AbstractAstList ( Ast , IAbstractArrayList):
@@ -11293,23 +11300,15 @@ class AstToken ( Ast, IAstToken):
         def  getAllChildren(self) -> ArrayList :  return ArrayList()
 
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAstToken(self)
-            v.endVisitAstToken(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAstToken(self)
+        def  acceptWithArg(self, v, o) :   v.visitAstToken(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAstToken(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAstToken(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 3:  identifier ::= IDENTIFIER
+*<li>Rule 3:  identifier ::= IDENTIFIER
  *</b>
  */'''
 class identifier ( AstToken ,Iidentifier):
@@ -11325,27 +11324,19 @@ class identifier ( AstToken ,Iidentifier):
             self.initialize()
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitidentifier(self)
-            v.endVisitidentifier(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitidentifier(self)
+        def  acceptWithArg(self, v, o) :   v.visitidentifier(self, o)
+        def  acceptWithResult(self, v) :  return v.visitidentifier(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitidentifier(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 12:  PrimitiveType ::= NumericType
+*<li>Rule 12:  PrimitiveType ::= NumericType
  *</em>
  *<p>
  *<b>
-#*<li>Rule 13:  PrimitiveType ::= boolean
+*<li>Rule 13:  PrimitiveType ::= boolean
  *</b>
  */'''
 class PrimitiveType ( AstToken ,IPrimitiveType):
@@ -11357,23 +11348,15 @@ class PrimitiveType ( AstToken ,IPrimitiveType):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitPrimitiveType(self)
-            v.endVisitPrimitiveType(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPrimitiveType(self)
+        def  acceptWithArg(self, v, o) :   v.visitPrimitiveType(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPrimitiveType(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPrimitiveType(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 27:  ClassType ::= TypeName TypeArgumentsopt
+*<li>Rule 27:  ClassType ::= TypeName TypeArgumentsopt
  *</b>
  */'''
 class ClassType ( Ast ,IClassType):
@@ -11395,7 +11378,7 @@ class ClassType ( Ast ,IClassType):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._TypeName : ITypeName = _TypeName
+            self._TypeName : Ast = _TypeName
             _TypeName.setParent(self)
             self._TypeArgumentsopt : TypeArguments = _TypeArgumentsopt
             if _TypeArgumentsopt: _TypeArgumentsopt.setParent(self)
@@ -11413,28 +11396,15 @@ class ClassType ( Ast ,IClassType):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitClassType(self)
-            if checkChildren:
-            
-                self._TypeName.accept(v)
-                if self._TypeArgumentsopt: self._TypeArgumentsopt.accept(v)
-            
-            v.endVisitClassType(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassType(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassType(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassType(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassType(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 28:  InterfaceType ::= TypeName TypeArgumentsopt
+*<li>Rule 28:  InterfaceType ::= TypeName TypeArgumentsopt
  *</b>
  */'''
 class InterfaceType ( Ast ,IInterfaceType):
@@ -11456,7 +11426,7 @@ class InterfaceType ( Ast ,IInterfaceType):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._TypeName : ITypeName = _TypeName
+            self._TypeName : Ast = _TypeName
             _TypeName.setParent(self)
             self._TypeArgumentsopt : TypeArguments = _TypeArgumentsopt
             if _TypeArgumentsopt: _TypeArgumentsopt.setParent(self)
@@ -11474,32 +11444,19 @@ class InterfaceType ( Ast ,IInterfaceType):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitInterfaceType(self)
-            if checkChildren:
-            
-                self._TypeName.accept(v)
-                if self._TypeArgumentsopt: self._TypeArgumentsopt.accept(v)
-            
-            v.endVisitInterfaceType(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceType(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceType(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceType(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceType(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 29:  TypeName ::= identifier
+*<li>Rule 29:  TypeName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 30:  TypeName ::= TypeName . identifier
+*<li>Rule 30:  TypeName ::= TypeName . identifier
  *</b>
  */'''
 class TypeName ( Ast ,ITypeName):
@@ -11521,7 +11478,7 @@ class TypeName ( Ast ,ITypeName):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._TypeName : ITypeName = _TypeName
+            self._TypeName : Ast = _TypeName
             _TypeName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -11542,29 +11499,15 @@ class TypeName ( Ast ,ITypeName):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitTypeName(self)
-            if checkChildren:
-            
-                self._TypeName.accept(v)
-                self._DOT.accept(v)
-                self._identifier.accept(v)
-            
-            v.endVisitTypeName(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTypeName(self)
+        def  acceptWithArg(self, v, o) :   v.visitTypeName(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTypeName(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTypeName(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 33:  ArrayType ::= Type [ ]
+*<li>Rule 33:  ArrayType ::= Type [ ]
  *</b>
  */'''
 class ArrayType ( Ast ,IArrayType):
@@ -11586,7 +11529,7 @@ class ArrayType ( Ast ,IArrayType):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Type : IType = _Type
+            self._Type : Ast = _Type
             _Type.setParent(self)
             self._LBRACKET : AstToken = _LBRACKET
             _LBRACKET.setParent(self)
@@ -11607,29 +11550,15 @@ class ArrayType ( Ast ,IArrayType):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitArrayType(self)
-            if checkChildren:
-            
-                self._Type.accept(v)
-                self._LBRACKET.accept(v)
-                self._RBRACKET.accept(v)
-            
-            v.endVisitArrayType(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitArrayType(self)
+        def  acceptWithArg(self, v, o) :   v.visitArrayType(self, o)
+        def  acceptWithResult(self, v) :  return v.visitArrayType(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitArrayType(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 34:  TypeParameter ::= TypeVariable TypeBoundopt
+*<li>Rule 34:  TypeParameter ::= TypeVariable TypeBoundopt
  *</b>
  */'''
 class TypeParameter ( Ast ,ITypeParameter):
@@ -11669,28 +11598,15 @@ class TypeParameter ( Ast ,ITypeParameter):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitTypeParameter(self)
-            if checkChildren:
-            
-                self._TypeVariable.accept(v)
-                if self._TypeBoundopt: self._TypeBoundopt.accept(v)
-            
-            v.endVisitTypeParameter(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTypeParameter(self)
+        def  acceptWithArg(self, v, o) :   v.visitTypeParameter(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTypeParameter(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTypeParameter(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 35:  TypeBound ::= extends ClassOrInterfaceType AdditionalBoundListopt
+*<li>Rule 35:  TypeBound ::= extends ClassOrInterfaceType AdditionalBoundListopt
  *</b>
  */'''
 class TypeBound ( Ast ,ITypeBound):
@@ -11719,7 +11635,7 @@ class TypeBound ( Ast ,ITypeBound):
             _extends.setParent(self)
             self._ClassOrInterfaceType : ClassType = _ClassOrInterfaceType
             _ClassOrInterfaceType.setParent(self)
-            self._AdditionalBoundListopt : IAdditionalBoundListopt = _AdditionalBoundListopt
+            self._AdditionalBoundListopt : Ast = _AdditionalBoundListopt
             if _AdditionalBoundListopt: _AdditionalBoundListopt.setParent(self)
             self.initialize()
         
@@ -11736,33 +11652,19 @@ class TypeBound ( Ast ,ITypeBound):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitTypeBound(self)
-            if checkChildren:
-            
-                self._extends.accept(v)
-                self._ClassOrInterfaceType.accept(v)
-                if self._AdditionalBoundListopt: self._AdditionalBoundListopt.accept(v)
-            
-            v.endVisitTypeBound(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTypeBound(self)
+        def  acceptWithArg(self, v, o) :   v.visitTypeBound(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTypeBound(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTypeBound(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 36:  AdditionalBoundList ::= AdditionalBound
+*<li>Rule 36:  AdditionalBoundList ::= AdditionalBound
  *</em>
  *<p>
  *<b>
-#*<li>Rule 37:  AdditionalBoundList ::= AdditionalBoundList AdditionalBound
+*<li>Rule 37:  AdditionalBoundList ::= AdditionalBoundList AdditionalBound
  *</b>
  */'''
 class AdditionalBoundList ( Ast ,IAdditionalBoundList):
@@ -11781,7 +11683,7 @@ class AdditionalBoundList ( Ast ,IAdditionalBoundList):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AdditionalBoundList : IAdditionalBoundList = _AdditionalBoundList
+            self._AdditionalBoundList : Ast = _AdditionalBoundList
             _AdditionalBoundList.setParent(self)
             self._AdditionalBound : AdditionalBound = _AdditionalBound
             _AdditionalBound.setParent(self)
@@ -11799,28 +11701,15 @@ class AdditionalBoundList ( Ast ,IAdditionalBoundList):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAdditionalBoundList(self)
-            if checkChildren:
-            
-                self._AdditionalBoundList.accept(v)
-                self._AdditionalBound.accept(v)
-            
-            v.endVisitAdditionalBoundList(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAdditionalBoundList(self)
+        def  acceptWithArg(self, v, o) :   v.visitAdditionalBoundList(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAdditionalBoundList(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAdditionalBoundList(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 38:  AdditionalBound ::= & InterfaceType
+*<li>Rule 38:  AdditionalBound ::= & InterfaceType
  *</b>
  */'''
 class AdditionalBound ( Ast ,IAdditionalBound):
@@ -11857,28 +11746,15 @@ class AdditionalBound ( Ast ,IAdditionalBound):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAdditionalBound(self)
-            if checkChildren:
-            
-                self._AND.accept(v)
-                self._InterfaceType.accept(v)
-            
-            v.endVisitAdditionalBound(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAdditionalBound(self)
+        def  acceptWithArg(self, v, o) :   v.visitAdditionalBound(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAdditionalBound(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAdditionalBound(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 39:  TypeArguments ::= < ActualTypeArgumentList >
+*<li>Rule 39:  TypeArguments ::= < ActualTypeArgumentList >
  *</b>
  */'''
 class TypeArguments ( Ast ,ITypeArguments):
@@ -11902,7 +11778,7 @@ class TypeArguments ( Ast ,ITypeArguments):
 
             self._LESS : AstToken = _LESS
             _LESS.setParent(self)
-            self._ActualTypeArgumentList : IActualTypeArgumentList = _ActualTypeArgumentList
+            self._ActualTypeArgumentList : Ast = _ActualTypeArgumentList
             _ActualTypeArgumentList.setParent(self)
             self._GREATER : AstToken = _GREATER
             _GREATER.setParent(self)
@@ -11921,33 +11797,19 @@ class TypeArguments ( Ast ,ITypeArguments):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitTypeArguments(self)
-            if checkChildren:
-            
-                self._LESS.accept(v)
-                self._ActualTypeArgumentList.accept(v)
-                self._GREATER.accept(v)
-            
-            v.endVisitTypeArguments(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTypeArguments(self)
+        def  acceptWithArg(self, v, o) :   v.visitTypeArguments(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTypeArguments(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTypeArguments(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 40:  ActualTypeArgumentList ::= ActualTypeArgument
+*<li>Rule 40:  ActualTypeArgumentList ::= ActualTypeArgument
  *</em>
  *<p>
  *<b>
-#*<li>Rule 41:  ActualTypeArgumentList ::= ActualTypeArgumentList , ActualTypeArgument
+*<li>Rule 41:  ActualTypeArgumentList ::= ActualTypeArgumentList , ActualTypeArgument
  *</b>
  */'''
 class ActualTypeArgumentList ( Ast ,IActualTypeArgumentList):
@@ -11969,11 +11831,11 @@ class ActualTypeArgumentList ( Ast ,IActualTypeArgumentList):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ActualTypeArgumentList : IActualTypeArgumentList = _ActualTypeArgumentList
+            self._ActualTypeArgumentList : Ast = _ActualTypeArgumentList
             _ActualTypeArgumentList.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
-            self._ActualTypeArgument : IActualTypeArgument = _ActualTypeArgument
+            self._ActualTypeArgument : Ast = _ActualTypeArgument
             _ActualTypeArgument.setParent(self)
             self.initialize()
         
@@ -11990,29 +11852,15 @@ class ActualTypeArgumentList ( Ast ,IActualTypeArgumentList):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitActualTypeArgumentList(self)
-            if checkChildren:
-            
-                self._ActualTypeArgumentList.accept(v)
-                self._COMMA.accept(v)
-                self._ActualTypeArgument.accept(v)
-            
-            v.endVisitActualTypeArgumentList(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitActualTypeArgumentList(self)
+        def  acceptWithArg(self, v, o) :   v.visitActualTypeArgumentList(self, o)
+        def  acceptWithResult(self, v) :  return v.visitActualTypeArgumentList(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitActualTypeArgumentList(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 44:  Wildcard ::= ? WildcardBoundsOpt
+*<li>Rule 44:  Wildcard ::= ? WildcardBoundsOpt
  *</b>
  */'''
 class Wildcard ( Ast ,IWildcard):
@@ -12036,7 +11884,7 @@ class Wildcard ( Ast ,IWildcard):
 
             self._QUESTION : AstToken = _QUESTION
             _QUESTION.setParent(self)
-            self._WildcardBoundsOpt : IWildcardBoundsOpt = _WildcardBoundsOpt
+            self._WildcardBoundsOpt : Ast = _WildcardBoundsOpt
             if _WildcardBoundsOpt: _WildcardBoundsOpt.setParent(self)
             self.initialize()
         
@@ -12052,32 +11900,19 @@ class Wildcard ( Ast ,IWildcard):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitWildcard(self)
-            if checkChildren:
-            
-                self._QUESTION.accept(v)
-                if self._WildcardBoundsOpt: self._WildcardBoundsOpt.accept(v)
-            
-            v.endVisitWildcard(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitWildcard(self)
+        def  acceptWithArg(self, v, o) :   v.visitWildcard(self, o)
+        def  acceptWithResult(self, v) :  return v.visitWildcard(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitWildcard(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 47:  PackageName ::= identifier
+*<li>Rule 47:  PackageName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 48:  PackageName ::= PackageName . identifier
+*<li>Rule 48:  PackageName ::= PackageName . identifier
  *</b>
  */'''
 class PackageName ( Ast ,IPackageName):
@@ -12099,7 +11934,7 @@ class PackageName ( Ast ,IPackageName):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._PackageName : IPackageName = _PackageName
+            self._PackageName : Ast = _PackageName
             _PackageName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -12120,33 +11955,19 @@ class PackageName ( Ast ,IPackageName):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPackageName(self)
-            if checkChildren:
-            
-                self._PackageName.accept(v)
-                self._DOT.accept(v)
-                self._identifier.accept(v)
-            
-            v.endVisitPackageName(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPackageName(self)
+        def  acceptWithArg(self, v, o) :   v.visitPackageName(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPackageName(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPackageName(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 49:  ExpressionName ::= identifier
+*<li>Rule 49:  ExpressionName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 50:  ExpressionName ::= AmbiguousName . identifier
+*<li>Rule 50:  ExpressionName ::= AmbiguousName . identifier
  *</b>
  */'''
 class ExpressionName ( Ast ,IExpressionName):
@@ -12168,7 +11989,7 @@ class ExpressionName ( Ast ,IExpressionName):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AmbiguousName : IAmbiguousName = _AmbiguousName
+            self._AmbiguousName : Ast = _AmbiguousName
             _AmbiguousName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -12189,33 +12010,19 @@ class ExpressionName ( Ast ,IExpressionName):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitExpressionName(self)
-            if checkChildren:
-            
-                self._AmbiguousName.accept(v)
-                self._DOT.accept(v)
-                self._identifier.accept(v)
-            
-            v.endVisitExpressionName(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitExpressionName(self)
+        def  acceptWithArg(self, v, o) :   v.visitExpressionName(self, o)
+        def  acceptWithResult(self, v) :  return v.visitExpressionName(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitExpressionName(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 51:  MethodName ::= identifier
+*<li>Rule 51:  MethodName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 52:  MethodName ::= AmbiguousName . identifier
+*<li>Rule 52:  MethodName ::= AmbiguousName . identifier
  *</b>
  */'''
 class MethodName ( Ast ,IMethodName):
@@ -12237,7 +12044,7 @@ class MethodName ( Ast ,IMethodName):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AmbiguousName : IAmbiguousName = _AmbiguousName
+            self._AmbiguousName : Ast = _AmbiguousName
             _AmbiguousName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -12258,33 +12065,19 @@ class MethodName ( Ast ,IMethodName):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodName(self)
-            if checkChildren:
-            
-                self._AmbiguousName.accept(v)
-                self._DOT.accept(v)
-                self._identifier.accept(v)
-            
-            v.endVisitMethodName(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodName(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodName(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodName(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodName(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 53:  PackageOrTypeName ::= identifier
+*<li>Rule 53:  PackageOrTypeName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 54:  PackageOrTypeName ::= PackageOrTypeName . identifier
+*<li>Rule 54:  PackageOrTypeName ::= PackageOrTypeName . identifier
  *</b>
  */'''
 class PackageOrTypeName ( Ast ,IPackageOrTypeName):
@@ -12306,7 +12099,7 @@ class PackageOrTypeName ( Ast ,IPackageOrTypeName):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._PackageOrTypeName : IPackageOrTypeName = _PackageOrTypeName
+            self._PackageOrTypeName : Ast = _PackageOrTypeName
             _PackageOrTypeName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -12327,33 +12120,19 @@ class PackageOrTypeName ( Ast ,IPackageOrTypeName):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPackageOrTypeName(self)
-            if checkChildren:
-            
-                self._PackageOrTypeName.accept(v)
-                self._DOT.accept(v)
-                self._identifier.accept(v)
-            
-            v.endVisitPackageOrTypeName(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPackageOrTypeName(self)
+        def  acceptWithArg(self, v, o) :   v.visitPackageOrTypeName(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPackageOrTypeName(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPackageOrTypeName(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 55:  AmbiguousName ::= identifier
+*<li>Rule 55:  AmbiguousName ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 56:  AmbiguousName ::= AmbiguousName . identifier
+*<li>Rule 56:  AmbiguousName ::= AmbiguousName . identifier
  *</b>
  */'''
 class AmbiguousName ( Ast ,IAmbiguousName):
@@ -12375,7 +12154,7 @@ class AmbiguousName ( Ast ,IAmbiguousName):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AmbiguousName : IAmbiguousName = _AmbiguousName
+            self._AmbiguousName : Ast = _AmbiguousName
             _AmbiguousName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -12396,29 +12175,15 @@ class AmbiguousName ( Ast ,IAmbiguousName):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAmbiguousName(self)
-            if checkChildren:
-            
-                self._AmbiguousName.accept(v)
-                self._DOT.accept(v)
-                self._identifier.accept(v)
-            
-            v.endVisitAmbiguousName(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAmbiguousName(self)
+        def  acceptWithArg(self, v, o) :   v.visitAmbiguousName(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAmbiguousName(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAmbiguousName(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 57:  CompilationUnit ::= PackageDeclarationopt ImportDeclarationsopt TypeDeclarationsopt
+*<li>Rule 57:  CompilationUnit ::= PackageDeclarationopt ImportDeclarationsopt TypeDeclarationsopt
  *</b>
  */'''
 class CompilationUnit ( Ast ,ICompilationUnit):
@@ -12451,9 +12216,9 @@ class CompilationUnit ( Ast ,ICompilationUnit):
 
             self._PackageDeclarationopt : PackageDeclaration = _PackageDeclarationopt
             if _PackageDeclarationopt: _PackageDeclarationopt.setParent(self)
-            self._ImportDeclarationsopt : IImportDeclarationsopt = _ImportDeclarationsopt
+            self._ImportDeclarationsopt : Ast = _ImportDeclarationsopt
             if _ImportDeclarationsopt: _ImportDeclarationsopt.setParent(self)
-            self._TypeDeclarationsopt : ITypeDeclarationsopt = _TypeDeclarationsopt
+            self._TypeDeclarationsopt : Ast = _TypeDeclarationsopt
             if _TypeDeclarationsopt: _TypeDeclarationsopt.setParent(self)
             self.initialize()
         
@@ -12470,33 +12235,19 @@ class CompilationUnit ( Ast ,ICompilationUnit):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitCompilationUnit(self)
-            if checkChildren:
-            
-                if self._PackageDeclarationopt: self._PackageDeclarationopt.accept(v)
-                if self._ImportDeclarationsopt: self._ImportDeclarationsopt.accept(v)
-                if self._TypeDeclarationsopt: self._TypeDeclarationsopt.accept(v)
-            
-            v.endVisitCompilationUnit(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitCompilationUnit(self)
+        def  acceptWithArg(self, v, o) :   v.visitCompilationUnit(self, o)
+        def  acceptWithResult(self, v) :  return v.visitCompilationUnit(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitCompilationUnit(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 58:  ImportDeclarations ::= ImportDeclaration
+*<li>Rule 58:  ImportDeclarations ::= ImportDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 59:  ImportDeclarations ::= ImportDeclarations ImportDeclaration
+*<li>Rule 59:  ImportDeclarations ::= ImportDeclarations ImportDeclaration
  *</b>
  */'''
 class ImportDeclarations ( Ast ,IImportDeclarations):
@@ -12515,9 +12266,9 @@ class ImportDeclarations ( Ast ,IImportDeclarations):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ImportDeclarations : IImportDeclarations = _ImportDeclarations
+            self._ImportDeclarations : Ast = _ImportDeclarations
             _ImportDeclarations.setParent(self)
-            self._ImportDeclaration : IImportDeclaration = _ImportDeclaration
+            self._ImportDeclaration : Ast = _ImportDeclaration
             _ImportDeclaration.setParent(self)
             self.initialize()
         
@@ -12533,32 +12284,19 @@ class ImportDeclarations ( Ast ,IImportDeclarations):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitImportDeclarations(self)
-            if checkChildren:
-            
-                self._ImportDeclarations.accept(v)
-                self._ImportDeclaration.accept(v)
-            
-            v.endVisitImportDeclarations(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitImportDeclarations(self)
+        def  acceptWithArg(self, v, o) :   v.visitImportDeclarations(self, o)
+        def  acceptWithResult(self, v) :  return v.visitImportDeclarations(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitImportDeclarations(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 60:  TypeDeclarations ::= TypeDeclaration
+*<li>Rule 60:  TypeDeclarations ::= TypeDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 61:  TypeDeclarations ::= TypeDeclarations TypeDeclaration
+*<li>Rule 61:  TypeDeclarations ::= TypeDeclarations TypeDeclaration
  *</b>
  */'''
 class TypeDeclarations ( Ast ,ITypeDeclarations):
@@ -12577,9 +12315,9 @@ class TypeDeclarations ( Ast ,ITypeDeclarations):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._TypeDeclarations : ITypeDeclarations = _TypeDeclarations
+            self._TypeDeclarations : Ast = _TypeDeclarations
             _TypeDeclarations.setParent(self)
-            self._TypeDeclaration : ITypeDeclaration = _TypeDeclaration
+            self._TypeDeclaration : Ast = _TypeDeclaration
             _TypeDeclaration.setParent(self)
             self.initialize()
         
@@ -12595,28 +12333,15 @@ class TypeDeclarations ( Ast ,ITypeDeclarations):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitTypeDeclarations(self)
-            if checkChildren:
-            
-                self._TypeDeclarations.accept(v)
-                self._TypeDeclaration.accept(v)
-            
-            v.endVisitTypeDeclarations(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTypeDeclarations(self)
+        def  acceptWithArg(self, v, o) :   v.visitTypeDeclarations(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTypeDeclarations(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTypeDeclarations(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 62:  PackageDeclaration ::= Annotationsopt package PackageName ;
+*<li>Rule 62:  PackageDeclaration ::= Annotationsopt package PackageName ;
  *</b>
  */'''
 class PackageDeclaration ( Ast ,IPackageDeclaration):
@@ -12644,11 +12369,11 @@ class PackageDeclaration ( Ast ,IPackageDeclaration):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Annotationsopt : IAnnotationsopt = _Annotationsopt
+            self._Annotationsopt : Ast = _Annotationsopt
             if _Annotationsopt: _Annotationsopt.setParent(self)
             self._package : AstToken = _package
             _package.setParent(self)
-            self._PackageName : IPackageName = _PackageName
+            self._PackageName : Ast = _PackageName
             _PackageName.setParent(self)
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
@@ -12668,30 +12393,15 @@ class PackageDeclaration ( Ast ,IPackageDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPackageDeclaration(self)
-            if checkChildren:
-            
-                if self._Annotationsopt: self._Annotationsopt.accept(v)
-                self._package.accept(v)
-                self._PackageName.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitPackageDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPackageDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitPackageDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPackageDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPackageDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 67:  SingleTypeImportDeclaration ::= import TypeName ;
+*<li>Rule 67:  SingleTypeImportDeclaration ::= import TypeName ;
  *</b>
  */'''
 class SingleTypeImportDeclaration ( Ast ,ISingleTypeImportDeclaration):
@@ -12715,7 +12425,7 @@ class SingleTypeImportDeclaration ( Ast ,ISingleTypeImportDeclaration):
 
             self._import : AstToken = _import
             _import.setParent(self)
-            self._TypeName : ITypeName = _TypeName
+            self._TypeName : Ast = _TypeName
             _TypeName.setParent(self)
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
@@ -12734,29 +12444,15 @@ class SingleTypeImportDeclaration ( Ast ,ISingleTypeImportDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSingleTypeImportDeclaration(self)
-            if checkChildren:
-            
-                self._import.accept(v)
-                self._TypeName.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitSingleTypeImportDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSingleTypeImportDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitSingleTypeImportDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSingleTypeImportDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSingleTypeImportDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 68:  TypeImportOnDemandDeclaration ::= import PackageOrTypeName . * ;
+*<li>Rule 68:  TypeImportOnDemandDeclaration ::= import PackageOrTypeName . * ;
  *</b>
  */'''
 class TypeImportOnDemandDeclaration ( Ast ,ITypeImportOnDemandDeclaration):
@@ -12786,7 +12482,7 @@ class TypeImportOnDemandDeclaration ( Ast ,ITypeImportOnDemandDeclaration):
 
             self._import : AstToken = _import
             _import.setParent(self)
-            self._PackageOrTypeName : IPackageOrTypeName = _PackageOrTypeName
+            self._PackageOrTypeName : Ast = _PackageOrTypeName
             _PackageOrTypeName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -12811,31 +12507,15 @@ class TypeImportOnDemandDeclaration ( Ast ,ITypeImportOnDemandDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitTypeImportOnDemandDeclaration(self)
-            if checkChildren:
-            
-                self._import.accept(v)
-                self._PackageOrTypeName.accept(v)
-                self._DOT.accept(v)
-                self._MULTIPLY.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitTypeImportOnDemandDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTypeImportOnDemandDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitTypeImportOnDemandDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTypeImportOnDemandDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTypeImportOnDemandDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 69:  SingleStaticImportDeclaration ::= import static TypeName . identifier ;
+*<li>Rule 69:  SingleStaticImportDeclaration ::= import static TypeName . identifier ;
  *</b>
  */'''
 class SingleStaticImportDeclaration ( Ast ,ISingleStaticImportDeclaration):
@@ -12870,7 +12550,7 @@ class SingleStaticImportDeclaration ( Ast ,ISingleStaticImportDeclaration):
             _import.setParent(self)
             self._static : AstToken = _static
             _static.setParent(self)
-            self._TypeName : ITypeName = _TypeName
+            self._TypeName : Ast = _TypeName
             _TypeName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -12896,32 +12576,15 @@ class SingleStaticImportDeclaration ( Ast ,ISingleStaticImportDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSingleStaticImportDeclaration(self)
-            if checkChildren:
-            
-                self._import.accept(v)
-                self._static.accept(v)
-                self._TypeName.accept(v)
-                self._DOT.accept(v)
-                self._identifier.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitSingleStaticImportDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSingleStaticImportDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitSingleStaticImportDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSingleStaticImportDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSingleStaticImportDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 70:  StaticImportOnDemandDeclaration ::= import static TypeName . * ;
+*<li>Rule 70:  StaticImportOnDemandDeclaration ::= import static TypeName . * ;
  *</b>
  */'''
 class StaticImportOnDemandDeclaration ( Ast ,IStaticImportOnDemandDeclaration):
@@ -12956,7 +12619,7 @@ class StaticImportOnDemandDeclaration ( Ast ,IStaticImportOnDemandDeclaration):
             _import.setParent(self)
             self._static : AstToken = _static
             _static.setParent(self)
-            self._TypeName : ITypeName = _TypeName
+            self._TypeName : Ast = _TypeName
             _TypeName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -12982,37 +12645,20 @@ class StaticImportOnDemandDeclaration ( Ast ,IStaticImportOnDemandDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitStaticImportOnDemandDeclaration(self)
-            if checkChildren:
-            
-                self._import.accept(v)
-                self._static.accept(v)
-                self._TypeName.accept(v)
-                self._DOT.accept(v)
-                self._MULTIPLY.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitStaticImportOnDemandDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitStaticImportOnDemandDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitStaticImportOnDemandDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitStaticImportOnDemandDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitStaticImportOnDemandDeclaration(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 71:  TypeDeclaration ::= ClassDeclaration
-#*<li>Rule 72:  TypeDeclaration ::= InterfaceDeclaration
+*<li>Rule 71:  TypeDeclaration ::= ClassDeclaration
+*<li>Rule 72:  TypeDeclaration ::= InterfaceDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 73:  TypeDeclaration ::= ;
+*<li>Rule 73:  TypeDeclaration ::= ;
  *</b>
  */'''
 class TypeDeclaration ( AstToken ,ITypeDeclaration):
@@ -13024,23 +12670,15 @@ class TypeDeclaration ( AstToken ,ITypeDeclaration):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitTypeDeclaration(self)
-            v.endVisitTypeDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTypeDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitTypeDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTypeDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTypeDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 76:  NormalClassDeclaration ::= ClassModifiersopt class identifier TypeParametersopt Superopt Interfacesopt ClassBody
+*<li>Rule 76:  NormalClassDeclaration ::= ClassModifiersopt class identifier TypeParametersopt Superopt Interfacesopt ClassBody
  *</b>
  */'''
 class NormalClassDeclaration ( Ast ,INormalClassDeclaration):
@@ -13086,7 +12724,7 @@ class NormalClassDeclaration ( Ast ,INormalClassDeclaration):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ClassModifiersopt : IClassModifiersopt = _ClassModifiersopt
+            self._ClassModifiersopt : Ast = _ClassModifiersopt
             if _ClassModifiersopt: _ClassModifiersopt.setParent(self)
             self._class : AstToken = _class
             _class.setParent(self)
@@ -13119,37 +12757,19 @@ class NormalClassDeclaration ( Ast ,INormalClassDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitNormalClassDeclaration(self)
-            if checkChildren:
-            
-                if self._ClassModifiersopt: self._ClassModifiersopt.accept(v)
-                self._class.accept(v)
-                self._identifier.accept(v)
-                if self._TypeParametersopt: self._TypeParametersopt.accept(v)
-                if self._Superopt: self._Superopt.accept(v)
-                if self._Interfacesopt: self._Interfacesopt.accept(v)
-                self._ClassBody.accept(v)
-            
-            v.endVisitNormalClassDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitNormalClassDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitNormalClassDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitNormalClassDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitNormalClassDeclaration(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 77:  ClassModifiers ::= ClassModifier
+*<li>Rule 77:  ClassModifiers ::= ClassModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 78:  ClassModifiers ::= ClassModifiers ClassModifier
+*<li>Rule 78:  ClassModifiers ::= ClassModifiers ClassModifier
  *</b>
  */'''
 class ClassModifiers ( Ast ,IClassModifiers):
@@ -13168,9 +12788,9 @@ class ClassModifiers ( Ast ,IClassModifiers):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ClassModifiers : IClassModifiers = _ClassModifiers
+            self._ClassModifiers : Ast = _ClassModifiers
             _ClassModifiers.setParent(self)
-            self._ClassModifier : IClassModifier = _ClassModifier
+            self._ClassModifier : Ast = _ClassModifier
             _ClassModifier.setParent(self)
             self.initialize()
         
@@ -13186,28 +12806,15 @@ class ClassModifiers ( Ast ,IClassModifiers):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitClassModifiers(self)
-            if checkChildren:
-            
-                self._ClassModifiers.accept(v)
-                self._ClassModifier.accept(v)
-            
-            v.endVisitClassModifiers(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassModifiers(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassModifiers(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassModifiers(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassModifiers(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 87:  TypeParameters ::= < TypeParameterList >
+*<li>Rule 87:  TypeParameters ::= < TypeParameterList >
  *</b>
  */'''
 class TypeParameters ( Ast ,ITypeParameters):
@@ -13231,7 +12838,7 @@ class TypeParameters ( Ast ,ITypeParameters):
 
             self._LESS : AstToken = _LESS
             _LESS.setParent(self)
-            self._TypeParameterList : ITypeParameterList = _TypeParameterList
+            self._TypeParameterList : Ast = _TypeParameterList
             _TypeParameterList.setParent(self)
             self._GREATER : AstToken = _GREATER
             _GREATER.setParent(self)
@@ -13250,33 +12857,19 @@ class TypeParameters ( Ast ,ITypeParameters):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitTypeParameters(self)
-            if checkChildren:
-            
-                self._LESS.accept(v)
-                self._TypeParameterList.accept(v)
-                self._GREATER.accept(v)
-            
-            v.endVisitTypeParameters(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTypeParameters(self)
+        def  acceptWithArg(self, v, o) :   v.visitTypeParameters(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTypeParameters(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTypeParameters(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 88:  TypeParameterList ::= TypeParameter
+*<li>Rule 88:  TypeParameterList ::= TypeParameter
  *</em>
  *<p>
  *<b>
-#*<li>Rule 89:  TypeParameterList ::= TypeParameterList , TypeParameter
+*<li>Rule 89:  TypeParameterList ::= TypeParameterList , TypeParameter
  *</b>
  */'''
 class TypeParameterList ( Ast ,ITypeParameterList):
@@ -13298,7 +12891,7 @@ class TypeParameterList ( Ast ,ITypeParameterList):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._TypeParameterList : ITypeParameterList = _TypeParameterList
+            self._TypeParameterList : Ast = _TypeParameterList
             _TypeParameterList.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
@@ -13319,29 +12912,15 @@ class TypeParameterList ( Ast ,ITypeParameterList):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitTypeParameterList(self)
-            if checkChildren:
-            
-                self._TypeParameterList.accept(v)
-                self._COMMA.accept(v)
-                self._TypeParameter.accept(v)
-            
-            v.endVisitTypeParameterList(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTypeParameterList(self)
+        def  acceptWithArg(self, v, o) :   v.visitTypeParameterList(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTypeParameterList(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTypeParameterList(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 90:  Super ::= extends ClassType
+*<li>Rule 90:  Super ::= extends ClassType
  *</b>
  */'''
 class Super ( Ast ,ISuper):
@@ -13378,28 +12957,15 @@ class Super ( Ast ,ISuper):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSuper(self)
-            if checkChildren:
-            
-                self._extends.accept(v)
-                self._ClassType.accept(v)
-            
-            v.endVisitSuper(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSuper(self)
+        def  acceptWithArg(self, v, o) :   v.visitSuper(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSuper(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSuper(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 91:  Interfaces ::= implements InterfaceTypeList
+*<li>Rule 91:  Interfaces ::= implements InterfaceTypeList
  *</b>
  */'''
 class Interfaces ( Ast ,IInterfaces):
@@ -13420,7 +12986,7 @@ class Interfaces ( Ast ,IInterfaces):
 
             self._implements : AstToken = _implements
             _implements.setParent(self)
-            self._InterfaceTypeList : IInterfaceTypeList = _InterfaceTypeList
+            self._InterfaceTypeList : Ast = _InterfaceTypeList
             _InterfaceTypeList.setParent(self)
             self.initialize()
         
@@ -13436,32 +13002,19 @@ class Interfaces ( Ast ,IInterfaces):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitInterfaces(self)
-            if checkChildren:
-            
-                self._implements.accept(v)
-                self._InterfaceTypeList.accept(v)
-            
-            v.endVisitInterfaces(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaces(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaces(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaces(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaces(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 92:  InterfaceTypeList ::= InterfaceType
+*<li>Rule 92:  InterfaceTypeList ::= InterfaceType
  *</em>
  *<p>
  *<b>
-#*<li>Rule 93:  InterfaceTypeList ::= InterfaceTypeList , InterfaceType
+*<li>Rule 93:  InterfaceTypeList ::= InterfaceTypeList , InterfaceType
  *</b>
  */'''
 class InterfaceTypeList ( Ast ,IInterfaceTypeList):
@@ -13483,7 +13036,7 @@ class InterfaceTypeList ( Ast ,IInterfaceTypeList):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._InterfaceTypeList : IInterfaceTypeList = _InterfaceTypeList
+            self._InterfaceTypeList : Ast = _InterfaceTypeList
             _InterfaceTypeList.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
@@ -13504,29 +13057,15 @@ class InterfaceTypeList ( Ast ,IInterfaceTypeList):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitInterfaceTypeList(self)
-            if checkChildren:
-            
-                self._InterfaceTypeList.accept(v)
-                self._COMMA.accept(v)
-                self._InterfaceType.accept(v)
-            
-            v.endVisitInterfaceTypeList(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceTypeList(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceTypeList(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceTypeList(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceTypeList(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 94:  ClassBody ::= { ClassBodyDeclarationsopt }
+*<li>Rule 94:  ClassBody ::= { ClassBodyDeclarationsopt }
  *</b>
  */'''
 class ClassBody ( Ast ,IClassBody):
@@ -13553,7 +13092,7 @@ class ClassBody ( Ast ,IClassBody):
 
             self._LBRACE : AstToken = _LBRACE
             _LBRACE.setParent(self)
-            self._ClassBodyDeclarationsopt : IClassBodyDeclarationsopt = _ClassBodyDeclarationsopt
+            self._ClassBodyDeclarationsopt : Ast = _ClassBodyDeclarationsopt
             if _ClassBodyDeclarationsopt: _ClassBodyDeclarationsopt.setParent(self)
             self._RBRACE : AstToken = _RBRACE
             _RBRACE.setParent(self)
@@ -13572,33 +13111,19 @@ class ClassBody ( Ast ,IClassBody):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitClassBody(self)
-            if checkChildren:
-            
-                self._LBRACE.accept(v)
-                if self._ClassBodyDeclarationsopt: self._ClassBodyDeclarationsopt.accept(v)
-                self._RBRACE.accept(v)
-            
-            v.endVisitClassBody(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassBody(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassBody(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassBody(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassBody(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 95:  ClassBodyDeclarations ::= ClassBodyDeclaration
+*<li>Rule 95:  ClassBodyDeclarations ::= ClassBodyDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 96:  ClassBodyDeclarations ::= ClassBodyDeclarations ClassBodyDeclaration
+*<li>Rule 96:  ClassBodyDeclarations ::= ClassBodyDeclarations ClassBodyDeclaration
  *</b>
  */'''
 class ClassBodyDeclarations ( Ast ,IClassBodyDeclarations):
@@ -13617,9 +13142,9 @@ class ClassBodyDeclarations ( Ast ,IClassBodyDeclarations):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ClassBodyDeclarations : IClassBodyDeclarations = _ClassBodyDeclarations
+            self._ClassBodyDeclarations : Ast = _ClassBodyDeclarations
             _ClassBodyDeclarations.setParent(self)
-            self._ClassBodyDeclaration : IClassBodyDeclaration = _ClassBodyDeclaration
+            self._ClassBodyDeclaration : Ast = _ClassBodyDeclaration
             _ClassBodyDeclaration.setParent(self)
             self.initialize()
         
@@ -13635,35 +13160,22 @@ class ClassBodyDeclarations ( Ast ,IClassBodyDeclarations):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitClassBodyDeclarations(self)
-            if checkChildren:
-            
-                self._ClassBodyDeclarations.accept(v)
-                self._ClassBodyDeclaration.accept(v)
-            
-            v.endVisitClassBodyDeclarations(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassBodyDeclarations(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassBodyDeclarations(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassBodyDeclarations(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassBodyDeclarations(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 101:  ClassMemberDeclaration ::= FieldDeclaration
-#*<li>Rule 102:  ClassMemberDeclaration ::= MethodDeclaration
-#*<li>Rule 103:  ClassMemberDeclaration ::= ClassDeclaration
-#*<li>Rule 104:  ClassMemberDeclaration ::= InterfaceDeclaration
+*<li>Rule 101:  ClassMemberDeclaration ::= FieldDeclaration
+*<li>Rule 102:  ClassMemberDeclaration ::= MethodDeclaration
+*<li>Rule 103:  ClassMemberDeclaration ::= ClassDeclaration
+*<li>Rule 104:  ClassMemberDeclaration ::= InterfaceDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 105:  ClassMemberDeclaration ::= ;
+*<li>Rule 105:  ClassMemberDeclaration ::= ;
  *</b>
  */'''
 class ClassMemberDeclaration ( AstToken ,IClassMemberDeclaration):
@@ -13675,23 +13187,15 @@ class ClassMemberDeclaration ( AstToken ,IClassMemberDeclaration):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitClassMemberDeclaration(self)
-            v.endVisitClassMemberDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassMemberDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassMemberDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassMemberDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassMemberDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 106:  FieldDeclaration ::= FieldModifiersopt Type VariableDeclarators ;
+*<li>Rule 106:  FieldDeclaration ::= FieldModifiersopt Type VariableDeclarators ;
  *</b>
  */'''
 class FieldDeclaration ( Ast ,IFieldDeclaration):
@@ -13719,11 +13223,11 @@ class FieldDeclaration ( Ast ,IFieldDeclaration):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._FieldModifiersopt : IFieldModifiersopt = _FieldModifiersopt
+            self._FieldModifiersopt : Ast = _FieldModifiersopt
             if _FieldModifiersopt: _FieldModifiersopt.setParent(self)
-            self._Type : IType = _Type
+            self._Type : Ast = _Type
             _Type.setParent(self)
-            self._VariableDeclarators : IVariableDeclarators = _VariableDeclarators
+            self._VariableDeclarators : Ast = _VariableDeclarators
             _VariableDeclarators.setParent(self)
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
@@ -13743,34 +13247,19 @@ class FieldDeclaration ( Ast ,IFieldDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitFieldDeclaration(self)
-            if checkChildren:
-            
-                if self._FieldModifiersopt: self._FieldModifiersopt.accept(v)
-                self._Type.accept(v)
-                self._VariableDeclarators.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitFieldDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldDeclaration(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 107:  VariableDeclarators ::= VariableDeclarator
+*<li>Rule 107:  VariableDeclarators ::= VariableDeclarator
  *</em>
  *<p>
  *<b>
-#*<li>Rule 108:  VariableDeclarators ::= VariableDeclarators , VariableDeclarator
+*<li>Rule 108:  VariableDeclarators ::= VariableDeclarators , VariableDeclarator
  *</b>
  */'''
 class VariableDeclarators ( Ast ,IVariableDeclarators):
@@ -13792,11 +13281,11 @@ class VariableDeclarators ( Ast ,IVariableDeclarators):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._VariableDeclarators : IVariableDeclarators = _VariableDeclarators
+            self._VariableDeclarators : Ast = _VariableDeclarators
             _VariableDeclarators.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
-            self._VariableDeclarator : IVariableDeclarator = _VariableDeclarator
+            self._VariableDeclarator : Ast = _VariableDeclarator
             _VariableDeclarator.setParent(self)
             self.initialize()
         
@@ -13813,33 +13302,19 @@ class VariableDeclarators ( Ast ,IVariableDeclarators):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitVariableDeclarators(self)
-            if checkChildren:
-            
-                self._VariableDeclarators.accept(v)
-                self._COMMA.accept(v)
-                self._VariableDeclarator.accept(v)
-            
-            v.endVisitVariableDeclarators(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitVariableDeclarators(self)
+        def  acceptWithArg(self, v, o) :   v.visitVariableDeclarators(self, o)
+        def  acceptWithResult(self, v) :  return v.visitVariableDeclarators(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitVariableDeclarators(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 109:  VariableDeclarator ::= VariableDeclaratorId
+*<li>Rule 109:  VariableDeclarator ::= VariableDeclaratorId
  *</em>
  *<p>
  *<b>
-#*<li>Rule 110:  VariableDeclarator ::= VariableDeclaratorId = VariableInitializer
+*<li>Rule 110:  VariableDeclarator ::= VariableDeclaratorId = VariableInitializer
  *</b>
  */'''
 class VariableDeclarator ( Ast ,IVariableDeclarator):
@@ -13861,11 +13336,11 @@ class VariableDeclarator ( Ast ,IVariableDeclarator):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._VariableDeclaratorId : IVariableDeclaratorId = _VariableDeclaratorId
+            self._VariableDeclaratorId : Ast = _VariableDeclaratorId
             _VariableDeclaratorId.setParent(self)
             self._EQUAL : AstToken = _EQUAL
             _EQUAL.setParent(self)
-            self._VariableInitializer : IVariableInitializer = _VariableInitializer
+            self._VariableInitializer : Ast = _VariableInitializer
             _VariableInitializer.setParent(self)
             self.initialize()
         
@@ -13882,33 +13357,19 @@ class VariableDeclarator ( Ast ,IVariableDeclarator):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitVariableDeclarator(self)
-            if checkChildren:
-            
-                self._VariableDeclaratorId.accept(v)
-                self._EQUAL.accept(v)
-                self._VariableInitializer.accept(v)
-            
-            v.endVisitVariableDeclarator(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitVariableDeclarator(self)
+        def  acceptWithArg(self, v, o) :   v.visitVariableDeclarator(self, o)
+        def  acceptWithResult(self, v) :  return v.visitVariableDeclarator(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitVariableDeclarator(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 111:  VariableDeclaratorId ::= identifier
+*<li>Rule 111:  VariableDeclaratorId ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 112:  VariableDeclaratorId ::= VariableDeclaratorId [ ]
+*<li>Rule 112:  VariableDeclaratorId ::= VariableDeclaratorId [ ]
  *</b>
  */'''
 class VariableDeclaratorId ( Ast ,IVariableDeclaratorId):
@@ -13930,7 +13391,7 @@ class VariableDeclaratorId ( Ast ,IVariableDeclaratorId):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._VariableDeclaratorId : IVariableDeclaratorId = _VariableDeclaratorId
+            self._VariableDeclaratorId : Ast = _VariableDeclaratorId
             _VariableDeclaratorId.setParent(self)
             self._LBRACKET : AstToken = _LBRACKET
             _LBRACKET.setParent(self)
@@ -13951,33 +13412,19 @@ class VariableDeclaratorId ( Ast ,IVariableDeclaratorId):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitVariableDeclaratorId(self)
-            if checkChildren:
-            
-                self._VariableDeclaratorId.accept(v)
-                self._LBRACKET.accept(v)
-                self._RBRACKET.accept(v)
-            
-            v.endVisitVariableDeclaratorId(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitVariableDeclaratorId(self)
+        def  acceptWithArg(self, v, o) :   v.visitVariableDeclaratorId(self, o)
+        def  acceptWithResult(self, v) :  return v.visitVariableDeclaratorId(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitVariableDeclaratorId(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 115:  FieldModifiers ::= FieldModifier
+*<li>Rule 115:  FieldModifiers ::= FieldModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 116:  FieldModifiers ::= FieldModifiers FieldModifier
+*<li>Rule 116:  FieldModifiers ::= FieldModifiers FieldModifier
  *</b>
  */'''
 class FieldModifiers ( Ast ,IFieldModifiers):
@@ -13996,9 +13443,9 @@ class FieldModifiers ( Ast ,IFieldModifiers):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._FieldModifiers : IFieldModifiers = _FieldModifiers
+            self._FieldModifiers : Ast = _FieldModifiers
             _FieldModifiers.setParent(self)
-            self._FieldModifier : IFieldModifier = _FieldModifier
+            self._FieldModifier : Ast = _FieldModifier
             _FieldModifier.setParent(self)
             self.initialize()
         
@@ -14014,28 +13461,15 @@ class FieldModifiers ( Ast ,IFieldModifiers):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitFieldModifiers(self)
-            if checkChildren:
-            
-                self._FieldModifiers.accept(v)
-                self._FieldModifier.accept(v)
-            
-            v.endVisitFieldModifiers(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldModifiers(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldModifiers(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldModifiers(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldModifiers(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 125:  MethodDeclaration ::= MethodHeader MethodBody
+*<li>Rule 125:  MethodDeclaration ::= MethodHeader MethodBody
  *</b>
  */'''
 class MethodDeclaration ( Ast ,IMethodDeclaration):
@@ -14056,7 +13490,7 @@ class MethodDeclaration ( Ast ,IMethodDeclaration):
 
             self._MethodHeader : MethodHeader = _MethodHeader
             _MethodHeader.setParent(self)
-            self._MethodBody : IMethodBody = _MethodBody
+            self._MethodBody : Ast = _MethodBody
             _MethodBody.setParent(self)
             self.initialize()
         
@@ -14072,28 +13506,15 @@ class MethodDeclaration ( Ast ,IMethodDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodDeclaration(self)
-            if checkChildren:
-            
-                self._MethodHeader.accept(v)
-                self._MethodBody.accept(v)
-            
-            v.endVisitMethodDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 126:  MethodHeader ::= MethodModifiersopt TypeParametersopt ResultType MethodDeclarator Throwsopt
+*<li>Rule 126:  MethodHeader ::= MethodModifiersopt TypeParametersopt ResultType MethodDeclarator Throwsopt
  *</b>
  */'''
 class MethodHeader ( Ast ,IMethodHeader):
@@ -14130,13 +13551,13 @@ class MethodHeader ( Ast ,IMethodHeader):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._MethodModifiersopt : IMethodModifiersopt = _MethodModifiersopt
+            self._MethodModifiersopt : Ast = _MethodModifiersopt
             if _MethodModifiersopt: _MethodModifiersopt.setParent(self)
             self._TypeParametersopt : TypeParameters = _TypeParametersopt
             if _TypeParametersopt: _TypeParametersopt.setParent(self)
-            self._ResultType : IResultType = _ResultType
+            self._ResultType : Ast = _ResultType
             _ResultType.setParent(self)
-            self._MethodDeclarator : IMethodDeclarator = _MethodDeclarator
+            self._MethodDeclarator : Ast = _MethodDeclarator
             _MethodDeclarator.setParent(self)
             self._Throwsopt : Throws = _Throwsopt
             if _Throwsopt: _Throwsopt.setParent(self)
@@ -14157,35 +13578,19 @@ class MethodHeader ( Ast ,IMethodHeader):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodHeader(self)
-            if checkChildren:
-            
-                if self._MethodModifiersopt: self._MethodModifiersopt.accept(v)
-                if self._TypeParametersopt: self._TypeParametersopt.accept(v)
-                self._ResultType.accept(v)
-                self._MethodDeclarator.accept(v)
-                if self._Throwsopt: self._Throwsopt.accept(v)
-            
-            v.endVisitMethodHeader(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodHeader(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodHeader(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodHeader(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodHeader(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 127:  ResultType ::= Type
+*<li>Rule 127:  ResultType ::= Type
  *</em>
  *<p>
  *<b>
-#*<li>Rule 128:  ResultType ::= void
+*<li>Rule 128:  ResultType ::= void
  *</b>
  */'''
 class ResultType ( AstToken ,IResultType):
@@ -14197,27 +13602,19 @@ class ResultType ( AstToken ,IResultType):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitResultType(self)
-            v.endVisitResultType(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitResultType(self)
+        def  acceptWithArg(self, v, o) :   v.visitResultType(self, o)
+        def  acceptWithResult(self, v) :  return v.visitResultType(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitResultType(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 131:  FormalParameterList ::= LastFormalParameter
+*<li>Rule 131:  FormalParameterList ::= LastFormalParameter
  *</em>
  *<p>
  *<b>
-#*<li>Rule 132:  FormalParameterList ::= FormalParameters , LastFormalParameter
+*<li>Rule 132:  FormalParameterList ::= FormalParameters , LastFormalParameter
  *</b>
  */'''
 class FormalParameterList ( Ast ,IFormalParameterList):
@@ -14239,7 +13636,7 @@ class FormalParameterList ( Ast ,IFormalParameterList):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._FormalParameters : IFormalParameters = _FormalParameters
+            self._FormalParameters : Ast = _FormalParameters
             _FormalParameters.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
@@ -14260,33 +13657,19 @@ class FormalParameterList ( Ast ,IFormalParameterList):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitFormalParameterList(self)
-            if checkChildren:
-            
-                self._FormalParameters.accept(v)
-                self._COMMA.accept(v)
-                self._LastFormalParameter.accept(v)
-            
-            v.endVisitFormalParameterList(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFormalParameterList(self)
+        def  acceptWithArg(self, v, o) :   v.visitFormalParameterList(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFormalParameterList(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFormalParameterList(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 133:  FormalParameters ::= FormalParameter
+*<li>Rule 133:  FormalParameters ::= FormalParameter
  *</em>
  *<p>
  *<b>
-#*<li>Rule 134:  FormalParameters ::= FormalParameters , FormalParameter
+*<li>Rule 134:  FormalParameters ::= FormalParameters , FormalParameter
  *</b>
  */'''
 class FormalParameters ( Ast ,IFormalParameters):
@@ -14308,7 +13691,7 @@ class FormalParameters ( Ast ,IFormalParameters):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._FormalParameters : IFormalParameters = _FormalParameters
+            self._FormalParameters : Ast = _FormalParameters
             _FormalParameters.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
@@ -14329,29 +13712,15 @@ class FormalParameters ( Ast ,IFormalParameters):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitFormalParameters(self)
-            if checkChildren:
-            
-                self._FormalParameters.accept(v)
-                self._COMMA.accept(v)
-                self._FormalParameter.accept(v)
-            
-            v.endVisitFormalParameters(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFormalParameters(self)
+        def  acceptWithArg(self, v, o) :   v.visitFormalParameters(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFormalParameters(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFormalParameters(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 135:  FormalParameter ::= VariableModifiersopt Type VariableDeclaratorId
+*<li>Rule 135:  FormalParameter ::= VariableModifiersopt Type VariableDeclaratorId
  *</b>
  */'''
 class FormalParameter ( Ast ,IFormalParameter):
@@ -14376,11 +13745,11 @@ class FormalParameter ( Ast ,IFormalParameter):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._VariableModifiersopt : IVariableModifiersopt = _VariableModifiersopt
+            self._VariableModifiersopt : Ast = _VariableModifiersopt
             if _VariableModifiersopt: _VariableModifiersopt.setParent(self)
-            self._Type : IType = _Type
+            self._Type : Ast = _Type
             _Type.setParent(self)
-            self._VariableDeclaratorId : IVariableDeclaratorId = _VariableDeclaratorId
+            self._VariableDeclaratorId : Ast = _VariableDeclaratorId
             _VariableDeclaratorId.setParent(self)
             self.initialize()
         
@@ -14397,33 +13766,19 @@ class FormalParameter ( Ast ,IFormalParameter):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitFormalParameter(self)
-            if checkChildren:
-            
-                if self._VariableModifiersopt: self._VariableModifiersopt.accept(v)
-                self._Type.accept(v)
-                self._VariableDeclaratorId.accept(v)
-            
-            v.endVisitFormalParameter(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFormalParameter(self)
+        def  acceptWithArg(self, v, o) :   v.visitFormalParameter(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFormalParameter(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFormalParameter(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 136:  VariableModifiers ::= VariableModifier
+*<li>Rule 136:  VariableModifiers ::= VariableModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 137:  VariableModifiers ::= VariableModifiers VariableModifier
+*<li>Rule 137:  VariableModifiers ::= VariableModifiers VariableModifier
  *</b>
  */'''
 class VariableModifiers ( Ast ,IVariableModifiers):
@@ -14442,9 +13797,9 @@ class VariableModifiers ( Ast ,IVariableModifiers):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._VariableModifiers : IVariableModifiers = _VariableModifiers
+            self._VariableModifiers : Ast = _VariableModifiers
             _VariableModifiers.setParent(self)
-            self._VariableModifier : IVariableModifier = _VariableModifier
+            self._VariableModifier : Ast = _VariableModifier
             _VariableModifier.setParent(self)
             self.initialize()
         
@@ -14460,32 +13815,19 @@ class VariableModifiers ( Ast ,IVariableModifiers):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitVariableModifiers(self)
-            if checkChildren:
-            
-                self._VariableModifiers.accept(v)
-                self._VariableModifier.accept(v)
-            
-            v.endVisitVariableModifiers(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitVariableModifiers(self)
+        def  acceptWithArg(self, v, o) :   v.visitVariableModifiers(self, o)
+        def  acceptWithResult(self, v) :  return v.visitVariableModifiers(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitVariableModifiers(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 139:  VariableModifier ::= Annotations
+*<li>Rule 139:  VariableModifier ::= Annotations
  *</em>
  *<p>
  *<b>
-#*<li>Rule 138:  VariableModifier ::= final
+*<li>Rule 138:  VariableModifier ::= final
  *</b>
  */'''
 class VariableModifier ( AstToken ,IVariableModifier):
@@ -14497,23 +13839,15 @@ class VariableModifier ( AstToken ,IVariableModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitVariableModifier(self)
-            v.endVisitVariableModifier(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitVariableModifier(self)
+        def  acceptWithArg(self, v, o) :   v.visitVariableModifier(self, o)
+        def  acceptWithResult(self, v) :  return v.visitVariableModifier(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitVariableModifier(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 140:  LastFormalParameter ::= VariableModifiersopt Type ...opt VariableDeclaratorId
+*<li>Rule 140:  LastFormalParameter ::= VariableModifiersopt Type ...opt VariableDeclaratorId
  *</b>
  */'''
 class LastFormalParameter ( Ast ,ILastFormalParameter):
@@ -14544,13 +13878,13 @@ class LastFormalParameter ( Ast ,ILastFormalParameter):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._VariableModifiersopt : IVariableModifiersopt = _VariableModifiersopt
+            self._VariableModifiersopt : Ast = _VariableModifiersopt
             if _VariableModifiersopt: _VariableModifiersopt.setParent(self)
-            self._Type : IType = _Type
+            self._Type : Ast = _Type
             _Type.setParent(self)
             self._Ellipsisopt : Ellipsisopt = _Ellipsisopt
             if _Ellipsisopt: _Ellipsisopt.setParent(self)
-            self._VariableDeclaratorId : IVariableDeclaratorId = _VariableDeclaratorId
+            self._VariableDeclaratorId : Ast = _VariableDeclaratorId
             _VariableDeclaratorId.setParent(self)
             self.initialize()
         
@@ -14568,34 +13902,19 @@ class LastFormalParameter ( Ast ,ILastFormalParameter):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitLastFormalParameter(self)
-            if checkChildren:
-            
-                if self._VariableModifiersopt: self._VariableModifiersopt.accept(v)
-                self._Type.accept(v)
-                if self._Ellipsisopt: self._Ellipsisopt.accept(v)
-                self._VariableDeclaratorId.accept(v)
-            
-            v.endVisitLastFormalParameter(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLastFormalParameter(self)
+        def  acceptWithArg(self, v, o) :   v.visitLastFormalParameter(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLastFormalParameter(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLastFormalParameter(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 141:  MethodModifiers ::= MethodModifier
+*<li>Rule 141:  MethodModifiers ::= MethodModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 142:  MethodModifiers ::= MethodModifiers MethodModifier
+*<li>Rule 142:  MethodModifiers ::= MethodModifiers MethodModifier
  *</b>
  */'''
 class MethodModifiers ( Ast ,IMethodModifiers):
@@ -14614,9 +13933,9 @@ class MethodModifiers ( Ast ,IMethodModifiers):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._MethodModifiers : IMethodModifiers = _MethodModifiers
+            self._MethodModifiers : Ast = _MethodModifiers
             _MethodModifiers.setParent(self)
-            self._MethodModifier : IMethodModifier = _MethodModifier
+            self._MethodModifier : Ast = _MethodModifier
             _MethodModifier.setParent(self)
             self.initialize()
         
@@ -14632,28 +13951,15 @@ class MethodModifiers ( Ast ,IMethodModifiers):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodModifiers(self)
-            if checkChildren:
-            
-                self._MethodModifiers.accept(v)
-                self._MethodModifier.accept(v)
-            
-            v.endVisitMethodModifiers(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodModifiers(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodModifiers(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodModifiers(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodModifiers(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 153:  Throws ::= throws ExceptionTypeList
+*<li>Rule 153:  Throws ::= throws ExceptionTypeList
  *</b>
  */'''
 class Throws ( Ast ,IThrows):
@@ -14674,7 +13980,7 @@ class Throws ( Ast ,IThrows):
 
             self._throws : AstToken = _throws
             _throws.setParent(self)
-            self._ExceptionTypeList : IExceptionTypeList = _ExceptionTypeList
+            self._ExceptionTypeList : Ast = _ExceptionTypeList
             _ExceptionTypeList.setParent(self)
             self.initialize()
         
@@ -14690,32 +13996,19 @@ class Throws ( Ast ,IThrows):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitThrows(self)
-            if checkChildren:
-            
-                self._throws.accept(v)
-                self._ExceptionTypeList.accept(v)
-            
-            v.endVisitThrows(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitThrows(self)
+        def  acceptWithArg(self, v, o) :   v.visitThrows(self, o)
+        def  acceptWithResult(self, v) :  return v.visitThrows(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitThrows(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 154:  ExceptionTypeList ::= ExceptionType
+*<li>Rule 154:  ExceptionTypeList ::= ExceptionType
  *</em>
  *<p>
  *<b>
-#*<li>Rule 155:  ExceptionTypeList ::= ExceptionTypeList , ExceptionType
+*<li>Rule 155:  ExceptionTypeList ::= ExceptionTypeList , ExceptionType
  *</b>
  */'''
 class ExceptionTypeList ( Ast ,IExceptionTypeList):
@@ -14737,11 +14030,11 @@ class ExceptionTypeList ( Ast ,IExceptionTypeList):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ExceptionTypeList : IExceptionTypeList = _ExceptionTypeList
+            self._ExceptionTypeList : Ast = _ExceptionTypeList
             _ExceptionTypeList.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
-            self._ExceptionType : IExceptionType = _ExceptionType
+            self._ExceptionType : Ast = _ExceptionType
             _ExceptionType.setParent(self)
             self.initialize()
         
@@ -14758,33 +14051,19 @@ class ExceptionTypeList ( Ast ,IExceptionTypeList):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitExceptionTypeList(self)
-            if checkChildren:
-            
-                self._ExceptionTypeList.accept(v)
-                self._COMMA.accept(v)
-                self._ExceptionType.accept(v)
-            
-            v.endVisitExceptionTypeList(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitExceptionTypeList(self)
+        def  acceptWithArg(self, v, o) :   v.visitExceptionTypeList(self, o)
+        def  acceptWithResult(self, v) :  return v.visitExceptionTypeList(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitExceptionTypeList(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 158:  MethodBody ::= Block
+*<li>Rule 158:  MethodBody ::= Block
  *</em>
  *<p>
  *<b>
-#*<li>Rule 159:  MethodBody ::= ;
+*<li>Rule 159:  MethodBody ::= ;
  *</b>
  */'''
 class MethodBody ( AstToken ,IMethodBody):
@@ -14796,23 +14075,15 @@ class MethodBody ( AstToken ,IMethodBody):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitMethodBody(self)
-            v.endVisitMethodBody(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodBody(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodBody(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodBody(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodBody(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 161:  StaticInitializer ::= static Block
+*<li>Rule 161:  StaticInitializer ::= static Block
  *</b>
  */'''
 class StaticInitializer ( Ast ,IStaticInitializer):
@@ -14849,28 +14120,15 @@ class StaticInitializer ( Ast ,IStaticInitializer):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitStaticInitializer(self)
-            if checkChildren:
-            
-                self._static.accept(v)
-                self._Block.accept(v)
-            
-            v.endVisitStaticInitializer(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitStaticInitializer(self)
+        def  acceptWithArg(self, v, o) :   v.visitStaticInitializer(self, o)
+        def  acceptWithResult(self, v) :  return v.visitStaticInitializer(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitStaticInitializer(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 162:  ConstructorDeclaration ::= ConstructorModifiersopt ConstructorDeclarator Throwsopt ConstructorBody
+*<li>Rule 162:  ConstructorDeclaration ::= ConstructorModifiersopt ConstructorDeclarator Throwsopt ConstructorBody
  *</b>
  */'''
 class ConstructorDeclaration ( Ast ,IConstructorDeclaration):
@@ -14901,7 +14159,7 @@ class ConstructorDeclaration ( Ast ,IConstructorDeclaration):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ConstructorModifiersopt : IConstructorModifiersopt = _ConstructorModifiersopt
+            self._ConstructorModifiersopt : Ast = _ConstructorModifiersopt
             if _ConstructorModifiersopt: _ConstructorModifiersopt.setParent(self)
             self._ConstructorDeclarator : ConstructorDeclarator = _ConstructorDeclarator
             _ConstructorDeclarator.setParent(self)
@@ -14925,30 +14183,15 @@ class ConstructorDeclaration ( Ast ,IConstructorDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitConstructorDeclaration(self)
-            if checkChildren:
-            
-                if self._ConstructorModifiersopt: self._ConstructorModifiersopt.accept(v)
-                self._ConstructorDeclarator.accept(v)
-                if self._Throwsopt: self._Throwsopt.accept(v)
-                self._ConstructorBody.accept(v)
-            
-            v.endVisitConstructorDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstructorDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstructorDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstructorDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstructorDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 163:  ConstructorDeclarator ::= TypeParametersopt SimpleTypeName ( FormalParameterListopt )
+*<li>Rule 163:  ConstructorDeclarator ::= TypeParametersopt SimpleTypeName ( FormalParameterListopt )
  *</b>
  */'''
 class ConstructorDeclarator ( Ast ,IConstructorDeclarator):
@@ -14988,7 +14231,7 @@ class ConstructorDeclarator ( Ast ,IConstructorDeclarator):
             _SimpleTypeName.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._FormalParameterListopt : IFormalParameterListopt = _FormalParameterListopt
+            self._FormalParameterListopt : Ast = _FormalParameterListopt
             if _FormalParameterListopt: _FormalParameterListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -15009,35 +14252,19 @@ class ConstructorDeclarator ( Ast ,IConstructorDeclarator):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitConstructorDeclarator(self)
-            if checkChildren:
-            
-                if self._TypeParametersopt: self._TypeParametersopt.accept(v)
-                self._SimpleTypeName.accept(v)
-                self._LPAREN.accept(v)
-                if self._FormalParameterListopt: self._FormalParameterListopt.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitConstructorDeclarator(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstructorDeclarator(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstructorDeclarator(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstructorDeclarator(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstructorDeclarator(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 165:  ConstructorModifiers ::= ConstructorModifier
+*<li>Rule 165:  ConstructorModifiers ::= ConstructorModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 166:  ConstructorModifiers ::= ConstructorModifiers ConstructorModifier
+*<li>Rule 166:  ConstructorModifiers ::= ConstructorModifiers ConstructorModifier
  *</b>
  */'''
 class ConstructorModifiers ( Ast ,IConstructorModifiers):
@@ -15056,9 +14283,9 @@ class ConstructorModifiers ( Ast ,IConstructorModifiers):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ConstructorModifiers : IConstructorModifiers = _ConstructorModifiers
+            self._ConstructorModifiers : Ast = _ConstructorModifiers
             _ConstructorModifiers.setParent(self)
-            self._ConstructorModifier : IConstructorModifier = _ConstructorModifier
+            self._ConstructorModifier : Ast = _ConstructorModifier
             _ConstructorModifier.setParent(self)
             self.initialize()
         
@@ -15074,28 +14301,15 @@ class ConstructorModifiers ( Ast ,IConstructorModifiers):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitConstructorModifiers(self)
-            if checkChildren:
-            
-                self._ConstructorModifiers.accept(v)
-                self._ConstructorModifier.accept(v)
-            
-            v.endVisitConstructorModifiers(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstructorModifiers(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstructorModifiers(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstructorModifiers(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstructorModifiers(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 171:  ConstructorBody ::= { ExplicitConstructorInvocationopt BlockStatementsopt }
+*<li>Rule 171:  ConstructorBody ::= { ExplicitConstructorInvocationopt BlockStatementsopt }
  *</b>
  */'''
 class ConstructorBody ( Ast ,IConstructorBody):
@@ -15128,9 +14342,9 @@ class ConstructorBody ( Ast ,IConstructorBody):
 
             self._LBRACE : AstToken = _LBRACE
             _LBRACE.setParent(self)
-            self._ExplicitConstructorInvocationopt : IExplicitConstructorInvocationopt = _ExplicitConstructorInvocationopt
+            self._ExplicitConstructorInvocationopt : Ast = _ExplicitConstructorInvocationopt
             if _ExplicitConstructorInvocationopt: _ExplicitConstructorInvocationopt.setParent(self)
-            self._BlockStatementsopt : IBlockStatementsopt = _BlockStatementsopt
+            self._BlockStatementsopt : Ast = _BlockStatementsopt
             if _BlockStatementsopt: _BlockStatementsopt.setParent(self)
             self._RBRACE : AstToken = _RBRACE
             _RBRACE.setParent(self)
@@ -15150,30 +14364,15 @@ class ConstructorBody ( Ast ,IConstructorBody):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitConstructorBody(self)
-            if checkChildren:
-            
-                self._LBRACE.accept(v)
-                if self._ExplicitConstructorInvocationopt: self._ExplicitConstructorInvocationopt.accept(v)
-                if self._BlockStatementsopt: self._BlockStatementsopt.accept(v)
-                self._RBRACE.accept(v)
-            
-            v.endVisitConstructorBody(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstructorBody(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstructorBody(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstructorBody(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstructorBody(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 175:  EnumDeclaration ::= ClassModifiersopt enum identifier Interfacesopt EnumBody
+*<li>Rule 175:  EnumDeclaration ::= ClassModifiersopt enum identifier Interfacesopt EnumBody
  *</b>
  */'''
 class EnumDeclaration ( Ast ,IEnumDeclaration):
@@ -15207,7 +14406,7 @@ class EnumDeclaration ( Ast ,IEnumDeclaration):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ClassModifiersopt : IClassModifiersopt = _ClassModifiersopt
+            self._ClassModifiersopt : Ast = _ClassModifiersopt
             if _ClassModifiersopt: _ClassModifiersopt.setParent(self)
             self._enum : AstToken = _enum
             _enum.setParent(self)
@@ -15234,31 +14433,15 @@ class EnumDeclaration ( Ast ,IEnumDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitEnumDeclaration(self)
-            if checkChildren:
-            
-                if self._ClassModifiersopt: self._ClassModifiersopt.accept(v)
-                self._enum.accept(v)
-                self._identifier.accept(v)
-                if self._Interfacesopt: self._Interfacesopt.accept(v)
-                self._EnumBody.accept(v)
-            
-            v.endVisitEnumDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitEnumDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitEnumDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitEnumDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitEnumDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 176:  EnumBody ::= { EnumConstantsopt ,opt EnumBodyDeclarationsopt }
+*<li>Rule 176:  EnumBody ::= { EnumConstantsopt ,opt EnumBodyDeclarationsopt }
  *</b>
  */'''
 class EnumBody ( Ast ,IEnumBody):
@@ -15297,7 +14480,7 @@ class EnumBody ( Ast ,IEnumBody):
 
             self._LBRACE : AstToken = _LBRACE
             _LBRACE.setParent(self)
-            self._EnumConstantsopt : IEnumConstantsopt = _EnumConstantsopt
+            self._EnumConstantsopt : Ast = _EnumConstantsopt
             if _EnumConstantsopt: _EnumConstantsopt.setParent(self)
             self._Commaopt : Commaopt = _Commaopt
             if _Commaopt: _Commaopt.setParent(self)
@@ -15322,35 +14505,19 @@ class EnumBody ( Ast ,IEnumBody):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitEnumBody(self)
-            if checkChildren:
-            
-                self._LBRACE.accept(v)
-                if self._EnumConstantsopt: self._EnumConstantsopt.accept(v)
-                if self._Commaopt: self._Commaopt.accept(v)
-                if self._EnumBodyDeclarationsopt: self._EnumBodyDeclarationsopt.accept(v)
-                self._RBRACE.accept(v)
-            
-            v.endVisitEnumBody(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitEnumBody(self)
+        def  acceptWithArg(self, v, o) :   v.visitEnumBody(self, o)
+        def  acceptWithResult(self, v) :  return v.visitEnumBody(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitEnumBody(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 177:  EnumConstants ::= EnumConstant
+*<li>Rule 177:  EnumConstants ::= EnumConstant
  *</em>
  *<p>
  *<b>
-#*<li>Rule 178:  EnumConstants ::= EnumConstants , EnumConstant
+*<li>Rule 178:  EnumConstants ::= EnumConstants , EnumConstant
  *</b>
  */'''
 class EnumConstants ( Ast ,IEnumConstants):
@@ -15372,11 +14539,11 @@ class EnumConstants ( Ast ,IEnumConstants):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._EnumConstants : IEnumConstants = _EnumConstants
+            self._EnumConstants : Ast = _EnumConstants
             _EnumConstants.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
-            self._EnumConstant : IEnumConstant = _EnumConstant
+            self._EnumConstant : Ast = _EnumConstant
             _EnumConstant.setParent(self)
             self.initialize()
         
@@ -15393,33 +14560,19 @@ class EnumConstants ( Ast ,IEnumConstants):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitEnumConstants(self)
-            if checkChildren:
-            
-                self._EnumConstants.accept(v)
-                self._COMMA.accept(v)
-                self._EnumConstant.accept(v)
-            
-            v.endVisitEnumConstants(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitEnumConstants(self)
+        def  acceptWithArg(self, v, o) :   v.visitEnumConstants(self, o)
+        def  acceptWithResult(self, v) :  return v.visitEnumConstants(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitEnumConstants(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 307:  EnumConstant ::= identifier
+*<li>Rule 307:  EnumConstant ::= identifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 179:  EnumConstant ::= Annotationsopt identifier Argumentsopt ClassBodyopt
+*<li>Rule 179:  EnumConstant ::= Annotationsopt identifier Argumentsopt ClassBodyopt
  *</b>
  */'''
 class EnumConstant ( Ast ,IEnumConstant):
@@ -15453,7 +14606,7 @@ class EnumConstant ( Ast ,IEnumConstant):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Annotationsopt : IAnnotationsopt = _Annotationsopt
+            self._Annotationsopt : Ast = _Annotationsopt
             if _Annotationsopt: _Annotationsopt.setParent(self)
             self._identifier : identifier = _identifier
             _identifier.setParent(self)
@@ -15477,30 +14630,15 @@ class EnumConstant ( Ast ,IEnumConstant):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitEnumConstant(self)
-            if checkChildren:
-            
-                if self._Annotationsopt: self._Annotationsopt.accept(v)
-                self._identifier.accept(v)
-                if self._Argumentsopt: self._Argumentsopt.accept(v)
-                if self._ClassBodyopt: self._ClassBodyopt.accept(v)
-            
-            v.endVisitEnumConstant(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitEnumConstant(self)
+        def  acceptWithArg(self, v, o) :   v.visitEnumConstant(self, o)
+        def  acceptWithResult(self, v) :  return v.visitEnumConstant(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitEnumConstant(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 180:  Arguments ::= ( ArgumentListopt )
+*<li>Rule 180:  Arguments ::= ( ArgumentListopt )
  *</b>
  */'''
 class Arguments ( Ast ,IArguments):
@@ -15527,7 +14665,7 @@ class Arguments ( Ast ,IArguments):
 
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -15546,29 +14684,15 @@ class Arguments ( Ast ,IArguments):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitArguments(self)
-            if checkChildren:
-            
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitArguments(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitArguments(self)
+        def  acceptWithArg(self, v, o) :   v.visitArguments(self, o)
+        def  acceptWithResult(self, v) :  return v.visitArguments(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitArguments(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 181:  EnumBodyDeclarations ::= ; ClassBodyDeclarationsopt
+*<li>Rule 181:  EnumBodyDeclarations ::= ; ClassBodyDeclarationsopt
  *</b>
  */'''
 class EnumBodyDeclarations ( Ast ,IEnumBodyDeclarations):
@@ -15592,7 +14716,7 @@ class EnumBodyDeclarations ( Ast ,IEnumBodyDeclarations):
 
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
-            self._ClassBodyDeclarationsopt : IClassBodyDeclarationsopt = _ClassBodyDeclarationsopt
+            self._ClassBodyDeclarationsopt : Ast = _ClassBodyDeclarationsopt
             if _ClassBodyDeclarationsopt: _ClassBodyDeclarationsopt.setParent(self)
             self.initialize()
         
@@ -15608,28 +14732,15 @@ class EnumBodyDeclarations ( Ast ,IEnumBodyDeclarations):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitEnumBodyDeclarations(self)
-            if checkChildren:
-            
-                self._SEMICOLON.accept(v)
-                if self._ClassBodyDeclarationsopt: self._ClassBodyDeclarationsopt.accept(v)
-            
-            v.endVisitEnumBodyDeclarations(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitEnumBodyDeclarations(self)
+        def  acceptWithArg(self, v, o) :   v.visitEnumBodyDeclarations(self, o)
+        def  acceptWithResult(self, v) :  return v.visitEnumBodyDeclarations(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitEnumBodyDeclarations(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 184:  NormalInterfaceDeclaration ::= InterfaceModifiersopt interface identifier TypeParametersopt ExtendsInterfacesopt InterfaceBody
+*<li>Rule 184:  NormalInterfaceDeclaration ::= InterfaceModifiersopt interface identifier TypeParametersopt ExtendsInterfacesopt InterfaceBody
  *</b>
  */'''
 class NormalInterfaceDeclaration ( Ast ,INormalInterfaceDeclaration):
@@ -15669,7 +14780,7 @@ class NormalInterfaceDeclaration ( Ast ,INormalInterfaceDeclaration):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._InterfaceModifiersopt : IInterfaceModifiersopt = _InterfaceModifiersopt
+            self._InterfaceModifiersopt : Ast = _InterfaceModifiersopt
             if _InterfaceModifiersopt: _InterfaceModifiersopt.setParent(self)
             self._interface : AstToken = _interface
             _interface.setParent(self)
@@ -15677,7 +14788,7 @@ class NormalInterfaceDeclaration ( Ast ,INormalInterfaceDeclaration):
             _identifier.setParent(self)
             self._TypeParametersopt : TypeParameters = _TypeParametersopt
             if _TypeParametersopt: _TypeParametersopt.setParent(self)
-            self._ExtendsInterfacesopt : IExtendsInterfacesopt = _ExtendsInterfacesopt
+            self._ExtendsInterfacesopt : Ast = _ExtendsInterfacesopt
             if _ExtendsInterfacesopt: _ExtendsInterfacesopt.setParent(self)
             self._InterfaceBody : InterfaceBody = _InterfaceBody
             _InterfaceBody.setParent(self)
@@ -15699,36 +14810,19 @@ class NormalInterfaceDeclaration ( Ast ,INormalInterfaceDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitNormalInterfaceDeclaration(self)
-            if checkChildren:
-            
-                if self._InterfaceModifiersopt: self._InterfaceModifiersopt.accept(v)
-                self._interface.accept(v)
-                self._identifier.accept(v)
-                if self._TypeParametersopt: self._TypeParametersopt.accept(v)
-                if self._ExtendsInterfacesopt: self._ExtendsInterfacesopt.accept(v)
-                self._InterfaceBody.accept(v)
-            
-            v.endVisitNormalInterfaceDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitNormalInterfaceDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitNormalInterfaceDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitNormalInterfaceDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitNormalInterfaceDeclaration(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 185:  InterfaceModifiers ::= InterfaceModifier
+*<li>Rule 185:  InterfaceModifiers ::= InterfaceModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 186:  InterfaceModifiers ::= InterfaceModifiers InterfaceModifier
+*<li>Rule 186:  InterfaceModifiers ::= InterfaceModifiers InterfaceModifier
  *</b>
  */'''
 class InterfaceModifiers ( Ast ,IInterfaceModifiers):
@@ -15747,9 +14841,9 @@ class InterfaceModifiers ( Ast ,IInterfaceModifiers):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._InterfaceModifiers : IInterfaceModifiers = _InterfaceModifiers
+            self._InterfaceModifiers : Ast = _InterfaceModifiers
             _InterfaceModifiers.setParent(self)
-            self._InterfaceModifier : IInterfaceModifier = _InterfaceModifier
+            self._InterfaceModifier : Ast = _InterfaceModifier
             _InterfaceModifier.setParent(self)
             self.initialize()
         
@@ -15765,28 +14859,15 @@ class InterfaceModifiers ( Ast ,IInterfaceModifiers):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitInterfaceModifiers(self)
-            if checkChildren:
-            
-                self._InterfaceModifiers.accept(v)
-                self._InterfaceModifier.accept(v)
-            
-            v.endVisitInterfaceModifiers(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceModifiers(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceModifiers(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceModifiers(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceModifiers(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 196:  InterfaceBody ::= { InterfaceMemberDeclarationsopt }
+*<li>Rule 196:  InterfaceBody ::= { InterfaceMemberDeclarationsopt }
  *</b>
  */'''
 class InterfaceBody ( Ast ,IInterfaceBody):
@@ -15813,7 +14894,7 @@ class InterfaceBody ( Ast ,IInterfaceBody):
 
             self._LBRACE : AstToken = _LBRACE
             _LBRACE.setParent(self)
-            self._InterfaceMemberDeclarationsopt : IInterfaceMemberDeclarationsopt = _InterfaceMemberDeclarationsopt
+            self._InterfaceMemberDeclarationsopt : Ast = _InterfaceMemberDeclarationsopt
             if _InterfaceMemberDeclarationsopt: _InterfaceMemberDeclarationsopt.setParent(self)
             self._RBRACE : AstToken = _RBRACE
             _RBRACE.setParent(self)
@@ -15832,33 +14913,19 @@ class InterfaceBody ( Ast ,IInterfaceBody):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitInterfaceBody(self)
-            if checkChildren:
-            
-                self._LBRACE.accept(v)
-                if self._InterfaceMemberDeclarationsopt: self._InterfaceMemberDeclarationsopt.accept(v)
-                self._RBRACE.accept(v)
-            
-            v.endVisitInterfaceBody(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceBody(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceBody(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceBody(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceBody(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 197:  InterfaceMemberDeclarations ::= InterfaceMemberDeclaration
+*<li>Rule 197:  InterfaceMemberDeclarations ::= InterfaceMemberDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 198:  InterfaceMemberDeclarations ::= InterfaceMemberDeclarations InterfaceMemberDeclaration
+*<li>Rule 198:  InterfaceMemberDeclarations ::= InterfaceMemberDeclarations InterfaceMemberDeclaration
  *</b>
  */'''
 class InterfaceMemberDeclarations ( Ast ,IInterfaceMemberDeclarations):
@@ -15877,9 +14944,9 @@ class InterfaceMemberDeclarations ( Ast ,IInterfaceMemberDeclarations):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._InterfaceMemberDeclarations : IInterfaceMemberDeclarations = _InterfaceMemberDeclarations
+            self._InterfaceMemberDeclarations : Ast = _InterfaceMemberDeclarations
             _InterfaceMemberDeclarations.setParent(self)
-            self._InterfaceMemberDeclaration : IInterfaceMemberDeclaration = _InterfaceMemberDeclaration
+            self._InterfaceMemberDeclaration : Ast = _InterfaceMemberDeclaration
             _InterfaceMemberDeclaration.setParent(self)
             self.initialize()
         
@@ -15895,35 +14962,22 @@ class InterfaceMemberDeclarations ( Ast ,IInterfaceMemberDeclarations):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitInterfaceMemberDeclarations(self)
-            if checkChildren:
-            
-                self._InterfaceMemberDeclarations.accept(v)
-                self._InterfaceMemberDeclaration.accept(v)
-            
-            v.endVisitInterfaceMemberDeclarations(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceMemberDeclarations(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceMemberDeclarations(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceMemberDeclarations(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceMemberDeclarations(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 199:  InterfaceMemberDeclaration ::= ConstantDeclaration
-#*<li>Rule 200:  InterfaceMemberDeclaration ::= AbstractMethodDeclaration
-#*<li>Rule 201:  InterfaceMemberDeclaration ::= ClassDeclaration
-#*<li>Rule 202:  InterfaceMemberDeclaration ::= InterfaceDeclaration
+*<li>Rule 199:  InterfaceMemberDeclaration ::= ConstantDeclaration
+*<li>Rule 200:  InterfaceMemberDeclaration ::= AbstractMethodDeclaration
+*<li>Rule 201:  InterfaceMemberDeclaration ::= ClassDeclaration
+*<li>Rule 202:  InterfaceMemberDeclaration ::= InterfaceDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 203:  InterfaceMemberDeclaration ::= ;
+*<li>Rule 203:  InterfaceMemberDeclaration ::= ;
  *</b>
  */'''
 class InterfaceMemberDeclaration ( AstToken ,IInterfaceMemberDeclaration):
@@ -15935,23 +14989,15 @@ class InterfaceMemberDeclaration ( AstToken ,IInterfaceMemberDeclaration):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitInterfaceMemberDeclaration(self)
-            v.endVisitInterfaceMemberDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceMemberDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceMemberDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceMemberDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceMemberDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 204:  ConstantDeclaration ::= ConstantModifiersopt Type VariableDeclarators
+*<li>Rule 204:  ConstantDeclaration ::= ConstantModifiersopt Type VariableDeclarators
  *</b>
  */'''
 class ConstantDeclaration ( Ast ,IConstantDeclaration):
@@ -15976,11 +15022,11 @@ class ConstantDeclaration ( Ast ,IConstantDeclaration):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ConstantModifiersopt : IConstantModifiersopt = _ConstantModifiersopt
+            self._ConstantModifiersopt : Ast = _ConstantModifiersopt
             if _ConstantModifiersopt: _ConstantModifiersopt.setParent(self)
-            self._Type : IType = _Type
+            self._Type : Ast = _Type
             _Type.setParent(self)
-            self._VariableDeclarators : IVariableDeclarators = _VariableDeclarators
+            self._VariableDeclarators : Ast = _VariableDeclarators
             _VariableDeclarators.setParent(self)
             self.initialize()
         
@@ -15997,33 +15043,19 @@ class ConstantDeclaration ( Ast ,IConstantDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitConstantDeclaration(self)
-            if checkChildren:
-            
-                if self._ConstantModifiersopt: self._ConstantModifiersopt.accept(v)
-                self._Type.accept(v)
-                self._VariableDeclarators.accept(v)
-            
-            v.endVisitConstantDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstantDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstantDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstantDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstantDeclaration(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 205:  ConstantModifiers ::= ConstantModifier
+*<li>Rule 205:  ConstantModifiers ::= ConstantModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 206:  ConstantModifiers ::= ConstantModifiers ConstantModifier
+*<li>Rule 206:  ConstantModifiers ::= ConstantModifiers ConstantModifier
  *</b>
  */'''
 class ConstantModifiers ( Ast ,IConstantModifiers):
@@ -16042,9 +15074,9 @@ class ConstantModifiers ( Ast ,IConstantModifiers):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ConstantModifiers : IConstantModifiers = _ConstantModifiers
+            self._ConstantModifiers : Ast = _ConstantModifiers
             _ConstantModifiers.setParent(self)
-            self._ConstantModifier : IConstantModifier = _ConstantModifier
+            self._ConstantModifier : Ast = _ConstantModifier
             _ConstantModifier.setParent(self)
             self.initialize()
         
@@ -16060,28 +15092,15 @@ class ConstantModifiers ( Ast ,IConstantModifiers):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitConstantModifiers(self)
-            if checkChildren:
-            
-                self._ConstantModifiers.accept(v)
-                self._ConstantModifier.accept(v)
-            
-            v.endVisitConstantModifiers(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstantModifiers(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstantModifiers(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstantModifiers(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstantModifiers(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 211:  AbstractMethodDeclaration ::= AbstractMethodModifiersopt TypeParametersopt ResultType MethodDeclarator Throwsopt ;
+*<li>Rule 211:  AbstractMethodDeclaration ::= AbstractMethodModifiersopt TypeParametersopt ResultType MethodDeclarator Throwsopt ;
  *</b>
  */'''
 class AbstractMethodDeclaration ( Ast ,IAbstractMethodDeclaration):
@@ -16121,13 +15140,13 @@ class AbstractMethodDeclaration ( Ast ,IAbstractMethodDeclaration):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AbstractMethodModifiersopt : IAbstractMethodModifiersopt = _AbstractMethodModifiersopt
+            self._AbstractMethodModifiersopt : Ast = _AbstractMethodModifiersopt
             if _AbstractMethodModifiersopt: _AbstractMethodModifiersopt.setParent(self)
             self._TypeParametersopt : TypeParameters = _TypeParametersopt
             if _TypeParametersopt: _TypeParametersopt.setParent(self)
-            self._ResultType : IResultType = _ResultType
+            self._ResultType : Ast = _ResultType
             _ResultType.setParent(self)
-            self._MethodDeclarator : IMethodDeclarator = _MethodDeclarator
+            self._MethodDeclarator : Ast = _MethodDeclarator
             _MethodDeclarator.setParent(self)
             self._Throwsopt : Throws = _Throwsopt
             if _Throwsopt: _Throwsopt.setParent(self)
@@ -16151,36 +15170,19 @@ class AbstractMethodDeclaration ( Ast ,IAbstractMethodDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAbstractMethodDeclaration(self)
-            if checkChildren:
-            
-                if self._AbstractMethodModifiersopt: self._AbstractMethodModifiersopt.accept(v)
-                if self._TypeParametersopt: self._TypeParametersopt.accept(v)
-                self._ResultType.accept(v)
-                self._MethodDeclarator.accept(v)
-                if self._Throwsopt: self._Throwsopt.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitAbstractMethodDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAbstractMethodDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitAbstractMethodDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAbstractMethodDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAbstractMethodDeclaration(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 212:  AbstractMethodModifiers ::= AbstractMethodModifier
+*<li>Rule 212:  AbstractMethodModifiers ::= AbstractMethodModifier
  *</em>
  *<p>
  *<b>
-#*<li>Rule 213:  AbstractMethodModifiers ::= AbstractMethodModifiers AbstractMethodModifier
+*<li>Rule 213:  AbstractMethodModifiers ::= AbstractMethodModifiers AbstractMethodModifier
  *</b>
  */'''
 class AbstractMethodModifiers ( Ast ,IAbstractMethodModifiers):
@@ -16199,9 +15201,9 @@ class AbstractMethodModifiers ( Ast ,IAbstractMethodModifiers):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AbstractMethodModifiers : IAbstractMethodModifiers = _AbstractMethodModifiers
+            self._AbstractMethodModifiers : Ast = _AbstractMethodModifiers
             _AbstractMethodModifiers.setParent(self)
-            self._AbstractMethodModifier : IAbstractMethodModifier = _AbstractMethodModifier
+            self._AbstractMethodModifier : Ast = _AbstractMethodModifier
             _AbstractMethodModifier.setParent(self)
             self.initialize()
         
@@ -16217,28 +15219,15 @@ class AbstractMethodModifiers ( Ast ,IAbstractMethodModifiers):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAbstractMethodModifiers(self)
-            if checkChildren:
-            
-                self._AbstractMethodModifiers.accept(v)
-                self._AbstractMethodModifier.accept(v)
-            
-            v.endVisitAbstractMethodModifiers(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAbstractMethodModifiers(self)
+        def  acceptWithArg(self, v, o) :   v.visitAbstractMethodModifiers(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAbstractMethodModifiers(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAbstractMethodModifiers(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 217:  AnnotationTypeDeclaration ::= InterfaceModifiersopt @ interface identifier AnnotationTypeBody
+*<li>Rule 217:  AnnotationTypeDeclaration ::= InterfaceModifiersopt @ interface identifier AnnotationTypeBody
  *</b>
  */'''
 class AnnotationTypeDeclaration ( Ast ,IAnnotationTypeDeclaration):
@@ -16269,7 +15258,7 @@ class AnnotationTypeDeclaration ( Ast ,IAnnotationTypeDeclaration):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._InterfaceModifiersopt : IInterfaceModifiersopt = _InterfaceModifiersopt
+            self._InterfaceModifiersopt : Ast = _InterfaceModifiersopt
             if _InterfaceModifiersopt: _InterfaceModifiersopt.setParent(self)
             self._AT : AstToken = _AT
             _AT.setParent(self)
@@ -16296,31 +15285,15 @@ class AnnotationTypeDeclaration ( Ast ,IAnnotationTypeDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAnnotationTypeDeclaration(self)
-            if checkChildren:
-            
-                if self._InterfaceModifiersopt: self._InterfaceModifiersopt.accept(v)
-                self._AT.accept(v)
-                self._interface.accept(v)
-                self._identifier.accept(v)
-                self._AnnotationTypeBody.accept(v)
-            
-            v.endVisitAnnotationTypeDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAnnotationTypeDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitAnnotationTypeDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAnnotationTypeDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAnnotationTypeDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 218:  AnnotationTypeBody ::= { AnnotationTypeElementDeclarationsopt }
+*<li>Rule 218:  AnnotationTypeBody ::= { AnnotationTypeElementDeclarationsopt }
  *</b>
  */'''
 class AnnotationTypeBody ( Ast ,IAnnotationTypeBody):
@@ -16347,7 +15320,7 @@ class AnnotationTypeBody ( Ast ,IAnnotationTypeBody):
 
             self._LBRACE : AstToken = _LBRACE
             _LBRACE.setParent(self)
-            self._AnnotationTypeElementDeclarationsopt : IAnnotationTypeElementDeclarationsopt = _AnnotationTypeElementDeclarationsopt
+            self._AnnotationTypeElementDeclarationsopt : Ast = _AnnotationTypeElementDeclarationsopt
             if _AnnotationTypeElementDeclarationsopt: _AnnotationTypeElementDeclarationsopt.setParent(self)
             self._RBRACE : AstToken = _RBRACE
             _RBRACE.setParent(self)
@@ -16366,33 +15339,19 @@ class AnnotationTypeBody ( Ast ,IAnnotationTypeBody):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAnnotationTypeBody(self)
-            if checkChildren:
-            
-                self._LBRACE.accept(v)
-                if self._AnnotationTypeElementDeclarationsopt: self._AnnotationTypeElementDeclarationsopt.accept(v)
-                self._RBRACE.accept(v)
-            
-            v.endVisitAnnotationTypeBody(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAnnotationTypeBody(self)
+        def  acceptWithArg(self, v, o) :   v.visitAnnotationTypeBody(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAnnotationTypeBody(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAnnotationTypeBody(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 219:  AnnotationTypeElementDeclarations ::= AnnotationTypeElementDeclaration
+*<li>Rule 219:  AnnotationTypeElementDeclarations ::= AnnotationTypeElementDeclaration
  *</em>
  *<p>
  *<b>
-#*<li>Rule 220:  AnnotationTypeElementDeclarations ::= AnnotationTypeElementDeclarations AnnotationTypeElementDeclaration
+*<li>Rule 220:  AnnotationTypeElementDeclarations ::= AnnotationTypeElementDeclarations AnnotationTypeElementDeclaration
  *</b>
  */'''
 class AnnotationTypeElementDeclarations ( Ast ,IAnnotationTypeElementDeclarations):
@@ -16411,9 +15370,9 @@ class AnnotationTypeElementDeclarations ( Ast ,IAnnotationTypeElementDeclaration
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AnnotationTypeElementDeclarations : IAnnotationTypeElementDeclarations = _AnnotationTypeElementDeclarations
+            self._AnnotationTypeElementDeclarations : Ast = _AnnotationTypeElementDeclarations
             _AnnotationTypeElementDeclarations.setParent(self)
-            self._AnnotationTypeElementDeclaration : IAnnotationTypeElementDeclaration = _AnnotationTypeElementDeclaration
+            self._AnnotationTypeElementDeclaration : Ast = _AnnotationTypeElementDeclaration
             _AnnotationTypeElementDeclaration.setParent(self)
             self.initialize()
         
@@ -16429,28 +15388,15 @@ class AnnotationTypeElementDeclarations ( Ast ,IAnnotationTypeElementDeclaration
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAnnotationTypeElementDeclarations(self)
-            if checkChildren:
-            
-                self._AnnotationTypeElementDeclarations.accept(v)
-                self._AnnotationTypeElementDeclaration.accept(v)
-            
-            v.endVisitAnnotationTypeElementDeclarations(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAnnotationTypeElementDeclarations(self)
+        def  acceptWithArg(self, v, o) :   v.visitAnnotationTypeElementDeclarations(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAnnotationTypeElementDeclarations(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAnnotationTypeElementDeclarations(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 228:  DefaultValue ::= default ElementValue
+*<li>Rule 228:  DefaultValue ::= default ElementValue
  *</b>
  */'''
 class DefaultValue ( Ast ,IDefaultValue):
@@ -16471,7 +15417,7 @@ class DefaultValue ( Ast ,IDefaultValue):
 
             self._default : AstToken = _default
             _default.setParent(self)
-            self._ElementValue : IElementValue = _ElementValue
+            self._ElementValue : Ast = _ElementValue
             _ElementValue.setParent(self)
             self.initialize()
         
@@ -16487,32 +15433,19 @@ class DefaultValue ( Ast ,IDefaultValue):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitDefaultValue(self)
-            if checkChildren:
-            
-                self._default.accept(v)
-                self._ElementValue.accept(v)
-            
-            v.endVisitDefaultValue(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitDefaultValue(self)
+        def  acceptWithArg(self, v, o) :   v.visitDefaultValue(self, o)
+        def  acceptWithResult(self, v) :  return v.visitDefaultValue(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitDefaultValue(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 229:  Annotations ::= Annotation
+*<li>Rule 229:  Annotations ::= Annotation
  *</em>
  *<p>
  *<b>
-#*<li>Rule 230:  Annotations ::= Annotations Annotation
+*<li>Rule 230:  Annotations ::= Annotations Annotation
  *</b>
  */'''
 class Annotations ( Ast ,IAnnotations):
@@ -16531,9 +15464,9 @@ class Annotations ( Ast ,IAnnotations):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Annotations : IAnnotations = _Annotations
+            self._Annotations : Ast = _Annotations
             _Annotations.setParent(self)
-            self._Annotation : IAnnotation = _Annotation
+            self._Annotation : Ast = _Annotation
             _Annotation.setParent(self)
             self.initialize()
         
@@ -16549,28 +15482,15 @@ class Annotations ( Ast ,IAnnotations):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAnnotations(self)
-            if checkChildren:
-            
-                self._Annotations.accept(v)
-                self._Annotation.accept(v)
-            
-            v.endVisitAnnotations(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAnnotations(self)
+        def  acceptWithArg(self, v, o) :   v.visitAnnotations(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAnnotations(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAnnotations(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 234:  NormalAnnotation ::= @ TypeName ( ElementValuePairsopt )
+*<li>Rule 234:  NormalAnnotation ::= @ TypeName ( ElementValuePairsopt )
  *</b>
  */'''
 class NormalAnnotation ( Ast ,INormalAnnotation):
@@ -16603,11 +15523,11 @@ class NormalAnnotation ( Ast ,INormalAnnotation):
 
             self._AT : AstToken = _AT
             _AT.setParent(self)
-            self._TypeName : ITypeName = _TypeName
+            self._TypeName : Ast = _TypeName
             _TypeName.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ElementValuePairsopt : IElementValuePairsopt = _ElementValuePairsopt
+            self._ElementValuePairsopt : Ast = _ElementValuePairsopt
             if _ElementValuePairsopt: _ElementValuePairsopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -16628,35 +15548,19 @@ class NormalAnnotation ( Ast ,INormalAnnotation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitNormalAnnotation(self)
-            if checkChildren:
-            
-                self._AT.accept(v)
-                self._TypeName.accept(v)
-                self._LPAREN.accept(v)
-                if self._ElementValuePairsopt: self._ElementValuePairsopt.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitNormalAnnotation(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitNormalAnnotation(self)
+        def  acceptWithArg(self, v, o) :   v.visitNormalAnnotation(self, o)
+        def  acceptWithResult(self, v) :  return v.visitNormalAnnotation(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitNormalAnnotation(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 235:  ElementValuePairs ::= ElementValuePair
+*<li>Rule 235:  ElementValuePairs ::= ElementValuePair
  *</em>
  *<p>
  *<b>
-#*<li>Rule 236:  ElementValuePairs ::= ElementValuePairs , ElementValuePair
+*<li>Rule 236:  ElementValuePairs ::= ElementValuePairs , ElementValuePair
  *</b>
  */'''
 class ElementValuePairs ( Ast ,IElementValuePairs):
@@ -16678,7 +15582,7 @@ class ElementValuePairs ( Ast ,IElementValuePairs):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ElementValuePairs : IElementValuePairs = _ElementValuePairs
+            self._ElementValuePairs : Ast = _ElementValuePairs
             _ElementValuePairs.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
@@ -16699,29 +15603,15 @@ class ElementValuePairs ( Ast ,IElementValuePairs):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitElementValuePairs(self)
-            if checkChildren:
-            
-                self._ElementValuePairs.accept(v)
-                self._COMMA.accept(v)
-                self._ElementValuePair.accept(v)
-            
-            v.endVisitElementValuePairs(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitElementValuePairs(self)
+        def  acceptWithArg(self, v, o) :   v.visitElementValuePairs(self, o)
+        def  acceptWithResult(self, v) :  return v.visitElementValuePairs(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitElementValuePairs(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 237:  ElementValuePair ::= SimpleName = ElementValue
+*<li>Rule 237:  ElementValuePair ::= SimpleName = ElementValue
  *</b>
  */'''
 class ElementValuePair ( Ast ,IElementValuePair):
@@ -16747,7 +15637,7 @@ class ElementValuePair ( Ast ,IElementValuePair):
             _SimpleName.setParent(self)
             self._EQUAL : AstToken = _EQUAL
             _EQUAL.setParent(self)
-            self._ElementValue : IElementValue = _ElementValue
+            self._ElementValue : Ast = _ElementValue
             _ElementValue.setParent(self)
             self.initialize()
         
@@ -16764,29 +15654,15 @@ class ElementValuePair ( Ast ,IElementValuePair):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitElementValuePair(self)
-            if checkChildren:
-            
-                self._SimpleName.accept(v)
-                self._EQUAL.accept(v)
-                self._ElementValue.accept(v)
-            
-            v.endVisitElementValuePair(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitElementValuePair(self)
+        def  acceptWithArg(self, v, o) :   v.visitElementValuePair(self, o)
+        def  acceptWithResult(self, v) :  return v.visitElementValuePair(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitElementValuePair(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 242:  ElementValueArrayInitializer ::= { ElementValuesopt ,opt }
+*<li>Rule 242:  ElementValueArrayInitializer ::= { ElementValuesopt ,opt }
  *</b>
  */'''
 class ElementValueArrayInitializer ( Ast ,IElementValueArrayInitializer):
@@ -16819,7 +15695,7 @@ class ElementValueArrayInitializer ( Ast ,IElementValueArrayInitializer):
 
             self._LBRACE : AstToken = _LBRACE
             _LBRACE.setParent(self)
-            self._ElementValuesopt : IElementValuesopt = _ElementValuesopt
+            self._ElementValuesopt : Ast = _ElementValuesopt
             if _ElementValuesopt: _ElementValuesopt.setParent(self)
             self._Commaopt : Commaopt = _Commaopt
             if _Commaopt: _Commaopt.setParent(self)
@@ -16841,34 +15717,19 @@ class ElementValueArrayInitializer ( Ast ,IElementValueArrayInitializer):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitElementValueArrayInitializer(self)
-            if checkChildren:
-            
-                self._LBRACE.accept(v)
-                if self._ElementValuesopt: self._ElementValuesopt.accept(v)
-                if self._Commaopt: self._Commaopt.accept(v)
-                self._RBRACE.accept(v)
-            
-            v.endVisitElementValueArrayInitializer(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitElementValueArrayInitializer(self)
+        def  acceptWithArg(self, v, o) :   v.visitElementValueArrayInitializer(self, o)
+        def  acceptWithResult(self, v) :  return v.visitElementValueArrayInitializer(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitElementValueArrayInitializer(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 243:  ElementValues ::= ElementValue
+*<li>Rule 243:  ElementValues ::= ElementValue
  *</em>
  *<p>
  *<b>
-#*<li>Rule 244:  ElementValues ::= ElementValues , ElementValue
+*<li>Rule 244:  ElementValues ::= ElementValues , ElementValue
  *</b>
  */'''
 class ElementValues ( Ast ,IElementValues):
@@ -16890,11 +15751,11 @@ class ElementValues ( Ast ,IElementValues):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ElementValues : IElementValues = _ElementValues
+            self._ElementValues : Ast = _ElementValues
             _ElementValues.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
-            self._ElementValue : IElementValue = _ElementValue
+            self._ElementValue : Ast = _ElementValue
             _ElementValue.setParent(self)
             self.initialize()
         
@@ -16911,29 +15772,15 @@ class ElementValues ( Ast ,IElementValues):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitElementValues(self)
-            if checkChildren:
-            
-                self._ElementValues.accept(v)
-                self._COMMA.accept(v)
-                self._ElementValue.accept(v)
-            
-            v.endVisitElementValues(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitElementValues(self)
+        def  acceptWithArg(self, v, o) :   v.visitElementValues(self, o)
+        def  acceptWithResult(self, v) :  return v.visitElementValues(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitElementValues(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 245:  MarkerAnnotation ::= @ TypeName
+*<li>Rule 245:  MarkerAnnotation ::= @ TypeName
  *</b>
  */'''
 class MarkerAnnotation ( Ast ,IMarkerAnnotation):
@@ -16954,7 +15801,7 @@ class MarkerAnnotation ( Ast ,IMarkerAnnotation):
 
             self._AT : AstToken = _AT
             _AT.setParent(self)
-            self._TypeName : ITypeName = _TypeName
+            self._TypeName : Ast = _TypeName
             _TypeName.setParent(self)
             self.initialize()
         
@@ -16970,28 +15817,15 @@ class MarkerAnnotation ( Ast ,IMarkerAnnotation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMarkerAnnotation(self)
-            if checkChildren:
-            
-                self._AT.accept(v)
-                self._TypeName.accept(v)
-            
-            v.endVisitMarkerAnnotation(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMarkerAnnotation(self)
+        def  acceptWithArg(self, v, o) :   v.visitMarkerAnnotation(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMarkerAnnotation(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMarkerAnnotation(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 246:  SingleElementAnnotation ::= @ TypeName ( ElementValue )
+*<li>Rule 246:  SingleElementAnnotation ::= @ TypeName ( ElementValue )
  *</b>
  */'''
 class SingleElementAnnotation ( Ast ,ISingleElementAnnotation):
@@ -17021,11 +15855,11 @@ class SingleElementAnnotation ( Ast ,ISingleElementAnnotation):
 
             self._AT : AstToken = _AT
             _AT.setParent(self)
-            self._TypeName : ITypeName = _TypeName
+            self._TypeName : Ast = _TypeName
             _TypeName.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ElementValue : IElementValue = _ElementValue
+            self._ElementValue : Ast = _ElementValue
             _ElementValue.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -17046,31 +15880,15 @@ class SingleElementAnnotation ( Ast ,ISingleElementAnnotation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSingleElementAnnotation(self)
-            if checkChildren:
-            
-                self._AT.accept(v)
-                self._TypeName.accept(v)
-                self._LPAREN.accept(v)
-                self._ElementValue.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitSingleElementAnnotation(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSingleElementAnnotation(self)
+        def  acceptWithArg(self, v, o) :   v.visitSingleElementAnnotation(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSingleElementAnnotation(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSingleElementAnnotation(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 247:  ArrayInitializer ::= { VariableInitializersopt ,opt }
+*<li>Rule 247:  ArrayInitializer ::= { VariableInitializersopt ,opt }
  *</b>
  */'''
 class ArrayInitializer ( Ast ,IArrayInitializer):
@@ -17103,7 +15921,7 @@ class ArrayInitializer ( Ast ,IArrayInitializer):
 
             self._LBRACE : AstToken = _LBRACE
             _LBRACE.setParent(self)
-            self._VariableInitializersopt : IVariableInitializersopt = _VariableInitializersopt
+            self._VariableInitializersopt : Ast = _VariableInitializersopt
             if _VariableInitializersopt: _VariableInitializersopt.setParent(self)
             self._Commaopt : Commaopt = _Commaopt
             if _Commaopt: _Commaopt.setParent(self)
@@ -17125,34 +15943,19 @@ class ArrayInitializer ( Ast ,IArrayInitializer):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitArrayInitializer(self)
-            if checkChildren:
-            
-                self._LBRACE.accept(v)
-                if self._VariableInitializersopt: self._VariableInitializersopt.accept(v)
-                if self._Commaopt: self._Commaopt.accept(v)
-                self._RBRACE.accept(v)
-            
-            v.endVisitArrayInitializer(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitArrayInitializer(self)
+        def  acceptWithArg(self, v, o) :   v.visitArrayInitializer(self, o)
+        def  acceptWithResult(self, v) :  return v.visitArrayInitializer(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitArrayInitializer(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 248:  VariableInitializers ::= VariableInitializer
+*<li>Rule 248:  VariableInitializers ::= VariableInitializer
  *</em>
  *<p>
  *<b>
-#*<li>Rule 249:  VariableInitializers ::= VariableInitializers , VariableInitializer
+*<li>Rule 249:  VariableInitializers ::= VariableInitializers , VariableInitializer
  *</b>
  */'''
 class VariableInitializers ( Ast ,IVariableInitializers):
@@ -17174,11 +15977,11 @@ class VariableInitializers ( Ast ,IVariableInitializers):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._VariableInitializers : IVariableInitializers = _VariableInitializers
+            self._VariableInitializers : Ast = _VariableInitializers
             _VariableInitializers.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
-            self._VariableInitializer : IVariableInitializer = _VariableInitializer
+            self._VariableInitializer : Ast = _VariableInitializer
             _VariableInitializer.setParent(self)
             self.initialize()
         
@@ -17195,29 +15998,15 @@ class VariableInitializers ( Ast ,IVariableInitializers):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitVariableInitializers(self)
-            if checkChildren:
-            
-                self._VariableInitializers.accept(v)
-                self._COMMA.accept(v)
-                self._VariableInitializer.accept(v)
-            
-            v.endVisitVariableInitializers(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitVariableInitializers(self)
+        def  acceptWithArg(self, v, o) :   v.visitVariableInitializers(self, o)
+        def  acceptWithResult(self, v) :  return v.visitVariableInitializers(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitVariableInitializers(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 250:  Block ::= { BlockStatementsopt }
+*<li>Rule 250:  Block ::= { BlockStatementsopt }
  *</b>
  */'''
 class Block ( Ast ,IBlock):
@@ -17244,7 +16033,7 @@ class Block ( Ast ,IBlock):
 
             self._LBRACE : AstToken = _LBRACE
             _LBRACE.setParent(self)
-            self._BlockStatementsopt : IBlockStatementsopt = _BlockStatementsopt
+            self._BlockStatementsopt : Ast = _BlockStatementsopt
             if _BlockStatementsopt: _BlockStatementsopt.setParent(self)
             self._RBRACE : AstToken = _RBRACE
             _RBRACE.setParent(self)
@@ -17263,33 +16052,19 @@ class Block ( Ast ,IBlock):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitBlock(self)
-            if checkChildren:
-            
-                self._LBRACE.accept(v)
-                if self._BlockStatementsopt: self._BlockStatementsopt.accept(v)
-                self._RBRACE.accept(v)
-            
-            v.endVisitBlock(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitBlock(self)
+        def  acceptWithArg(self, v, o) :   v.visitBlock(self, o)
+        def  acceptWithResult(self, v) :  return v.visitBlock(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitBlock(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 251:  BlockStatements ::= BlockStatement
+*<li>Rule 251:  BlockStatements ::= BlockStatement
  *</em>
  *<p>
  *<b>
-#*<li>Rule 252:  BlockStatements ::= BlockStatements BlockStatement
+*<li>Rule 252:  BlockStatements ::= BlockStatements BlockStatement
  *</b>
  */'''
 class BlockStatements ( Ast ,IBlockStatements):
@@ -17308,9 +16083,9 @@ class BlockStatements ( Ast ,IBlockStatements):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._BlockStatements : IBlockStatements = _BlockStatements
+            self._BlockStatements : Ast = _BlockStatements
             _BlockStatements.setParent(self)
-            self._BlockStatement : IBlockStatement = _BlockStatement
+            self._BlockStatement : Ast = _BlockStatement
             _BlockStatement.setParent(self)
             self.initialize()
         
@@ -17326,28 +16101,15 @@ class BlockStatements ( Ast ,IBlockStatements):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitBlockStatements(self)
-            if checkChildren:
-            
-                self._BlockStatements.accept(v)
-                self._BlockStatement.accept(v)
-            
-            v.endVisitBlockStatements(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitBlockStatements(self)
+        def  acceptWithArg(self, v, o) :   v.visitBlockStatements(self, o)
+        def  acceptWithResult(self, v) :  return v.visitBlockStatements(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitBlockStatements(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 256:  LocalVariableDeclarationStatement ::= LocalVariableDeclaration ;
+*<li>Rule 256:  LocalVariableDeclarationStatement ::= LocalVariableDeclaration ;
  *</b>
  */'''
 class LocalVariableDeclarationStatement ( Ast ,ILocalVariableDeclarationStatement):
@@ -17384,28 +16146,15 @@ class LocalVariableDeclarationStatement ( Ast ,ILocalVariableDeclarationStatemen
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitLocalVariableDeclarationStatement(self)
-            if checkChildren:
-            
-                self._LocalVariableDeclaration.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitLocalVariableDeclarationStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLocalVariableDeclarationStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitLocalVariableDeclarationStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLocalVariableDeclarationStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLocalVariableDeclarationStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 257:  LocalVariableDeclaration ::= VariableModifiersopt Type VariableDeclarators
+*<li>Rule 257:  LocalVariableDeclaration ::= VariableModifiersopt Type VariableDeclarators
  *</b>
  */'''
 class LocalVariableDeclaration ( Ast ,ILocalVariableDeclaration):
@@ -17430,11 +16179,11 @@ class LocalVariableDeclaration ( Ast ,ILocalVariableDeclaration):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._VariableModifiersopt : IVariableModifiersopt = _VariableModifiersopt
+            self._VariableModifiersopt : Ast = _VariableModifiersopt
             if _VariableModifiersopt: _VariableModifiersopt.setParent(self)
-            self._Type : IType = _Type
+            self._Type : Ast = _Type
             _Type.setParent(self)
-            self._VariableDeclarators : IVariableDeclarators = _VariableDeclarators
+            self._VariableDeclarators : Ast = _VariableDeclarators
             _VariableDeclarators.setParent(self)
             self.initialize()
         
@@ -17451,29 +16200,15 @@ class LocalVariableDeclaration ( Ast ,ILocalVariableDeclaration):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitLocalVariableDeclaration(self)
-            if checkChildren:
-            
-                if self._VariableModifiersopt: self._VariableModifiersopt.accept(v)
-                self._Type.accept(v)
-                self._VariableDeclarators.accept(v)
-            
-            v.endVisitLocalVariableDeclaration(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLocalVariableDeclaration(self)
+        def  acceptWithArg(self, v, o) :   v.visitLocalVariableDeclaration(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLocalVariableDeclaration(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLocalVariableDeclaration(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 281:  IfThenStatement ::= if ( Expression ) Statement
+*<li>Rule 281:  IfThenStatement ::= if ( Expression ) Statement
  *</b>
  */'''
 class IfThenStatement ( Ast ,IIfThenStatement):
@@ -17505,11 +16240,11 @@ class IfThenStatement ( Ast ,IIfThenStatement):
             _if.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
-            self._Statement : IStatement = _Statement
+            self._Statement : Ast = _Statement
             _Statement.setParent(self)
             self.initialize()
         
@@ -17528,31 +16263,15 @@ class IfThenStatement ( Ast ,IIfThenStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitIfThenStatement(self)
-            if checkChildren:
-            
-                self._if.accept(v)
-                self._LPAREN.accept(v)
-                self._Expression.accept(v)
-                self._RPAREN.accept(v)
-                self._Statement.accept(v)
-            
-            v.endVisitIfThenStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitIfThenStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitIfThenStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitIfThenStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitIfThenStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 282:  IfThenElseStatement ::= if ( Expression ) StatementNoShortIf else Statement
+*<li>Rule 282:  IfThenElseStatement ::= if ( Expression ) StatementNoShortIf else Statement
  *</b>
  */'''
 class IfThenElseStatement ( Ast ,IIfThenElseStatement):
@@ -17590,15 +16309,15 @@ class IfThenElseStatement ( Ast ,IIfThenElseStatement):
             _if.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
-            self._StatementNoShortIf : IStatementNoShortIf = _StatementNoShortIf
+            self._StatementNoShortIf : Ast = _StatementNoShortIf
             _StatementNoShortIf.setParent(self)
             self._else : AstToken = _else
             _else.setParent(self)
-            self._Statement : IStatement = _Statement
+            self._Statement : Ast = _Statement
             _Statement.setParent(self)
             self.initialize()
         
@@ -17619,33 +16338,15 @@ class IfThenElseStatement ( Ast ,IIfThenElseStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitIfThenElseStatement(self)
-            if checkChildren:
-            
-                self._if.accept(v)
-                self._LPAREN.accept(v)
-                self._Expression.accept(v)
-                self._RPAREN.accept(v)
-                self._StatementNoShortIf.accept(v)
-                self._else.accept(v)
-                self._Statement.accept(v)
-            
-            v.endVisitIfThenElseStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitIfThenElseStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitIfThenElseStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitIfThenElseStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitIfThenElseStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 283:  IfThenElseStatementNoShortIf ::= if ( Expression ) StatementNoShortIf else StatementNoShortIf
+*<li>Rule 283:  IfThenElseStatementNoShortIf ::= if ( Expression ) StatementNoShortIf else StatementNoShortIf
  *</b>
  */'''
 class IfThenElseStatementNoShortIf ( Ast ,IIfThenElseStatementNoShortIf):
@@ -17683,15 +16384,15 @@ class IfThenElseStatementNoShortIf ( Ast ,IIfThenElseStatementNoShortIf):
             _if.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
-            self._StatementNoShortIf : IStatementNoShortIf = _StatementNoShortIf
+            self._StatementNoShortIf : Ast = _StatementNoShortIf
             _StatementNoShortIf.setParent(self)
             self._else : AstToken = _else
             _else.setParent(self)
-            self._StatementNoShortIf7 : IStatementNoShortIf = _StatementNoShortIf7
+            self._StatementNoShortIf7 : Ast = _StatementNoShortIf7
             _StatementNoShortIf7.setParent(self)
             self.initialize()
         
@@ -17712,33 +16413,15 @@ class IfThenElseStatementNoShortIf ( Ast ,IIfThenElseStatementNoShortIf):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitIfThenElseStatementNoShortIf(self)
-            if checkChildren:
-            
-                self._if.accept(v)
-                self._LPAREN.accept(v)
-                self._Expression.accept(v)
-                self._RPAREN.accept(v)
-                self._StatementNoShortIf.accept(v)
-                self._else.accept(v)
-                self._StatementNoShortIf7.accept(v)
-            
-            v.endVisitIfThenElseStatementNoShortIf(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitIfThenElseStatementNoShortIf(self)
+        def  acceptWithArg(self, v, o) :   v.visitIfThenElseStatementNoShortIf(self, o)
+        def  acceptWithResult(self, v) :  return v.visitIfThenElseStatementNoShortIf(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitIfThenElseStatementNoShortIf(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 284:  EmptyStatement ::= ;
+*<li>Rule 284:  EmptyStatement ::= ;
  *</b>
  */'''
 class EmptyStatement ( AstToken ,IEmptyStatement):
@@ -17750,23 +16433,15 @@ class EmptyStatement ( AstToken ,IEmptyStatement):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitEmptyStatement(self)
-            v.endVisitEmptyStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitEmptyStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitEmptyStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitEmptyStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitEmptyStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 285:  LabeledStatement ::= identifier : Statement
+*<li>Rule 285:  LabeledStatement ::= identifier : Statement
  *</b>
  */'''
 class LabeledStatement ( Ast ,ILabeledStatement):
@@ -17792,7 +16467,7 @@ class LabeledStatement ( Ast ,ILabeledStatement):
             _identifier.setParent(self)
             self._COLON : AstToken = _COLON
             _COLON.setParent(self)
-            self._Statement : IStatement = _Statement
+            self._Statement : Ast = _Statement
             _Statement.setParent(self)
             self.initialize()
         
@@ -17809,29 +16484,15 @@ class LabeledStatement ( Ast ,ILabeledStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitLabeledStatement(self)
-            if checkChildren:
-            
-                self._identifier.accept(v)
-                self._COLON.accept(v)
-                self._Statement.accept(v)
-            
-            v.endVisitLabeledStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLabeledStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitLabeledStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLabeledStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLabeledStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 286:  LabeledStatementNoShortIf ::= identifier : StatementNoShortIf
+*<li>Rule 286:  LabeledStatementNoShortIf ::= identifier : StatementNoShortIf
  *</b>
  */'''
 class LabeledStatementNoShortIf ( Ast ,ILabeledStatementNoShortIf):
@@ -17857,7 +16518,7 @@ class LabeledStatementNoShortIf ( Ast ,ILabeledStatementNoShortIf):
             _identifier.setParent(self)
             self._COLON : AstToken = _COLON
             _COLON.setParent(self)
-            self._StatementNoShortIf : IStatementNoShortIf = _StatementNoShortIf
+            self._StatementNoShortIf : Ast = _StatementNoShortIf
             _StatementNoShortIf.setParent(self)
             self.initialize()
         
@@ -17874,29 +16535,15 @@ class LabeledStatementNoShortIf ( Ast ,ILabeledStatementNoShortIf):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitLabeledStatementNoShortIf(self)
-            if checkChildren:
-            
-                self._identifier.accept(v)
-                self._COLON.accept(v)
-                self._StatementNoShortIf.accept(v)
-            
-            v.endVisitLabeledStatementNoShortIf(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLabeledStatementNoShortIf(self)
+        def  acceptWithArg(self, v, o) :   v.visitLabeledStatementNoShortIf(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLabeledStatementNoShortIf(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLabeledStatementNoShortIf(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 287:  ExpressionStatement ::= StatementExpression ;
+*<li>Rule 287:  ExpressionStatement ::= StatementExpression ;
  *</b>
  */'''
 class ExpressionStatement ( Ast ,IExpressionStatement):
@@ -17915,7 +16562,7 @@ class ExpressionStatement ( Ast ,IExpressionStatement):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._StatementExpression : IStatementExpression = _StatementExpression
+            self._StatementExpression : Ast = _StatementExpression
             _StatementExpression.setParent(self)
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
@@ -17933,28 +16580,15 @@ class ExpressionStatement ( Ast ,IExpressionStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitExpressionStatement(self)
-            if checkChildren:
-            
-                self._StatementExpression.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitExpressionStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitExpressionStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitExpressionStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitExpressionStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitExpressionStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 297:  SwitchStatement ::= switch ( Expression ) SwitchBlock
+*<li>Rule 297:  SwitchStatement ::= switch ( Expression ) SwitchBlock
  *</b>
  */'''
 class SwitchStatement ( Ast ,ISwitchStatement):
@@ -17986,7 +16620,7 @@ class SwitchStatement ( Ast ,ISwitchStatement):
             _switch.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -18009,31 +16643,15 @@ class SwitchStatement ( Ast ,ISwitchStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSwitchStatement(self)
-            if checkChildren:
-            
-                self._switch.accept(v)
-                self._LPAREN.accept(v)
-                self._Expression.accept(v)
-                self._RPAREN.accept(v)
-                self._SwitchBlock.accept(v)
-            
-            v.endVisitSwitchStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSwitchStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitSwitchStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSwitchStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSwitchStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 298:  SwitchBlock ::= { SwitchBlockStatementGroupsopt SwitchLabelsopt }
+*<li>Rule 298:  SwitchBlock ::= { SwitchBlockStatementGroupsopt SwitchLabelsopt }
  *</b>
  */'''
 class SwitchBlock ( Ast ,ISwitchBlock):
@@ -18066,9 +16684,9 @@ class SwitchBlock ( Ast ,ISwitchBlock):
 
             self._LBRACE : AstToken = _LBRACE
             _LBRACE.setParent(self)
-            self._SwitchBlockStatementGroupsopt : ISwitchBlockStatementGroupsopt = _SwitchBlockStatementGroupsopt
+            self._SwitchBlockStatementGroupsopt : Ast = _SwitchBlockStatementGroupsopt
             if _SwitchBlockStatementGroupsopt: _SwitchBlockStatementGroupsopt.setParent(self)
-            self._SwitchLabelsopt : ISwitchLabelsopt = _SwitchLabelsopt
+            self._SwitchLabelsopt : Ast = _SwitchLabelsopt
             if _SwitchLabelsopt: _SwitchLabelsopt.setParent(self)
             self._RBRACE : AstToken = _RBRACE
             _RBRACE.setParent(self)
@@ -18088,34 +16706,19 @@ class SwitchBlock ( Ast ,ISwitchBlock):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSwitchBlock(self)
-            if checkChildren:
-            
-                self._LBRACE.accept(v)
-                if self._SwitchBlockStatementGroupsopt: self._SwitchBlockStatementGroupsopt.accept(v)
-                if self._SwitchLabelsopt: self._SwitchLabelsopt.accept(v)
-                self._RBRACE.accept(v)
-            
-            v.endVisitSwitchBlock(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSwitchBlock(self)
+        def  acceptWithArg(self, v, o) :   v.visitSwitchBlock(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSwitchBlock(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSwitchBlock(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 299:  SwitchBlockStatementGroups ::= SwitchBlockStatementGroup
+*<li>Rule 299:  SwitchBlockStatementGroups ::= SwitchBlockStatementGroup
  *</em>
  *<p>
  *<b>
-#*<li>Rule 300:  SwitchBlockStatementGroups ::= SwitchBlockStatementGroups SwitchBlockStatementGroup
+*<li>Rule 300:  SwitchBlockStatementGroups ::= SwitchBlockStatementGroups SwitchBlockStatementGroup
  *</b>
  */'''
 class SwitchBlockStatementGroups ( Ast ,ISwitchBlockStatementGroups):
@@ -18134,7 +16737,7 @@ class SwitchBlockStatementGroups ( Ast ,ISwitchBlockStatementGroups):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._SwitchBlockStatementGroups : ISwitchBlockStatementGroups = _SwitchBlockStatementGroups
+            self._SwitchBlockStatementGroups : Ast = _SwitchBlockStatementGroups
             _SwitchBlockStatementGroups.setParent(self)
             self._SwitchBlockStatementGroup : SwitchBlockStatementGroup = _SwitchBlockStatementGroup
             _SwitchBlockStatementGroup.setParent(self)
@@ -18152,28 +16755,15 @@ class SwitchBlockStatementGroups ( Ast ,ISwitchBlockStatementGroups):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSwitchBlockStatementGroups(self)
-            if checkChildren:
-            
-                self._SwitchBlockStatementGroups.accept(v)
-                self._SwitchBlockStatementGroup.accept(v)
-            
-            v.endVisitSwitchBlockStatementGroups(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSwitchBlockStatementGroups(self)
+        def  acceptWithArg(self, v, o) :   v.visitSwitchBlockStatementGroups(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSwitchBlockStatementGroups(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSwitchBlockStatementGroups(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 301:  SwitchBlockStatementGroup ::= SwitchLabels BlockStatements
+*<li>Rule 301:  SwitchBlockStatementGroup ::= SwitchLabels BlockStatements
  *</b>
  */'''
 class SwitchBlockStatementGroup ( Ast ,ISwitchBlockStatementGroup):
@@ -18192,9 +16782,9 @@ class SwitchBlockStatementGroup ( Ast ,ISwitchBlockStatementGroup):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._SwitchLabels : ISwitchLabels = _SwitchLabels
+            self._SwitchLabels : Ast = _SwitchLabels
             _SwitchLabels.setParent(self)
-            self._BlockStatements : IBlockStatements = _BlockStatements
+            self._BlockStatements : Ast = _BlockStatements
             _BlockStatements.setParent(self)
             self.initialize()
         
@@ -18210,32 +16800,19 @@ class SwitchBlockStatementGroup ( Ast ,ISwitchBlockStatementGroup):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSwitchBlockStatementGroup(self)
-            if checkChildren:
-            
-                self._SwitchLabels.accept(v)
-                self._BlockStatements.accept(v)
-            
-            v.endVisitSwitchBlockStatementGroup(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSwitchBlockStatementGroup(self)
+        def  acceptWithArg(self, v, o) :   v.visitSwitchBlockStatementGroup(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSwitchBlockStatementGroup(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSwitchBlockStatementGroup(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 302:  SwitchLabels ::= SwitchLabel
+*<li>Rule 302:  SwitchLabels ::= SwitchLabel
  *</em>
  *<p>
  *<b>
-#*<li>Rule 303:  SwitchLabels ::= SwitchLabels SwitchLabel
+*<li>Rule 303:  SwitchLabels ::= SwitchLabels SwitchLabel
  *</b>
  */'''
 class SwitchLabels ( Ast ,ISwitchLabels):
@@ -18254,9 +16831,9 @@ class SwitchLabels ( Ast ,ISwitchLabels):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._SwitchLabels : ISwitchLabels = _SwitchLabels
+            self._SwitchLabels : Ast = _SwitchLabels
             _SwitchLabels.setParent(self)
-            self._SwitchLabel : ISwitchLabel = _SwitchLabel
+            self._SwitchLabel : Ast = _SwitchLabel
             _SwitchLabel.setParent(self)
             self.initialize()
         
@@ -18272,28 +16849,15 @@ class SwitchLabels ( Ast ,ISwitchLabels):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSwitchLabels(self)
-            if checkChildren:
-            
-                self._SwitchLabels.accept(v)
-                self._SwitchLabel.accept(v)
-            
-            v.endVisitSwitchLabels(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSwitchLabels(self)
+        def  acceptWithArg(self, v, o) :   v.visitSwitchLabels(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSwitchLabels(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSwitchLabels(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 308:  WhileStatement ::= while ( Expression ) Statement
+*<li>Rule 308:  WhileStatement ::= while ( Expression ) Statement
  *</b>
  */'''
 class WhileStatement ( Ast ,IWhileStatement):
@@ -18325,11 +16889,11 @@ class WhileStatement ( Ast ,IWhileStatement):
             _while.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
-            self._Statement : IStatement = _Statement
+            self._Statement : Ast = _Statement
             _Statement.setParent(self)
             self.initialize()
         
@@ -18348,31 +16912,15 @@ class WhileStatement ( Ast ,IWhileStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitWhileStatement(self)
-            if checkChildren:
-            
-                self._while.accept(v)
-                self._LPAREN.accept(v)
-                self._Expression.accept(v)
-                self._RPAREN.accept(v)
-                self._Statement.accept(v)
-            
-            v.endVisitWhileStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitWhileStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitWhileStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitWhileStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitWhileStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 309:  WhileStatementNoShortIf ::= while ( Expression ) StatementNoShortIf
+*<li>Rule 309:  WhileStatementNoShortIf ::= while ( Expression ) StatementNoShortIf
  *</b>
  */'''
 class WhileStatementNoShortIf ( Ast ,IWhileStatementNoShortIf):
@@ -18404,11 +16952,11 @@ class WhileStatementNoShortIf ( Ast ,IWhileStatementNoShortIf):
             _while.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
-            self._StatementNoShortIf : IStatementNoShortIf = _StatementNoShortIf
+            self._StatementNoShortIf : Ast = _StatementNoShortIf
             _StatementNoShortIf.setParent(self)
             self.initialize()
         
@@ -18427,31 +16975,15 @@ class WhileStatementNoShortIf ( Ast ,IWhileStatementNoShortIf):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitWhileStatementNoShortIf(self)
-            if checkChildren:
-            
-                self._while.accept(v)
-                self._LPAREN.accept(v)
-                self._Expression.accept(v)
-                self._RPAREN.accept(v)
-                self._StatementNoShortIf.accept(v)
-            
-            v.endVisitWhileStatementNoShortIf(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitWhileStatementNoShortIf(self)
+        def  acceptWithArg(self, v, o) :   v.visitWhileStatementNoShortIf(self, o)
+        def  acceptWithResult(self, v) :  return v.visitWhileStatementNoShortIf(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitWhileStatementNoShortIf(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 310:  DoStatement ::= do Statement while ( Expression ) ;
+*<li>Rule 310:  DoStatement ::= do Statement while ( Expression ) ;
  *</b>
  */'''
 class DoStatement ( Ast ,IDoStatement):
@@ -18487,13 +17019,13 @@ class DoStatement ( Ast ,IDoStatement):
 
             self._do : AstToken = _do
             _do.setParent(self)
-            self._Statement : IStatement = _Statement
+            self._Statement : Ast = _Statement
             _Statement.setParent(self)
             self._while : AstToken = _while
             _while.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -18518,33 +17050,15 @@ class DoStatement ( Ast ,IDoStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitDoStatement(self)
-            if checkChildren:
-            
-                self._do.accept(v)
-                self._Statement.accept(v)
-                self._while.accept(v)
-                self._LPAREN.accept(v)
-                self._Expression.accept(v)
-                self._RPAREN.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitDoStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitDoStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitDoStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitDoStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitDoStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 313:  BasicForStatement ::= for ( ForInitopt ; Expressionopt ; ForUpdateopt ) Statement
+*<li>Rule 313:  BasicForStatement ::= for ( ForInitopt ; Expressionopt ; ForUpdateopt ) Statement
  *</b>
  */'''
 class BasicForStatement ( Ast ,IBasicForStatement):
@@ -18597,19 +17111,19 @@ class BasicForStatement ( Ast ,IBasicForStatement):
             _for.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ForInitopt : IForInitopt = _ForInitopt
+            self._ForInitopt : Ast = _ForInitopt
             if _ForInitopt: _ForInitopt.setParent(self)
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
-            self._Expressionopt : IExpressionopt = _Expressionopt
+            self._Expressionopt : Ast = _Expressionopt
             if _Expressionopt: _Expressionopt.setParent(self)
             self._SEMICOLON6 : AstToken = _SEMICOLON6
             _SEMICOLON6.setParent(self)
-            self._ForUpdateopt : IForUpdateopt = _ForUpdateopt
+            self._ForUpdateopt : Ast = _ForUpdateopt
             if _ForUpdateopt: _ForUpdateopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
-            self._Statement : IStatement = _Statement
+            self._Statement : Ast = _Statement
             _Statement.setParent(self)
             self.initialize()
         
@@ -18632,35 +17146,15 @@ class BasicForStatement ( Ast ,IBasicForStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitBasicForStatement(self)
-            if checkChildren:
-            
-                self._for.accept(v)
-                self._LPAREN.accept(v)
-                if self._ForInitopt: self._ForInitopt.accept(v)
-                self._SEMICOLON.accept(v)
-                if self._Expressionopt: self._Expressionopt.accept(v)
-                self._SEMICOLON6.accept(v)
-                if self._ForUpdateopt: self._ForUpdateopt.accept(v)
-                self._RPAREN.accept(v)
-                self._Statement.accept(v)
-            
-            v.endVisitBasicForStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitBasicForStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitBasicForStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitBasicForStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitBasicForStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 314:  ForStatementNoShortIf ::= for ( ForInitopt ; Expressionopt ; ForUpdateopt ) StatementNoShortIf
+*<li>Rule 314:  ForStatementNoShortIf ::= for ( ForInitopt ; Expressionopt ; ForUpdateopt ) StatementNoShortIf
  *</b>
  */'''
 class ForStatementNoShortIf ( Ast ,IForStatementNoShortIf):
@@ -18713,19 +17207,19 @@ class ForStatementNoShortIf ( Ast ,IForStatementNoShortIf):
             _for.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ForInitopt : IForInitopt = _ForInitopt
+            self._ForInitopt : Ast = _ForInitopt
             if _ForInitopt: _ForInitopt.setParent(self)
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
-            self._Expressionopt : IExpressionopt = _Expressionopt
+            self._Expressionopt : Ast = _Expressionopt
             if _Expressionopt: _Expressionopt.setParent(self)
             self._SEMICOLON6 : AstToken = _SEMICOLON6
             _SEMICOLON6.setParent(self)
-            self._ForUpdateopt : IForUpdateopt = _ForUpdateopt
+            self._ForUpdateopt : Ast = _ForUpdateopt
             if _ForUpdateopt: _ForUpdateopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
-            self._StatementNoShortIf : IStatementNoShortIf = _StatementNoShortIf
+            self._StatementNoShortIf : Ast = _StatementNoShortIf
             _StatementNoShortIf.setParent(self)
             self.initialize()
         
@@ -18748,39 +17242,19 @@ class ForStatementNoShortIf ( Ast ,IForStatementNoShortIf):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitForStatementNoShortIf(self)
-            if checkChildren:
-            
-                self._for.accept(v)
-                self._LPAREN.accept(v)
-                if self._ForInitopt: self._ForInitopt.accept(v)
-                self._SEMICOLON.accept(v)
-                if self._Expressionopt: self._Expressionopt.accept(v)
-                self._SEMICOLON6.accept(v)
-                if self._ForUpdateopt: self._ForUpdateopt.accept(v)
-                self._RPAREN.accept(v)
-                self._StatementNoShortIf.accept(v)
-            
-            v.endVisitForStatementNoShortIf(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitForStatementNoShortIf(self)
+        def  acceptWithArg(self, v, o) :   v.visitForStatementNoShortIf(self, o)
+        def  acceptWithResult(self, v) :  return v.visitForStatementNoShortIf(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitForStatementNoShortIf(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 318:  StatementExpressionList ::= StatementExpression
+*<li>Rule 318:  StatementExpressionList ::= StatementExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 319:  StatementExpressionList ::= StatementExpressionList , StatementExpression
+*<li>Rule 319:  StatementExpressionList ::= StatementExpressionList , StatementExpression
  *</b>
  */'''
 class StatementExpressionList ( Ast ,IStatementExpressionList):
@@ -18802,11 +17276,11 @@ class StatementExpressionList ( Ast ,IStatementExpressionList):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._StatementExpressionList : IStatementExpressionList = _StatementExpressionList
+            self._StatementExpressionList : Ast = _StatementExpressionList
             _StatementExpressionList.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
-            self._StatementExpression : IStatementExpression = _StatementExpression
+            self._StatementExpression : Ast = _StatementExpression
             _StatementExpression.setParent(self)
             self.initialize()
         
@@ -18823,29 +17297,15 @@ class StatementExpressionList ( Ast ,IStatementExpressionList):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitStatementExpressionList(self)
-            if checkChildren:
-            
-                self._StatementExpressionList.accept(v)
-                self._COMMA.accept(v)
-                self._StatementExpression.accept(v)
-            
-            v.endVisitStatementExpressionList(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitStatementExpressionList(self)
+        def  acceptWithArg(self, v, o) :   v.visitStatementExpressionList(self, o)
+        def  acceptWithResult(self, v) :  return v.visitStatementExpressionList(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitStatementExpressionList(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 320:  EnhancedForStatement ::= for ( FormalParameter : Expression ) Statement
+*<li>Rule 320:  EnhancedForStatement ::= for ( FormalParameter : Expression ) Statement
  *</b>
  */'''
 class EnhancedForStatement ( Ast ,IEnhancedForStatement):
@@ -18887,11 +17347,11 @@ class EnhancedForStatement ( Ast ,IEnhancedForStatement):
             _FormalParameter.setParent(self)
             self._COLON : AstToken = _COLON
             _COLON.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
-            self._Statement : IStatement = _Statement
+            self._Statement : Ast = _Statement
             _Statement.setParent(self)
             self.initialize()
         
@@ -18912,33 +17372,15 @@ class EnhancedForStatement ( Ast ,IEnhancedForStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitEnhancedForStatement(self)
-            if checkChildren:
-            
-                self._for.accept(v)
-                self._LPAREN.accept(v)
-                self._FormalParameter.accept(v)
-                self._COLON.accept(v)
-                self._Expression.accept(v)
-                self._RPAREN.accept(v)
-                self._Statement.accept(v)
-            
-            v.endVisitEnhancedForStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitEnhancedForStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitEnhancedForStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitEnhancedForStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitEnhancedForStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 321:  BreakStatement ::= break identifieropt ;
+*<li>Rule 321:  BreakStatement ::= break identifieropt ;
  *</b>
  */'''
 class BreakStatement ( Ast ,IBreakStatement):
@@ -18984,29 +17426,15 @@ class BreakStatement ( Ast ,IBreakStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitBreakStatement(self)
-            if checkChildren:
-            
-                self._break.accept(v)
-                if self._identifieropt: self._identifieropt.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitBreakStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitBreakStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitBreakStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitBreakStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitBreakStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 322:  ContinueStatement ::= continue identifieropt ;
+*<li>Rule 322:  ContinueStatement ::= continue identifieropt ;
  *</b>
  */'''
 class ContinueStatement ( Ast ,IContinueStatement):
@@ -19052,29 +17480,15 @@ class ContinueStatement ( Ast ,IContinueStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitContinueStatement(self)
-            if checkChildren:
-            
-                self._continue.accept(v)
-                if self._identifieropt: self._identifieropt.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitContinueStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitContinueStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitContinueStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitContinueStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitContinueStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 323:  ReturnStatement ::= return Expressionopt ;
+*<li>Rule 323:  ReturnStatement ::= return Expressionopt ;
  *</b>
  */'''
 class ReturnStatement ( Ast ,IReturnStatement):
@@ -19101,7 +17515,7 @@ class ReturnStatement ( Ast ,IReturnStatement):
 
             self._return : AstToken = _return
             _return.setParent(self)
-            self._Expressionopt : IExpressionopt = _Expressionopt
+            self._Expressionopt : Ast = _Expressionopt
             if _Expressionopt: _Expressionopt.setParent(self)
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
@@ -19120,29 +17534,15 @@ class ReturnStatement ( Ast ,IReturnStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitReturnStatement(self)
-            if checkChildren:
-            
-                self._return.accept(v)
-                if self._Expressionopt: self._Expressionopt.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitReturnStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitReturnStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitReturnStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitReturnStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitReturnStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 324:  ThrowStatement ::= throw Expression ;
+*<li>Rule 324:  ThrowStatement ::= throw Expression ;
  *</b>
  */'''
 class ThrowStatement ( Ast ,IThrowStatement):
@@ -19166,7 +17566,7 @@ class ThrowStatement ( Ast ,IThrowStatement):
 
             self._throw : AstToken = _throw
             _throw.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
@@ -19185,29 +17585,15 @@ class ThrowStatement ( Ast ,IThrowStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitThrowStatement(self)
-            if checkChildren:
-            
-                self._throw.accept(v)
-                self._Expression.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitThrowStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitThrowStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitThrowStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitThrowStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitThrowStatement(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 325:  SynchronizedStatement ::= synchronized ( Expression ) Block
+*<li>Rule 325:  SynchronizedStatement ::= synchronized ( Expression ) Block
  *</b>
  */'''
 class SynchronizedStatement ( Ast ,ISynchronizedStatement):
@@ -19239,7 +17625,7 @@ class SynchronizedStatement ( Ast ,ISynchronizedStatement):
             _synchronized.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -19262,35 +17648,19 @@ class SynchronizedStatement ( Ast ,ISynchronizedStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSynchronizedStatement(self)
-            if checkChildren:
-            
-                self._synchronized.accept(v)
-                self._LPAREN.accept(v)
-                self._Expression.accept(v)
-                self._RPAREN.accept(v)
-                self._Block.accept(v)
-            
-            v.endVisitSynchronizedStatement(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSynchronizedStatement(self)
+        def  acceptWithArg(self, v, o) :   v.visitSynchronizedStatement(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSynchronizedStatement(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSynchronizedStatement(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 328:  Catches ::= CatchClause
+*<li>Rule 328:  Catches ::= CatchClause
  *</em>
  *<p>
  *<b>
-#*<li>Rule 329:  Catches ::= Catches CatchClause
+*<li>Rule 329:  Catches ::= Catches CatchClause
  *</b>
  */'''
 class Catches ( Ast ,ICatches):
@@ -19309,7 +17679,7 @@ class Catches ( Ast ,ICatches):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Catches : ICatches = _Catches
+            self._Catches : Ast = _Catches
             _Catches.setParent(self)
             self._CatchClause : CatchClause = _CatchClause
             _CatchClause.setParent(self)
@@ -19327,28 +17697,15 @@ class Catches ( Ast ,ICatches):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitCatches(self)
-            if checkChildren:
-            
-                self._Catches.accept(v)
-                self._CatchClause.accept(v)
-            
-            v.endVisitCatches(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitCatches(self)
+        def  acceptWithArg(self, v, o) :   v.visitCatches(self, o)
+        def  acceptWithResult(self, v) :  return v.visitCatches(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitCatches(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 330:  CatchClause ::= catch ( FormalParameter ) Block
+*<li>Rule 330:  CatchClause ::= catch ( FormalParameter ) Block
  *</b>
  */'''
 class CatchClause ( Ast ,ICatchClause):
@@ -19403,31 +17760,15 @@ class CatchClause ( Ast ,ICatchClause):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitCatchClause(self)
-            if checkChildren:
-            
-                self._catch.accept(v)
-                self._LPAREN.accept(v)
-                self._FormalParameter.accept(v)
-                self._RPAREN.accept(v)
-                self._Block.accept(v)
-            
-            v.endVisitCatchClause(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitCatchClause(self)
+        def  acceptWithArg(self, v, o) :   v.visitCatchClause(self, o)
+        def  acceptWithResult(self, v) :  return v.visitCatchClause(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitCatchClause(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 331:  Finally ::= finally Block
+*<li>Rule 331:  Finally ::= finally Block
  *</b>
  */'''
 class Finally ( Ast ,IFinally):
@@ -19464,32 +17805,19 @@ class Finally ( Ast ,IFinally):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitFinally(self)
-            if checkChildren:
-            
-                self._finally.accept(v)
-                self._Block.accept(v)
-            
-            v.endVisitFinally(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFinally(self)
+        def  acceptWithArg(self, v, o) :   v.visitFinally(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFinally(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFinally(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 356:  ArgumentList ::= Expression
+*<li>Rule 356:  ArgumentList ::= Expression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 357:  ArgumentList ::= ArgumentList , Expression
+*<li>Rule 357:  ArgumentList ::= ArgumentList , Expression
  *</b>
  */'''
 class ArgumentList ( Ast ,IArgumentList):
@@ -19511,11 +17839,11 @@ class ArgumentList ( Ast ,IArgumentList):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ArgumentList : IArgumentList = _ArgumentList
+            self._ArgumentList : Ast = _ArgumentList
             _ArgumentList.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self.initialize()
         
@@ -19532,33 +17860,19 @@ class ArgumentList ( Ast ,IArgumentList):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitArgumentList(self)
-            if checkChildren:
-            
-                self._ArgumentList.accept(v)
-                self._COMMA.accept(v)
-                self._Expression.accept(v)
-            
-            v.endVisitArgumentList(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitArgumentList(self)
+        def  acceptWithArg(self, v, o) :   v.visitArgumentList(self, o)
+        def  acceptWithResult(self, v) :  return v.visitArgumentList(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitArgumentList(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 362:  DimExprs ::= DimExpr
+*<li>Rule 362:  DimExprs ::= DimExpr
  *</em>
  *<p>
  *<b>
-#*<li>Rule 363:  DimExprs ::= DimExprs DimExpr
+*<li>Rule 363:  DimExprs ::= DimExprs DimExpr
  *</b>
  */'''
 class DimExprs ( Ast ,IDimExprs):
@@ -19577,7 +17891,7 @@ class DimExprs ( Ast ,IDimExprs):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._DimExprs : IDimExprs = _DimExprs
+            self._DimExprs : Ast = _DimExprs
             _DimExprs.setParent(self)
             self._DimExpr : DimExpr = _DimExpr
             _DimExpr.setParent(self)
@@ -19595,28 +17909,15 @@ class DimExprs ( Ast ,IDimExprs):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitDimExprs(self)
-            if checkChildren:
-            
-                self._DimExprs.accept(v)
-                self._DimExpr.accept(v)
-            
-            v.endVisitDimExprs(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitDimExprs(self)
+        def  acceptWithArg(self, v, o) :   v.visitDimExprs(self, o)
+        def  acceptWithResult(self, v) :  return v.visitDimExprs(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitDimExprs(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 364:  DimExpr ::= [ Expression ]
+*<li>Rule 364:  DimExpr ::= [ Expression ]
  *</b>
  */'''
 class DimExpr ( Ast ,IDimExpr):
@@ -19640,7 +17941,7 @@ class DimExpr ( Ast ,IDimExpr):
 
             self._LBRACKET : AstToken = _LBRACKET
             _LBRACKET.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RBRACKET : AstToken = _RBRACKET
             _RBRACKET.setParent(self)
@@ -19659,29 +17960,15 @@ class DimExpr ( Ast ,IDimExpr):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitDimExpr(self)
-            if checkChildren:
-            
-                self._LBRACKET.accept(v)
-                self._Expression.accept(v)
-                self._RBRACKET.accept(v)
-            
-            v.endVisitDimExpr(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitDimExpr(self)
+        def  acceptWithArg(self, v, o) :   v.visitDimExpr(self, o)
+        def  acceptWithResult(self, v) :  return v.visitDimExpr(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitDimExpr(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 381:  PostIncrementExpression ::= PostfixExpression ++
+*<li>Rule 381:  PostIncrementExpression ::= PostfixExpression ++
  *</b>
  */'''
 class PostIncrementExpression ( Ast ,IPostIncrementExpression):
@@ -19700,7 +17987,7 @@ class PostIncrementExpression ( Ast ,IPostIncrementExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._PostfixExpression : IPostfixExpression = _PostfixExpression
+            self._PostfixExpression : Ast = _PostfixExpression
             _PostfixExpression.setParent(self)
             self._PLUS_PLUS : AstToken = _PLUS_PLUS
             _PLUS_PLUS.setParent(self)
@@ -19718,28 +18005,15 @@ class PostIncrementExpression ( Ast ,IPostIncrementExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPostIncrementExpression(self)
-            if checkChildren:
-            
-                self._PostfixExpression.accept(v)
-                self._PLUS_PLUS.accept(v)
-            
-            v.endVisitPostIncrementExpression(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPostIncrementExpression(self)
+        def  acceptWithArg(self, v, o) :   v.visitPostIncrementExpression(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPostIncrementExpression(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPostIncrementExpression(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 382:  PostDecrementExpression ::= PostfixExpression --
+*<li>Rule 382:  PostDecrementExpression ::= PostfixExpression --
  *</b>
  */'''
 class PostDecrementExpression ( Ast ,IPostDecrementExpression):
@@ -19758,7 +18032,7 @@ class PostDecrementExpression ( Ast ,IPostDecrementExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._PostfixExpression : IPostfixExpression = _PostfixExpression
+            self._PostfixExpression : Ast = _PostfixExpression
             _PostfixExpression.setParent(self)
             self._MINUS_MINUS : AstToken = _MINUS_MINUS
             _MINUS_MINUS.setParent(self)
@@ -19776,28 +18050,15 @@ class PostDecrementExpression ( Ast ,IPostDecrementExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPostDecrementExpression(self)
-            if checkChildren:
-            
-                self._PostfixExpression.accept(v)
-                self._MINUS_MINUS.accept(v)
-            
-            v.endVisitPostDecrementExpression(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPostDecrementExpression(self)
+        def  acceptWithArg(self, v, o) :   v.visitPostDecrementExpression(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPostDecrementExpression(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPostDecrementExpression(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 388:  PreIncrementExpression ::= ++ UnaryExpression
+*<li>Rule 388:  PreIncrementExpression ::= ++ UnaryExpression
  *</b>
  */'''
 class PreIncrementExpression ( Ast ,IPreIncrementExpression):
@@ -19818,7 +18079,7 @@ class PreIncrementExpression ( Ast ,IPreIncrementExpression):
 
             self._PLUS_PLUS : AstToken = _PLUS_PLUS
             _PLUS_PLUS.setParent(self)
-            self._UnaryExpression : IUnaryExpression = _UnaryExpression
+            self._UnaryExpression : Ast = _UnaryExpression
             _UnaryExpression.setParent(self)
             self.initialize()
         
@@ -19834,28 +18095,15 @@ class PreIncrementExpression ( Ast ,IPreIncrementExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPreIncrementExpression(self)
-            if checkChildren:
-            
-                self._PLUS_PLUS.accept(v)
-                self._UnaryExpression.accept(v)
-            
-            v.endVisitPreIncrementExpression(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPreIncrementExpression(self)
+        def  acceptWithArg(self, v, o) :   v.visitPreIncrementExpression(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPreIncrementExpression(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPreIncrementExpression(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 389:  PreDecrementExpression ::= -- UnaryExpression
+*<li>Rule 389:  PreDecrementExpression ::= -- UnaryExpression
  *</b>
  */'''
 class PreDecrementExpression ( Ast ,IPreDecrementExpression):
@@ -19876,7 +18124,7 @@ class PreDecrementExpression ( Ast ,IPreDecrementExpression):
 
             self._MINUS_MINUS : AstToken = _MINUS_MINUS
             _MINUS_MINUS.setParent(self)
-            self._UnaryExpression : IUnaryExpression = _UnaryExpression
+            self._UnaryExpression : Ast = _UnaryExpression
             _UnaryExpression.setParent(self)
             self.initialize()
         
@@ -19892,32 +18140,19 @@ class PreDecrementExpression ( Ast ,IPreDecrementExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPreDecrementExpression(self)
-            if checkChildren:
-            
-                self._MINUS_MINUS.accept(v)
-                self._UnaryExpression.accept(v)
-            
-            v.endVisitPreDecrementExpression(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPreDecrementExpression(self)
+        def  acceptWithArg(self, v, o) :   v.visitPreDecrementExpression(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPreDecrementExpression(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPreDecrementExpression(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 416:  AndExpression ::= EqualityExpression
+*<li>Rule 416:  AndExpression ::= EqualityExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 417:  AndExpression ::= AndExpression & EqualityExpression
+*<li>Rule 417:  AndExpression ::= AndExpression & EqualityExpression
  *</b>
  */'''
 class AndExpression ( Ast ,IAndExpression):
@@ -19939,11 +18174,11 @@ class AndExpression ( Ast ,IAndExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AndExpression : IAndExpression = _AndExpression
+            self._AndExpression : Ast = _AndExpression
             _AndExpression.setParent(self)
             self._AND : AstToken = _AND
             _AND.setParent(self)
-            self._EqualityExpression : IEqualityExpression = _EqualityExpression
+            self._EqualityExpression : Ast = _EqualityExpression
             _EqualityExpression.setParent(self)
             self.initialize()
         
@@ -19960,33 +18195,19 @@ class AndExpression ( Ast ,IAndExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAndExpression(self)
-            if checkChildren:
-            
-                self._AndExpression.accept(v)
-                self._AND.accept(v)
-                self._EqualityExpression.accept(v)
-            
-            v.endVisitAndExpression(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAndExpression(self)
+        def  acceptWithArg(self, v, o) :   v.visitAndExpression(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAndExpression(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAndExpression(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 418:  ExclusiveOrExpression ::= AndExpression
+*<li>Rule 418:  ExclusiveOrExpression ::= AndExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 419:  ExclusiveOrExpression ::= ExclusiveOrExpression ^ AndExpression
+*<li>Rule 419:  ExclusiveOrExpression ::= ExclusiveOrExpression ^ AndExpression
  *</b>
  */'''
 class ExclusiveOrExpression ( Ast ,IExclusiveOrExpression):
@@ -20008,11 +18229,11 @@ class ExclusiveOrExpression ( Ast ,IExclusiveOrExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ExclusiveOrExpression : IExclusiveOrExpression = _ExclusiveOrExpression
+            self._ExclusiveOrExpression : Ast = _ExclusiveOrExpression
             _ExclusiveOrExpression.setParent(self)
             self._XOR : AstToken = _XOR
             _XOR.setParent(self)
-            self._AndExpression : IAndExpression = _AndExpression
+            self._AndExpression : Ast = _AndExpression
             _AndExpression.setParent(self)
             self.initialize()
         
@@ -20029,33 +18250,19 @@ class ExclusiveOrExpression ( Ast ,IExclusiveOrExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitExclusiveOrExpression(self)
-            if checkChildren:
-            
-                self._ExclusiveOrExpression.accept(v)
-                self._XOR.accept(v)
-                self._AndExpression.accept(v)
-            
-            v.endVisitExclusiveOrExpression(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitExclusiveOrExpression(self)
+        def  acceptWithArg(self, v, o) :   v.visitExclusiveOrExpression(self, o)
+        def  acceptWithResult(self, v) :  return v.visitExclusiveOrExpression(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitExclusiveOrExpression(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 420:  InclusiveOrExpression ::= ExclusiveOrExpression
+*<li>Rule 420:  InclusiveOrExpression ::= ExclusiveOrExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 421:  InclusiveOrExpression ::= InclusiveOrExpression | ExclusiveOrExpression
+*<li>Rule 421:  InclusiveOrExpression ::= InclusiveOrExpression | ExclusiveOrExpression
  *</b>
  */'''
 class InclusiveOrExpression ( Ast ,IInclusiveOrExpression):
@@ -20077,11 +18284,11 @@ class InclusiveOrExpression ( Ast ,IInclusiveOrExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._InclusiveOrExpression : IInclusiveOrExpression = _InclusiveOrExpression
+            self._InclusiveOrExpression : Ast = _InclusiveOrExpression
             _InclusiveOrExpression.setParent(self)
             self._OR : AstToken = _OR
             _OR.setParent(self)
-            self._ExclusiveOrExpression : IExclusiveOrExpression = _ExclusiveOrExpression
+            self._ExclusiveOrExpression : Ast = _ExclusiveOrExpression
             _ExclusiveOrExpression.setParent(self)
             self.initialize()
         
@@ -20098,33 +18305,19 @@ class InclusiveOrExpression ( Ast ,IInclusiveOrExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitInclusiveOrExpression(self)
-            if checkChildren:
-            
-                self._InclusiveOrExpression.accept(v)
-                self._OR.accept(v)
-                self._ExclusiveOrExpression.accept(v)
-            
-            v.endVisitInclusiveOrExpression(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInclusiveOrExpression(self)
+        def  acceptWithArg(self, v, o) :   v.visitInclusiveOrExpression(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInclusiveOrExpression(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInclusiveOrExpression(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 422:  ConditionalAndExpression ::= InclusiveOrExpression
+*<li>Rule 422:  ConditionalAndExpression ::= InclusiveOrExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 423:  ConditionalAndExpression ::= ConditionalAndExpression && InclusiveOrExpression
+*<li>Rule 423:  ConditionalAndExpression ::= ConditionalAndExpression && InclusiveOrExpression
  *</b>
  */'''
 class ConditionalAndExpression ( Ast ,IConditionalAndExpression):
@@ -20146,11 +18339,11 @@ class ConditionalAndExpression ( Ast ,IConditionalAndExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ConditionalAndExpression : IConditionalAndExpression = _ConditionalAndExpression
+            self._ConditionalAndExpression : Ast = _ConditionalAndExpression
             _ConditionalAndExpression.setParent(self)
             self._AND_AND : AstToken = _AND_AND
             _AND_AND.setParent(self)
-            self._InclusiveOrExpression : IInclusiveOrExpression = _InclusiveOrExpression
+            self._InclusiveOrExpression : Ast = _InclusiveOrExpression
             _InclusiveOrExpression.setParent(self)
             self.initialize()
         
@@ -20167,33 +18360,19 @@ class ConditionalAndExpression ( Ast ,IConditionalAndExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitConditionalAndExpression(self)
-            if checkChildren:
-            
-                self._ConditionalAndExpression.accept(v)
-                self._AND_AND.accept(v)
-                self._InclusiveOrExpression.accept(v)
-            
-            v.endVisitConditionalAndExpression(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConditionalAndExpression(self)
+        def  acceptWithArg(self, v, o) :   v.visitConditionalAndExpression(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConditionalAndExpression(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConditionalAndExpression(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 424:  ConditionalOrExpression ::= ConditionalAndExpression
+*<li>Rule 424:  ConditionalOrExpression ::= ConditionalAndExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 425:  ConditionalOrExpression ::= ConditionalOrExpression || ConditionalAndExpression
+*<li>Rule 425:  ConditionalOrExpression ::= ConditionalOrExpression || ConditionalAndExpression
  *</b>
  */'''
 class ConditionalOrExpression ( Ast ,IConditionalOrExpression):
@@ -20215,11 +18394,11 @@ class ConditionalOrExpression ( Ast ,IConditionalOrExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ConditionalOrExpression : IConditionalOrExpression = _ConditionalOrExpression
+            self._ConditionalOrExpression : Ast = _ConditionalOrExpression
             _ConditionalOrExpression.setParent(self)
             self._OR_OR : AstToken = _OR_OR
             _OR_OR.setParent(self)
-            self._ConditionalAndExpression : IConditionalAndExpression = _ConditionalAndExpression
+            self._ConditionalAndExpression : Ast = _ConditionalAndExpression
             _ConditionalAndExpression.setParent(self)
             self.initialize()
         
@@ -20236,33 +18415,19 @@ class ConditionalOrExpression ( Ast ,IConditionalOrExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitConditionalOrExpression(self)
-            if checkChildren:
-            
-                self._ConditionalOrExpression.accept(v)
-                self._OR_OR.accept(v)
-                self._ConditionalAndExpression.accept(v)
-            
-            v.endVisitConditionalOrExpression(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConditionalOrExpression(self)
+        def  acceptWithArg(self, v, o) :   v.visitConditionalOrExpression(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConditionalOrExpression(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConditionalOrExpression(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 426:  ConditionalExpression ::= ConditionalOrExpression
+*<li>Rule 426:  ConditionalExpression ::= ConditionalOrExpression
  *</em>
  *<p>
  *<b>
-#*<li>Rule 427:  ConditionalExpression ::= ConditionalOrExpression ? Expression : ConditionalExpression
+*<li>Rule 427:  ConditionalExpression ::= ConditionalOrExpression ? Expression : ConditionalExpression
  *</b>
  */'''
 class ConditionalExpression ( Ast ,IConditionalExpression):
@@ -20290,15 +18455,15 @@ class ConditionalExpression ( Ast ,IConditionalExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ConditionalOrExpression : IConditionalOrExpression = _ConditionalOrExpression
+            self._ConditionalOrExpression : Ast = _ConditionalOrExpression
             _ConditionalOrExpression.setParent(self)
             self._QUESTION : AstToken = _QUESTION
             _QUESTION.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._COLON : AstToken = _COLON
             _COLON.setParent(self)
-            self._ConditionalExpression : IConditionalExpression = _ConditionalExpression
+            self._ConditionalExpression : Ast = _ConditionalExpression
             _ConditionalExpression.setParent(self)
             self.initialize()
         
@@ -20317,31 +18482,15 @@ class ConditionalExpression ( Ast ,IConditionalExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitConditionalExpression(self)
-            if checkChildren:
-            
-                self._ConditionalOrExpression.accept(v)
-                self._QUESTION.accept(v)
-                self._Expression.accept(v)
-                self._COLON.accept(v)
-                self._ConditionalExpression.accept(v)
-            
-            v.endVisitConditionalExpression(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConditionalExpression(self)
+        def  acceptWithArg(self, v, o) :   v.visitConditionalExpression(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConditionalExpression(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConditionalExpression(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 430:  Assignment ::= LeftHandSide AssignmentOperator AssignmentExpression
+*<li>Rule 430:  Assignment ::= LeftHandSide AssignmentOperator AssignmentExpression
  *</b>
  */'''
 class Assignment ( Ast ,IAssignment):
@@ -20363,11 +18512,11 @@ class Assignment ( Ast ,IAssignment):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._LeftHandSide : ILeftHandSide = _LeftHandSide
+            self._LeftHandSide : Ast = _LeftHandSide
             _LeftHandSide.setParent(self)
-            self._AssignmentOperator : IAssignmentOperator = _AssignmentOperator
+            self._AssignmentOperator : Ast = _AssignmentOperator
             _AssignmentOperator.setParent(self)
-            self._AssignmentExpression : IAssignmentExpression = _AssignmentExpression
+            self._AssignmentExpression : Ast = _AssignmentExpression
             _AssignmentExpression.setParent(self)
             self.initialize()
         
@@ -20384,33 +18533,19 @@ class Assignment ( Ast ,IAssignment):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAssignment(self)
-            if checkChildren:
-            
-                self._LeftHandSide.accept(v)
-                self._AssignmentOperator.accept(v)
-                self._AssignmentExpression.accept(v)
-            
-            v.endVisitAssignment(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignment(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignment(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignment(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignment(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 492:  ,opt ::= $Empty
+*<li>Rule 492:  ,opt ::= $Empty
  *</em>
  *<p>
  *<b>
-#*<li>Rule 493:  ,opt ::= ,
+*<li>Rule 493:  ,opt ::= ,
  *</b>
  */'''
 class Commaopt ( AstToken ,ICommaopt):
@@ -20422,27 +18557,19 @@ class Commaopt ( AstToken ,ICommaopt):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitCommaopt(self)
-            v.endVisitCommaopt(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitCommaopt(self)
+        def  acceptWithArg(self, v, o) :   v.visitCommaopt(self, o)
+        def  acceptWithResult(self, v) :  return v.visitCommaopt(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitCommaopt(self, o)
     
 
 '''/**
  *<em>
-#*<li>Rule 504:  ...opt ::= $Empty
+*<li>Rule 504:  ...opt ::= $Empty
  *</em>
  *<p>
  *<b>
-#*<li>Rule 505:  ...opt ::= ...
+*<li>Rule 505:  ...opt ::= ...
  *</b>
  */'''
 class Ellipsisopt ( AstToken ,IEllipsisopt):
@@ -20454,23 +18581,15 @@ class Ellipsisopt ( AstToken ,IEllipsisopt):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitEllipsisopt(self)
-            v.endVisitEllipsisopt(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitEllipsisopt(self)
+        def  acceptWithArg(self, v, o) :   v.visitEllipsisopt(self, o)
+        def  acceptWithResult(self, v) :  return v.visitEllipsisopt(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitEllipsisopt(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 5:  LPGUserAction ::= $BeginAction BlockStatementsopt $EndAction
+*<li>Rule 5:  LPGUserAction ::= $BeginAction BlockStatementsopt $EndAction
  *</b>
  */'''
 class LPGUserAction0 ( Ast ,ILPGUserAction):
@@ -20497,7 +18616,7 @@ class LPGUserAction0 ( Ast ,ILPGUserAction):
 
             self._BeginAction : AstToken = _BeginAction
             _BeginAction.setParent(self)
-            self._BlockStatementsopt : IBlockStatementsopt = _BlockStatementsopt
+            self._BlockStatementsopt : Ast = _BlockStatementsopt
             if _BlockStatementsopt: _BlockStatementsopt.setParent(self)
             self._EndAction : AstToken = _EndAction
             _EndAction.setParent(self)
@@ -20516,29 +18635,15 @@ class LPGUserAction0 ( Ast ,ILPGUserAction):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitLPGUserAction0(self)
-            if checkChildren:
-            
-                self._BeginAction.accept(v)
-                if self._BlockStatementsopt: self._BlockStatementsopt.accept(v)
-                self._EndAction.accept(v)
-            
-            v.endVisitLPGUserAction0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLPGUserAction0(self)
+        def  acceptWithArg(self, v, o) :   v.visitLPGUserAction0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLPGUserAction0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLPGUserAction0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 6:  LPGUserAction ::= $BeginJava BlockStatementsopt $EndJava
+*<li>Rule 6:  LPGUserAction ::= $BeginJava BlockStatementsopt $EndJava
  *</b>
  */'''
 class LPGUserAction1 ( Ast ,ILPGUserAction):
@@ -20565,7 +18670,7 @@ class LPGUserAction1 ( Ast ,ILPGUserAction):
 
             self._BeginJava : AstToken = _BeginJava
             _BeginJava.setParent(self)
-            self._BlockStatementsopt : IBlockStatementsopt = _BlockStatementsopt
+            self._BlockStatementsopt : Ast = _BlockStatementsopt
             if _BlockStatementsopt: _BlockStatementsopt.setParent(self)
             self._EndJava : AstToken = _EndJava
             _EndJava.setParent(self)
@@ -20584,29 +18689,15 @@ class LPGUserAction1 ( Ast ,ILPGUserAction):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitLPGUserAction1(self)
-            if checkChildren:
-            
-                self._BeginJava.accept(v)
-                if self._BlockStatementsopt: self._BlockStatementsopt.accept(v)
-                self._EndJava.accept(v)
-            
-            v.endVisitLPGUserAction1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLPGUserAction1(self)
+        def  acceptWithArg(self, v, o) :   v.visitLPGUserAction1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLPGUserAction1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLPGUserAction1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 7:  LPGUserAction ::= $NoAction
+*<li>Rule 7:  LPGUserAction ::= $NoAction
  *</b>
  */'''
 class LPGUserAction2 ( AstToken ,ILPGUserAction):
@@ -20618,23 +18709,15 @@ class LPGUserAction2 ( AstToken ,ILPGUserAction):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitLPGUserAction2(self)
-            v.endVisitLPGUserAction2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLPGUserAction2(self)
+        def  acceptWithArg(self, v, o) :   v.visitLPGUserAction2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLPGUserAction2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLPGUserAction2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 8:  LPGUserAction ::= $NullAction
+*<li>Rule 8:  LPGUserAction ::= $NullAction
  *</b>
  */'''
 class LPGUserAction3 ( AstToken ,ILPGUserAction):
@@ -20646,23 +18729,15 @@ class LPGUserAction3 ( AstToken ,ILPGUserAction):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitLPGUserAction3(self)
-            v.endVisitLPGUserAction3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLPGUserAction3(self)
+        def  acceptWithArg(self, v, o) :   v.visitLPGUserAction3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLPGUserAction3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLPGUserAction3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 9:  LPGUserAction ::= $BadAction
+*<li>Rule 9:  LPGUserAction ::= $BadAction
  *</b>
  */'''
 class LPGUserAction4 ( AstToken ,ILPGUserAction):
@@ -20674,23 +18749,15 @@ class LPGUserAction4 ( AstToken ,ILPGUserAction):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitLPGUserAction4(self)
-            v.endVisitLPGUserAction4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLPGUserAction4(self)
+        def  acceptWithArg(self, v, o) :   v.visitLPGUserAction4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLPGUserAction4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLPGUserAction4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 16:  IntegralType ::= byte
+*<li>Rule 16:  IntegralType ::= byte
  *</b>
  */'''
 class IntegralType0 ( AstToken ,IIntegralType):
@@ -20702,23 +18769,15 @@ class IntegralType0 ( AstToken ,IIntegralType):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitIntegralType0(self)
-            v.endVisitIntegralType0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitIntegralType0(self)
+        def  acceptWithArg(self, v, o) :   v.visitIntegralType0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitIntegralType0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitIntegralType0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 17:  IntegralType ::= short
+*<li>Rule 17:  IntegralType ::= short
  *</b>
  */'''
 class IntegralType1 ( AstToken ,IIntegralType):
@@ -20730,23 +18789,15 @@ class IntegralType1 ( AstToken ,IIntegralType):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitIntegralType1(self)
-            v.endVisitIntegralType1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitIntegralType1(self)
+        def  acceptWithArg(self, v, o) :   v.visitIntegralType1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitIntegralType1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitIntegralType1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 18:  IntegralType ::= int
+*<li>Rule 18:  IntegralType ::= int
  *</b>
  */'''
 class IntegralType2 ( AstToken ,IIntegralType):
@@ -20758,23 +18809,15 @@ class IntegralType2 ( AstToken ,IIntegralType):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitIntegralType2(self)
-            v.endVisitIntegralType2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitIntegralType2(self)
+        def  acceptWithArg(self, v, o) :   v.visitIntegralType2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitIntegralType2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitIntegralType2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 19:  IntegralType ::= long
+*<li>Rule 19:  IntegralType ::= long
  *</b>
  */'''
 class IntegralType3 ( AstToken ,IIntegralType):
@@ -20786,23 +18829,15 @@ class IntegralType3 ( AstToken ,IIntegralType):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitIntegralType3(self)
-            v.endVisitIntegralType3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitIntegralType3(self)
+        def  acceptWithArg(self, v, o) :   v.visitIntegralType3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitIntegralType3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitIntegralType3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 20:  IntegralType ::= char
+*<li>Rule 20:  IntegralType ::= char
  *</b>
  */'''
 class IntegralType4 ( AstToken ,IIntegralType):
@@ -20814,23 +18849,15 @@ class IntegralType4 ( AstToken ,IIntegralType):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitIntegralType4(self)
-            v.endVisitIntegralType4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitIntegralType4(self)
+        def  acceptWithArg(self, v, o) :   v.visitIntegralType4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitIntegralType4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitIntegralType4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 21:  FloatingPointType ::= float
+*<li>Rule 21:  FloatingPointType ::= float
  *</b>
  */'''
 class FloatingPointType0 ( AstToken ,IFloatingPointType):
@@ -20842,23 +18869,15 @@ class FloatingPointType0 ( AstToken ,IFloatingPointType):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitFloatingPointType0(self)
-            v.endVisitFloatingPointType0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFloatingPointType0(self)
+        def  acceptWithArg(self, v, o) :   v.visitFloatingPointType0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFloatingPointType0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFloatingPointType0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 22:  FloatingPointType ::= double
+*<li>Rule 22:  FloatingPointType ::= double
  *</b>
  */'''
 class FloatingPointType1 ( AstToken ,IFloatingPointType):
@@ -20870,23 +18889,15 @@ class FloatingPointType1 ( AstToken ,IFloatingPointType):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitFloatingPointType1(self)
-            v.endVisitFloatingPointType1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFloatingPointType1(self)
+        def  acceptWithArg(self, v, o) :   v.visitFloatingPointType1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFloatingPointType1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFloatingPointType1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 45:  WildcardBounds ::= extends ReferenceType
+*<li>Rule 45:  WildcardBounds ::= extends ReferenceType
  *</b>
  */'''
 class WildcardBounds0 ( Ast ,IWildcardBounds):
@@ -20907,7 +18918,7 @@ class WildcardBounds0 ( Ast ,IWildcardBounds):
 
             self._extends : AstToken = _extends
             _extends.setParent(self)
-            self._ReferenceType : IReferenceType = _ReferenceType
+            self._ReferenceType : Ast = _ReferenceType
             _ReferenceType.setParent(self)
             self.initialize()
         
@@ -20923,28 +18934,15 @@ class WildcardBounds0 ( Ast ,IWildcardBounds):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitWildcardBounds0(self)
-            if checkChildren:
-            
-                self._extends.accept(v)
-                self._ReferenceType.accept(v)
-            
-            v.endVisitWildcardBounds0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitWildcardBounds0(self)
+        def  acceptWithArg(self, v, o) :   v.visitWildcardBounds0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitWildcardBounds0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitWildcardBounds0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 46:  WildcardBounds ::= super ReferenceType
+*<li>Rule 46:  WildcardBounds ::= super ReferenceType
  *</b>
  */'''
 class WildcardBounds1 ( Ast ,IWildcardBounds):
@@ -20965,7 +18963,7 @@ class WildcardBounds1 ( Ast ,IWildcardBounds):
 
             self._super : AstToken = _super
             _super.setParent(self)
-            self._ReferenceType : IReferenceType = _ReferenceType
+            self._ReferenceType : Ast = _ReferenceType
             _ReferenceType.setParent(self)
             self.initialize()
         
@@ -20981,28 +18979,15 @@ class WildcardBounds1 ( Ast ,IWildcardBounds):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitWildcardBounds1(self)
-            if checkChildren:
-            
-                self._super.accept(v)
-                self._ReferenceType.accept(v)
-            
-            v.endVisitWildcardBounds1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitWildcardBounds1(self)
+        def  acceptWithArg(self, v, o) :   v.visitWildcardBounds1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitWildcardBounds1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitWildcardBounds1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 80:  ClassModifier ::= public
+*<li>Rule 80:  ClassModifier ::= public
  *</b>
  */'''
 class ClassModifier0 ( AstToken ,IClassModifier):
@@ -21014,23 +18999,15 @@ class ClassModifier0 ( AstToken ,IClassModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitClassModifier0(self)
-            v.endVisitClassModifier0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassModifier0(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassModifier0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassModifier0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassModifier0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 81:  ClassModifier ::= protected
+*<li>Rule 81:  ClassModifier ::= protected
  *</b>
  */'''
 class ClassModifier1 ( AstToken ,IClassModifier):
@@ -21042,23 +19019,15 @@ class ClassModifier1 ( AstToken ,IClassModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitClassModifier1(self)
-            v.endVisitClassModifier1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassModifier1(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassModifier1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassModifier1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassModifier1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 82:  ClassModifier ::= private
+*<li>Rule 82:  ClassModifier ::= private
  *</b>
  */'''
 class ClassModifier2 ( AstToken ,IClassModifier):
@@ -21070,23 +19039,15 @@ class ClassModifier2 ( AstToken ,IClassModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitClassModifier2(self)
-            v.endVisitClassModifier2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassModifier2(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassModifier2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassModifier2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassModifier2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 83:  ClassModifier ::= abstract
+*<li>Rule 83:  ClassModifier ::= abstract
  *</b>
  */'''
 class ClassModifier3 ( AstToken ,IClassModifier):
@@ -21098,23 +19059,15 @@ class ClassModifier3 ( AstToken ,IClassModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitClassModifier3(self)
-            v.endVisitClassModifier3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassModifier3(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassModifier3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassModifier3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassModifier3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 84:  ClassModifier ::= static
+*<li>Rule 84:  ClassModifier ::= static
  *</b>
  */'''
 class ClassModifier4 ( AstToken ,IClassModifier):
@@ -21126,23 +19079,15 @@ class ClassModifier4 ( AstToken ,IClassModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitClassModifier4(self)
-            v.endVisitClassModifier4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassModifier4(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassModifier4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassModifier4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassModifier4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 85:  ClassModifier ::= final
+*<li>Rule 85:  ClassModifier ::= final
  *</b>
  */'''
 class ClassModifier5 ( AstToken ,IClassModifier):
@@ -21154,23 +19099,15 @@ class ClassModifier5 ( AstToken ,IClassModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitClassModifier5(self)
-            v.endVisitClassModifier5(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassModifier5(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassModifier5(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassModifier5(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassModifier5(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 86:  ClassModifier ::= strictfp
+*<li>Rule 86:  ClassModifier ::= strictfp
  *</b>
  */'''
 class ClassModifier6 ( AstToken ,IClassModifier):
@@ -21182,23 +19119,15 @@ class ClassModifier6 ( AstToken ,IClassModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitClassModifier6(self)
-            v.endVisitClassModifier6(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassModifier6(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassModifier6(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassModifier6(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassModifier6(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 118:  FieldModifier ::= public
+*<li>Rule 118:  FieldModifier ::= public
  *</b>
  */'''
 class FieldModifier0 ( AstToken ,IFieldModifier):
@@ -21210,23 +19139,15 @@ class FieldModifier0 ( AstToken ,IFieldModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitFieldModifier0(self)
-            v.endVisitFieldModifier0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldModifier0(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldModifier0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldModifier0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldModifier0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 119:  FieldModifier ::= protected
+*<li>Rule 119:  FieldModifier ::= protected
  *</b>
  */'''
 class FieldModifier1 ( AstToken ,IFieldModifier):
@@ -21238,23 +19159,15 @@ class FieldModifier1 ( AstToken ,IFieldModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitFieldModifier1(self)
-            v.endVisitFieldModifier1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldModifier1(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldModifier1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldModifier1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldModifier1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 120:  FieldModifier ::= private
+*<li>Rule 120:  FieldModifier ::= private
  *</b>
  */'''
 class FieldModifier2 ( AstToken ,IFieldModifier):
@@ -21266,23 +19179,15 @@ class FieldModifier2 ( AstToken ,IFieldModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitFieldModifier2(self)
-            v.endVisitFieldModifier2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldModifier2(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldModifier2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldModifier2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldModifier2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 121:  FieldModifier ::= static
+*<li>Rule 121:  FieldModifier ::= static
  *</b>
  */'''
 class FieldModifier3 ( AstToken ,IFieldModifier):
@@ -21294,23 +19199,15 @@ class FieldModifier3 ( AstToken ,IFieldModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitFieldModifier3(self)
-            v.endVisitFieldModifier3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldModifier3(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldModifier3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldModifier3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldModifier3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 122:  FieldModifier ::= final
+*<li>Rule 122:  FieldModifier ::= final
  *</b>
  */'''
 class FieldModifier4 ( AstToken ,IFieldModifier):
@@ -21322,23 +19219,15 @@ class FieldModifier4 ( AstToken ,IFieldModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitFieldModifier4(self)
-            v.endVisitFieldModifier4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldModifier4(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldModifier4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldModifier4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldModifier4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 123:  FieldModifier ::= transient
+*<li>Rule 123:  FieldModifier ::= transient
  *</b>
  */'''
 class FieldModifier5 ( AstToken ,IFieldModifier):
@@ -21350,23 +19239,15 @@ class FieldModifier5 ( AstToken ,IFieldModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitFieldModifier5(self)
-            v.endVisitFieldModifier5(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldModifier5(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldModifier5(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldModifier5(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldModifier5(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 124:  FieldModifier ::= volatile
+*<li>Rule 124:  FieldModifier ::= volatile
  *</b>
  */'''
 class FieldModifier6 ( AstToken ,IFieldModifier):
@@ -21378,23 +19259,15 @@ class FieldModifier6 ( AstToken ,IFieldModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitFieldModifier6(self)
-            v.endVisitFieldModifier6(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldModifier6(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldModifier6(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldModifier6(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldModifier6(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 129:  MethodDeclarator ::= identifier ( FormalParameterListopt )
+*<li>Rule 129:  MethodDeclarator ::= identifier ( FormalParameterListopt )
  *</b>
  */'''
 class MethodDeclarator0 ( Ast ,IMethodDeclarator):
@@ -21426,7 +19299,7 @@ class MethodDeclarator0 ( Ast ,IMethodDeclarator):
             _identifier.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._FormalParameterListopt : IFormalParameterListopt = _FormalParameterListopt
+            self._FormalParameterListopt : Ast = _FormalParameterListopt
             if _FormalParameterListopt: _FormalParameterListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -21446,30 +19319,15 @@ class MethodDeclarator0 ( Ast ,IMethodDeclarator):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodDeclarator0(self)
-            if checkChildren:
-            
-                self._identifier.accept(v)
-                self._LPAREN.accept(v)
-                if self._FormalParameterListopt: self._FormalParameterListopt.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitMethodDeclarator0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodDeclarator0(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodDeclarator0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodDeclarator0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodDeclarator0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 130:  MethodDeclarator ::= MethodDeclarator [ ]
+*<li>Rule 130:  MethodDeclarator ::= MethodDeclarator [ ]
  *</b>
  */'''
 class MethodDeclarator1 ( Ast ,IMethodDeclarator):
@@ -21491,7 +19349,7 @@ class MethodDeclarator1 ( Ast ,IMethodDeclarator):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._MethodDeclarator : IMethodDeclarator = _MethodDeclarator
+            self._MethodDeclarator : Ast = _MethodDeclarator
             _MethodDeclarator.setParent(self)
             self._LBRACKET : AstToken = _LBRACKET
             _LBRACKET.setParent(self)
@@ -21512,29 +19370,15 @@ class MethodDeclarator1 ( Ast ,IMethodDeclarator):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodDeclarator1(self)
-            if checkChildren:
-            
-                self._MethodDeclarator.accept(v)
-                self._LBRACKET.accept(v)
-                self._RBRACKET.accept(v)
-            
-            v.endVisitMethodDeclarator1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodDeclarator1(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodDeclarator1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodDeclarator1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodDeclarator1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 144:  MethodModifier ::= public
+*<li>Rule 144:  MethodModifier ::= public
  *</b>
  */'''
 class MethodModifier0 ( AstToken ,IMethodModifier):
@@ -21546,23 +19390,15 @@ class MethodModifier0 ( AstToken ,IMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitMethodModifier0(self)
-            v.endVisitMethodModifier0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodModifier0(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodModifier0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodModifier0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodModifier0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 145:  MethodModifier ::= protected
+*<li>Rule 145:  MethodModifier ::= protected
  *</b>
  */'''
 class MethodModifier1 ( AstToken ,IMethodModifier):
@@ -21574,23 +19410,15 @@ class MethodModifier1 ( AstToken ,IMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitMethodModifier1(self)
-            v.endVisitMethodModifier1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodModifier1(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodModifier1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodModifier1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodModifier1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 146:  MethodModifier ::= private
+*<li>Rule 146:  MethodModifier ::= private
  *</b>
  */'''
 class MethodModifier2 ( AstToken ,IMethodModifier):
@@ -21602,23 +19430,15 @@ class MethodModifier2 ( AstToken ,IMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitMethodModifier2(self)
-            v.endVisitMethodModifier2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodModifier2(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodModifier2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodModifier2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodModifier2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 147:  MethodModifier ::= abstract
+*<li>Rule 147:  MethodModifier ::= abstract
  *</b>
  */'''
 class MethodModifier3 ( AstToken ,IMethodModifier):
@@ -21630,23 +19450,15 @@ class MethodModifier3 ( AstToken ,IMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitMethodModifier3(self)
-            v.endVisitMethodModifier3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodModifier3(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodModifier3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodModifier3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodModifier3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 148:  MethodModifier ::= static
+*<li>Rule 148:  MethodModifier ::= static
  *</b>
  */'''
 class MethodModifier4 ( AstToken ,IMethodModifier):
@@ -21658,23 +19470,15 @@ class MethodModifier4 ( AstToken ,IMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitMethodModifier4(self)
-            v.endVisitMethodModifier4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodModifier4(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodModifier4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodModifier4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodModifier4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 149:  MethodModifier ::= final
+*<li>Rule 149:  MethodModifier ::= final
  *</b>
  */'''
 class MethodModifier5 ( AstToken ,IMethodModifier):
@@ -21686,23 +19490,15 @@ class MethodModifier5 ( AstToken ,IMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitMethodModifier5(self)
-            v.endVisitMethodModifier5(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodModifier5(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodModifier5(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodModifier5(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodModifier5(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 150:  MethodModifier ::= synchronized
+*<li>Rule 150:  MethodModifier ::= synchronized
  *</b>
  */'''
 class MethodModifier6 ( AstToken ,IMethodModifier):
@@ -21714,23 +19510,15 @@ class MethodModifier6 ( AstToken ,IMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitMethodModifier6(self)
-            v.endVisitMethodModifier6(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodModifier6(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodModifier6(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodModifier6(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodModifier6(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 151:  MethodModifier ::= native
+*<li>Rule 151:  MethodModifier ::= native
  *</b>
  */'''
 class MethodModifier7 ( AstToken ,IMethodModifier):
@@ -21742,23 +19530,15 @@ class MethodModifier7 ( AstToken ,IMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitMethodModifier7(self)
-            v.endVisitMethodModifier7(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodModifier7(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodModifier7(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodModifier7(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodModifier7(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 152:  MethodModifier ::= strictfp
+*<li>Rule 152:  MethodModifier ::= strictfp
  *</b>
  */'''
 class MethodModifier8 ( AstToken ,IMethodModifier):
@@ -21770,23 +19550,15 @@ class MethodModifier8 ( AstToken ,IMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitMethodModifier8(self)
-            v.endVisitMethodModifier8(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodModifier8(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodModifier8(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodModifier8(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodModifier8(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 168:  ConstructorModifier ::= public
+*<li>Rule 168:  ConstructorModifier ::= public
  *</b>
  */'''
 class ConstructorModifier0 ( AstToken ,IConstructorModifier):
@@ -21798,23 +19570,15 @@ class ConstructorModifier0 ( AstToken ,IConstructorModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitConstructorModifier0(self)
-            v.endVisitConstructorModifier0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstructorModifier0(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstructorModifier0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstructorModifier0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstructorModifier0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 169:  ConstructorModifier ::= protected
+*<li>Rule 169:  ConstructorModifier ::= protected
  *</b>
  */'''
 class ConstructorModifier1 ( AstToken ,IConstructorModifier):
@@ -21826,23 +19590,15 @@ class ConstructorModifier1 ( AstToken ,IConstructorModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitConstructorModifier1(self)
-            v.endVisitConstructorModifier1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstructorModifier1(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstructorModifier1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstructorModifier1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstructorModifier1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 170:  ConstructorModifier ::= private
+*<li>Rule 170:  ConstructorModifier ::= private
  *</b>
  */'''
 class ConstructorModifier2 ( AstToken ,IConstructorModifier):
@@ -21854,23 +19610,15 @@ class ConstructorModifier2 ( AstToken ,IConstructorModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitConstructorModifier2(self)
-            v.endVisitConstructorModifier2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstructorModifier2(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstructorModifier2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstructorModifier2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstructorModifier2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 172:  ExplicitConstructorInvocation ::= TypeArgumentsopt this ( ArgumentListopt ) ;
+*<li>Rule 172:  ExplicitConstructorInvocation ::= TypeArgumentsopt this ( ArgumentListopt ) ;
  *</b>
  */'''
 class ExplicitConstructorInvocation0 ( Ast ,IExplicitConstructorInvocation):
@@ -21913,7 +19661,7 @@ class ExplicitConstructorInvocation0 ( Ast ,IExplicitConstructorInvocation):
             _this.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -21937,32 +19685,15 @@ class ExplicitConstructorInvocation0 ( Ast ,IExplicitConstructorInvocation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitExplicitConstructorInvocation0(self)
-            if checkChildren:
-            
-                if self._TypeArgumentsopt: self._TypeArgumentsopt.accept(v)
-                self._this.accept(v)
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitExplicitConstructorInvocation0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitExplicitConstructorInvocation0(self)
+        def  acceptWithArg(self, v, o) :   v.visitExplicitConstructorInvocation0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitExplicitConstructorInvocation0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitExplicitConstructorInvocation0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 173:  ExplicitConstructorInvocation ::= TypeArgumentsopt super ( ArgumentListopt ) ;
+*<li>Rule 173:  ExplicitConstructorInvocation ::= TypeArgumentsopt super ( ArgumentListopt ) ;
  *</b>
  */'''
 class ExplicitConstructorInvocation1 ( Ast ,IExplicitConstructorInvocation):
@@ -22005,7 +19736,7 @@ class ExplicitConstructorInvocation1 ( Ast ,IExplicitConstructorInvocation):
             _super.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -22029,32 +19760,15 @@ class ExplicitConstructorInvocation1 ( Ast ,IExplicitConstructorInvocation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitExplicitConstructorInvocation1(self)
-            if checkChildren:
-            
-                if self._TypeArgumentsopt: self._TypeArgumentsopt.accept(v)
-                self._super.accept(v)
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitExplicitConstructorInvocation1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitExplicitConstructorInvocation1(self)
+        def  acceptWithArg(self, v, o) :   v.visitExplicitConstructorInvocation1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitExplicitConstructorInvocation1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitExplicitConstructorInvocation1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 174:  ExplicitConstructorInvocation ::= Primary . TypeArgumentsopt super ( ArgumentListopt ) ;
+*<li>Rule 174:  ExplicitConstructorInvocation ::= Primary . TypeArgumentsopt super ( ArgumentListopt ) ;
  *</b>
  */'''
 class ExplicitConstructorInvocation2 ( Ast ,IExplicitConstructorInvocation):
@@ -22097,7 +19811,7 @@ class ExplicitConstructorInvocation2 ( Ast ,IExplicitConstructorInvocation):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Primary : IPrimary = _Primary
+            self._Primary : Ast = _Primary
             _Primary.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -22107,7 +19821,7 @@ class ExplicitConstructorInvocation2 ( Ast ,IExplicitConstructorInvocation):
             _super.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -22133,34 +19847,15 @@ class ExplicitConstructorInvocation2 ( Ast ,IExplicitConstructorInvocation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitExplicitConstructorInvocation2(self)
-            if checkChildren:
-            
-                self._Primary.accept(v)
-                self._DOT.accept(v)
-                if self._TypeArgumentsopt: self._TypeArgumentsopt.accept(v)
-                self._super.accept(v)
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitExplicitConstructorInvocation2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitExplicitConstructorInvocation2(self)
+        def  acceptWithArg(self, v, o) :   v.visitExplicitConstructorInvocation2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitExplicitConstructorInvocation2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitExplicitConstructorInvocation2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 188:  InterfaceModifier ::= public
+*<li>Rule 188:  InterfaceModifier ::= public
  *</b>
  */'''
 class InterfaceModifier0 ( AstToken ,IInterfaceModifier):
@@ -22172,23 +19867,15 @@ class InterfaceModifier0 ( AstToken ,IInterfaceModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitInterfaceModifier0(self)
-            v.endVisitInterfaceModifier0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceModifier0(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceModifier0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceModifier0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceModifier0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 189:  InterfaceModifier ::= protected
+*<li>Rule 189:  InterfaceModifier ::= protected
  *</b>
  */'''
 class InterfaceModifier1 ( AstToken ,IInterfaceModifier):
@@ -22200,23 +19887,15 @@ class InterfaceModifier1 ( AstToken ,IInterfaceModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitInterfaceModifier1(self)
-            v.endVisitInterfaceModifier1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceModifier1(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceModifier1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceModifier1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceModifier1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 190:  InterfaceModifier ::= private
+*<li>Rule 190:  InterfaceModifier ::= private
  *</b>
  */'''
 class InterfaceModifier2 ( AstToken ,IInterfaceModifier):
@@ -22228,23 +19907,15 @@ class InterfaceModifier2 ( AstToken ,IInterfaceModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitInterfaceModifier2(self)
-            v.endVisitInterfaceModifier2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceModifier2(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceModifier2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceModifier2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceModifier2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 191:  InterfaceModifier ::= abstract
+*<li>Rule 191:  InterfaceModifier ::= abstract
  *</b>
  */'''
 class InterfaceModifier3 ( AstToken ,IInterfaceModifier):
@@ -22256,23 +19927,15 @@ class InterfaceModifier3 ( AstToken ,IInterfaceModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitInterfaceModifier3(self)
-            v.endVisitInterfaceModifier3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceModifier3(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceModifier3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceModifier3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceModifier3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 192:  InterfaceModifier ::= static
+*<li>Rule 192:  InterfaceModifier ::= static
  *</b>
  */'''
 class InterfaceModifier4 ( AstToken ,IInterfaceModifier):
@@ -22284,23 +19947,15 @@ class InterfaceModifier4 ( AstToken ,IInterfaceModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitInterfaceModifier4(self)
-            v.endVisitInterfaceModifier4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceModifier4(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceModifier4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceModifier4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceModifier4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 193:  InterfaceModifier ::= strictfp
+*<li>Rule 193:  InterfaceModifier ::= strictfp
  *</b>
  */'''
 class InterfaceModifier5 ( AstToken ,IInterfaceModifier):
@@ -22312,23 +19967,15 @@ class InterfaceModifier5 ( AstToken ,IInterfaceModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitInterfaceModifier5(self)
-            v.endVisitInterfaceModifier5(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitInterfaceModifier5(self)
+        def  acceptWithArg(self, v, o) :   v.visitInterfaceModifier5(self, o)
+        def  acceptWithResult(self, v) :  return v.visitInterfaceModifier5(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitInterfaceModifier5(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 194:  ExtendsInterfaces ::= extends InterfaceType
+*<li>Rule 194:  ExtendsInterfaces ::= extends InterfaceType
  *</b>
  */'''
 class ExtendsInterfaces0 ( Ast ,IExtendsInterfaces):
@@ -22365,28 +20012,15 @@ class ExtendsInterfaces0 ( Ast ,IExtendsInterfaces):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitExtendsInterfaces0(self)
-            if checkChildren:
-            
-                self._extends.accept(v)
-                self._InterfaceType.accept(v)
-            
-            v.endVisitExtendsInterfaces0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitExtendsInterfaces0(self)
+        def  acceptWithArg(self, v, o) :   v.visitExtendsInterfaces0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitExtendsInterfaces0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitExtendsInterfaces0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 195:  ExtendsInterfaces ::= ExtendsInterfaces , InterfaceType
+*<li>Rule 195:  ExtendsInterfaces ::= ExtendsInterfaces , InterfaceType
  *</b>
  */'''
 class ExtendsInterfaces1 ( Ast ,IExtendsInterfaces):
@@ -22408,7 +20042,7 @@ class ExtendsInterfaces1 ( Ast ,IExtendsInterfaces):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ExtendsInterfaces : IExtendsInterfaces = _ExtendsInterfaces
+            self._ExtendsInterfaces : Ast = _ExtendsInterfaces
             _ExtendsInterfaces.setParent(self)
             self._COMMA : AstToken = _COMMA
             _COMMA.setParent(self)
@@ -22429,29 +20063,15 @@ class ExtendsInterfaces1 ( Ast ,IExtendsInterfaces):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitExtendsInterfaces1(self)
-            if checkChildren:
-            
-                self._ExtendsInterfaces.accept(v)
-                self._COMMA.accept(v)
-                self._InterfaceType.accept(v)
-            
-            v.endVisitExtendsInterfaces1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitExtendsInterfaces1(self)
+        def  acceptWithArg(self, v, o) :   v.visitExtendsInterfaces1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitExtendsInterfaces1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitExtendsInterfaces1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 208:  ConstantModifier ::= public
+*<li>Rule 208:  ConstantModifier ::= public
  *</b>
  */'''
 class ConstantModifier0 ( AstToken ,IConstantModifier):
@@ -22463,23 +20083,15 @@ class ConstantModifier0 ( AstToken ,IConstantModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitConstantModifier0(self)
-            v.endVisitConstantModifier0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstantModifier0(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstantModifier0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstantModifier0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstantModifier0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 209:  ConstantModifier ::= static
+*<li>Rule 209:  ConstantModifier ::= static
  *</b>
  */'''
 class ConstantModifier1 ( AstToken ,IConstantModifier):
@@ -22491,23 +20103,15 @@ class ConstantModifier1 ( AstToken ,IConstantModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitConstantModifier1(self)
-            v.endVisitConstantModifier1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstantModifier1(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstantModifier1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstantModifier1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstantModifier1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 210:  ConstantModifier ::= final
+*<li>Rule 210:  ConstantModifier ::= final
  *</b>
  */'''
 class ConstantModifier2 ( AstToken ,IConstantModifier):
@@ -22519,23 +20123,15 @@ class ConstantModifier2 ( AstToken ,IConstantModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitConstantModifier2(self)
-            v.endVisitConstantModifier2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitConstantModifier2(self)
+        def  acceptWithArg(self, v, o) :   v.visitConstantModifier2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitConstantModifier2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitConstantModifier2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 215:  AbstractMethodModifier ::= public
+*<li>Rule 215:  AbstractMethodModifier ::= public
  *</b>
  */'''
 class AbstractMethodModifier0 ( AstToken ,IAbstractMethodModifier):
@@ -22547,23 +20143,15 @@ class AbstractMethodModifier0 ( AstToken ,IAbstractMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAbstractMethodModifier0(self)
-            v.endVisitAbstractMethodModifier0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAbstractMethodModifier0(self)
+        def  acceptWithArg(self, v, o) :   v.visitAbstractMethodModifier0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAbstractMethodModifier0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAbstractMethodModifier0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 216:  AbstractMethodModifier ::= abstract
+*<li>Rule 216:  AbstractMethodModifier ::= abstract
  *</b>
  */'''
 class AbstractMethodModifier1 ( AstToken ,IAbstractMethodModifier):
@@ -22575,23 +20163,15 @@ class AbstractMethodModifier1 ( AstToken ,IAbstractMethodModifier):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAbstractMethodModifier1(self)
-            v.endVisitAbstractMethodModifier1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAbstractMethodModifier1(self)
+        def  acceptWithArg(self, v, o) :   v.visitAbstractMethodModifier1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAbstractMethodModifier1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAbstractMethodModifier1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 221:  AnnotationTypeElementDeclaration ::= AbstractMethodModifiersopt Type identifier ( ) DefaultValueopt ;
+*<li>Rule 221:  AnnotationTypeElementDeclaration ::= AbstractMethodModifiersopt Type identifier ( ) DefaultValueopt ;
  *</b>
  */'''
 class AnnotationTypeElementDeclaration0 ( Ast ,IAnnotationTypeElementDeclaration):
@@ -22631,9 +20211,9 @@ class AnnotationTypeElementDeclaration0 ( Ast ,IAnnotationTypeElementDeclaration
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AbstractMethodModifiersopt : IAbstractMethodModifiersopt = _AbstractMethodModifiersopt
+            self._AbstractMethodModifiersopt : Ast = _AbstractMethodModifiersopt
             if _AbstractMethodModifiersopt: _AbstractMethodModifiersopt.setParent(self)
-            self._Type : IType = _Type
+            self._Type : Ast = _Type
             _Type.setParent(self)
             self._identifier : identifier = _identifier
             _identifier.setParent(self)
@@ -22664,33 +20244,15 @@ class AnnotationTypeElementDeclaration0 ( Ast ,IAnnotationTypeElementDeclaration
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAnnotationTypeElementDeclaration0(self)
-            if checkChildren:
-            
-                if self._AbstractMethodModifiersopt: self._AbstractMethodModifiersopt.accept(v)
-                self._Type.accept(v)
-                self._identifier.accept(v)
-                self._LPAREN.accept(v)
-                self._RPAREN.accept(v)
-                if self._DefaultValueopt: self._DefaultValueopt.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitAnnotationTypeElementDeclaration0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAnnotationTypeElementDeclaration0(self)
+        def  acceptWithArg(self, v, o) :   v.visitAnnotationTypeElementDeclaration0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAnnotationTypeElementDeclaration0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAnnotationTypeElementDeclaration0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 227:  AnnotationTypeElementDeclaration ::= ;
+*<li>Rule 227:  AnnotationTypeElementDeclaration ::= ;
  *</b>
  */'''
 class AnnotationTypeElementDeclaration1 ( AstToken ,IAnnotationTypeElementDeclaration):
@@ -22702,23 +20264,15 @@ class AnnotationTypeElementDeclaration1 ( AstToken ,IAnnotationTypeElementDeclar
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAnnotationTypeElementDeclaration1(self)
-            v.endVisitAnnotationTypeElementDeclaration1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAnnotationTypeElementDeclaration1(self)
+        def  acceptWithArg(self, v, o) :   v.visitAnnotationTypeElementDeclaration1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAnnotationTypeElementDeclaration1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAnnotationTypeElementDeclaration1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 295:  AssertStatement ::= assert Expression ;
+*<li>Rule 295:  AssertStatement ::= assert Expression ;
  *</b>
  */'''
 class AssertStatement0 ( Ast ,IAssertStatement):
@@ -22742,7 +20296,7 @@ class AssertStatement0 ( Ast ,IAssertStatement):
 
             self._assert : AstToken = _assert
             _assert.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
@@ -22761,29 +20315,15 @@ class AssertStatement0 ( Ast ,IAssertStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAssertStatement0(self)
-            if checkChildren:
-            
-                self._assert.accept(v)
-                self._Expression.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitAssertStatement0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssertStatement0(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssertStatement0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssertStatement0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssertStatement0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 296:  AssertStatement ::= assert Expression : Expression ;
+*<li>Rule 296:  AssertStatement ::= assert Expression : Expression ;
  *</b>
  */'''
 class AssertStatement1 ( Ast ,IAssertStatement):
@@ -22813,11 +20353,11 @@ class AssertStatement1 ( Ast ,IAssertStatement):
 
             self._assert : AstToken = _assert
             _assert.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._COLON : AstToken = _COLON
             _COLON.setParent(self)
-            self._Expression4 : IExpression = _Expression4
+            self._Expression4 : Ast = _Expression4
             _Expression4.setParent(self)
             self._SEMICOLON : AstToken = _SEMICOLON
             _SEMICOLON.setParent(self)
@@ -22838,31 +20378,15 @@ class AssertStatement1 ( Ast ,IAssertStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAssertStatement1(self)
-            if checkChildren:
-            
-                self._assert.accept(v)
-                self._Expression.accept(v)
-                self._COLON.accept(v)
-                self._Expression4.accept(v)
-                self._SEMICOLON.accept(v)
-            
-            v.endVisitAssertStatement1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssertStatement1(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssertStatement1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssertStatement1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssertStatement1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 304:  SwitchLabel ::= case ConstantExpression :
+*<li>Rule 304:  SwitchLabel ::= case ConstantExpression :
  *</b>
  */'''
 class SwitchLabel0 ( Ast ,ISwitchLabel):
@@ -22886,7 +20410,7 @@ class SwitchLabel0 ( Ast ,ISwitchLabel):
 
             self._case : AstToken = _case
             _case.setParent(self)
-            self._ConstantExpression : IConstantExpression = _ConstantExpression
+            self._ConstantExpression : Ast = _ConstantExpression
             _ConstantExpression.setParent(self)
             self._COLON : AstToken = _COLON
             _COLON.setParent(self)
@@ -22905,29 +20429,15 @@ class SwitchLabel0 ( Ast ,ISwitchLabel):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSwitchLabel0(self)
-            if checkChildren:
-            
-                self._case.accept(v)
-                self._ConstantExpression.accept(v)
-                self._COLON.accept(v)
-            
-            v.endVisitSwitchLabel0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSwitchLabel0(self)
+        def  acceptWithArg(self, v, o) :   v.visitSwitchLabel0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSwitchLabel0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSwitchLabel0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 305:  SwitchLabel ::= case EnumConstant :
+*<li>Rule 305:  SwitchLabel ::= case EnumConstant :
  *</b>
  */'''
 class SwitchLabel1 ( Ast ,ISwitchLabel):
@@ -22951,7 +20461,7 @@ class SwitchLabel1 ( Ast ,ISwitchLabel):
 
             self._case : AstToken = _case
             _case.setParent(self)
-            self._EnumConstant : IEnumConstant = _EnumConstant
+            self._EnumConstant : Ast = _EnumConstant
             _EnumConstant.setParent(self)
             self._COLON : AstToken = _COLON
             _COLON.setParent(self)
@@ -22970,29 +20480,15 @@ class SwitchLabel1 ( Ast ,ISwitchLabel):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSwitchLabel1(self)
-            if checkChildren:
-            
-                self._case.accept(v)
-                self._EnumConstant.accept(v)
-                self._COLON.accept(v)
-            
-            v.endVisitSwitchLabel1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSwitchLabel1(self)
+        def  acceptWithArg(self, v, o) :   v.visitSwitchLabel1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSwitchLabel1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSwitchLabel1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 306:  SwitchLabel ::= default :
+*<li>Rule 306:  SwitchLabel ::= default :
  *</b>
  */'''
 class SwitchLabel2 ( Ast ,ISwitchLabel):
@@ -23029,28 +20525,15 @@ class SwitchLabel2 ( Ast ,ISwitchLabel):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitSwitchLabel2(self)
-            if checkChildren:
-            
-                self._default.accept(v)
-                self._COLON.accept(v)
-            
-            v.endVisitSwitchLabel2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitSwitchLabel2(self)
+        def  acceptWithArg(self, v, o) :   v.visitSwitchLabel2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitSwitchLabel2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitSwitchLabel2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 326:  TryStatement ::= try Block Catches
+*<li>Rule 326:  TryStatement ::= try Block Catches
  *</b>
  */'''
 class TryStatement0 ( Ast ,ITryStatement):
@@ -23076,7 +20559,7 @@ class TryStatement0 ( Ast ,ITryStatement):
             _try.setParent(self)
             self._Block : Block = _Block
             _Block.setParent(self)
-            self._Catches : ICatches = _Catches
+            self._Catches : Ast = _Catches
             _Catches.setParent(self)
             self.initialize()
         
@@ -23093,29 +20576,15 @@ class TryStatement0 ( Ast ,ITryStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitTryStatement0(self)
-            if checkChildren:
-            
-                self._try.accept(v)
-                self._Block.accept(v)
-                self._Catches.accept(v)
-            
-            v.endVisitTryStatement0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTryStatement0(self)
+        def  acceptWithArg(self, v, o) :   v.visitTryStatement0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTryStatement0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTryStatement0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 327:  TryStatement ::= try Block Catchesopt Finally
+*<li>Rule 327:  TryStatement ::= try Block Catchesopt Finally
  *</b>
  */'''
 class TryStatement1 ( Ast ,ITryStatement):
@@ -23147,7 +20616,7 @@ class TryStatement1 ( Ast ,ITryStatement):
             _try.setParent(self)
             self._Block : Block = _Block
             _Block.setParent(self)
-            self._Catchesopt : ICatchesopt = _Catchesopt
+            self._Catchesopt : Ast = _Catchesopt
             if _Catchesopt: _Catchesopt.setParent(self)
             self._Finally : Finally = _Finally
             _Finally.setParent(self)
@@ -23167,30 +20636,15 @@ class TryStatement1 ( Ast ,ITryStatement):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitTryStatement1(self)
-            if checkChildren:
-            
-                self._try.accept(v)
-                self._Block.accept(v)
-                if self._Catchesopt: self._Catchesopt.accept(v)
-                self._Finally.accept(v)
-            
-            v.endVisitTryStatement1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitTryStatement1(self)
+        def  acceptWithArg(self, v, o) :   v.visitTryStatement1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitTryStatement1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitTryStatement1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 335:  PrimaryNoNewArray ::= Type . class
+*<li>Rule 335:  PrimaryNoNewArray ::= Type . class
  *</b>
  */'''
 class PrimaryNoNewArray0 ( Ast ,IPrimaryNoNewArray):
@@ -23212,7 +20666,7 @@ class PrimaryNoNewArray0 ( Ast ,IPrimaryNoNewArray):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Type : IType = _Type
+            self._Type : Ast = _Type
             _Type.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -23233,29 +20687,15 @@ class PrimaryNoNewArray0 ( Ast ,IPrimaryNoNewArray):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPrimaryNoNewArray0(self)
-            if checkChildren:
-            
-                self._Type.accept(v)
-                self._DOT.accept(v)
-                self._class.accept(v)
-            
-            v.endVisitPrimaryNoNewArray0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPrimaryNoNewArray0(self)
+        def  acceptWithArg(self, v, o) :   v.visitPrimaryNoNewArray0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPrimaryNoNewArray0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPrimaryNoNewArray0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 336:  PrimaryNoNewArray ::= void . class
+*<li>Rule 336:  PrimaryNoNewArray ::= void . class
  *</b>
  */'''
 class PrimaryNoNewArray1 ( Ast ,IPrimaryNoNewArray):
@@ -23298,29 +20738,15 @@ class PrimaryNoNewArray1 ( Ast ,IPrimaryNoNewArray):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPrimaryNoNewArray1(self)
-            if checkChildren:
-            
-                self._void.accept(v)
-                self._DOT.accept(v)
-                self._class.accept(v)
-            
-            v.endVisitPrimaryNoNewArray1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPrimaryNoNewArray1(self)
+        def  acceptWithArg(self, v, o) :   v.visitPrimaryNoNewArray1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPrimaryNoNewArray1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPrimaryNoNewArray1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 337:  PrimaryNoNewArray ::= this
+*<li>Rule 337:  PrimaryNoNewArray ::= this
  *</b>
  */'''
 class PrimaryNoNewArray2 ( AstToken ,IPrimaryNoNewArray):
@@ -23332,23 +20758,15 @@ class PrimaryNoNewArray2 ( AstToken ,IPrimaryNoNewArray):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitPrimaryNoNewArray2(self)
-            v.endVisitPrimaryNoNewArray2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPrimaryNoNewArray2(self)
+        def  acceptWithArg(self, v, o) :   v.visitPrimaryNoNewArray2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPrimaryNoNewArray2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPrimaryNoNewArray2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 338:  PrimaryNoNewArray ::= ClassName . this
+*<li>Rule 338:  PrimaryNoNewArray ::= ClassName . this
  *</b>
  */'''
 class PrimaryNoNewArray3 ( Ast ,IPrimaryNoNewArray):
@@ -23370,7 +20788,7 @@ class PrimaryNoNewArray3 ( Ast ,IPrimaryNoNewArray):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ClassName : IClassName = _ClassName
+            self._ClassName : Ast = _ClassName
             _ClassName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -23391,29 +20809,15 @@ class PrimaryNoNewArray3 ( Ast ,IPrimaryNoNewArray):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPrimaryNoNewArray3(self)
-            if checkChildren:
-            
-                self._ClassName.accept(v)
-                self._DOT.accept(v)
-                self._this.accept(v)
-            
-            v.endVisitPrimaryNoNewArray3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPrimaryNoNewArray3(self)
+        def  acceptWithArg(self, v, o) :   v.visitPrimaryNoNewArray3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPrimaryNoNewArray3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPrimaryNoNewArray3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 339:  PrimaryNoNewArray ::= ( Expression )
+*<li>Rule 339:  PrimaryNoNewArray ::= ( Expression )
  *</b>
  */'''
 class PrimaryNoNewArray4 ( Ast ,IPrimaryNoNewArray):
@@ -23437,7 +20841,7 @@ class PrimaryNoNewArray4 ( Ast ,IPrimaryNoNewArray):
 
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -23456,29 +20860,15 @@ class PrimaryNoNewArray4 ( Ast ,IPrimaryNoNewArray):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitPrimaryNoNewArray4(self)
-            if checkChildren:
-            
-                self._LPAREN.accept(v)
-                self._Expression.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitPrimaryNoNewArray4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitPrimaryNoNewArray4(self)
+        def  acceptWithArg(self, v, o) :   v.visitPrimaryNoNewArray4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitPrimaryNoNewArray4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitPrimaryNoNewArray4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 344:  Literal ::= IntegerLiteral
+*<li>Rule 344:  Literal ::= IntegerLiteral
  *</b>
  */'''
 class Literal0 ( AstToken ,ILiteral):
@@ -23490,23 +20880,15 @@ class Literal0 ( AstToken ,ILiteral):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitLiteral0(self)
-            v.endVisitLiteral0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLiteral0(self)
+        def  acceptWithArg(self, v, o) :   v.visitLiteral0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLiteral0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLiteral0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 345:  Literal ::= LongLiteral
+*<li>Rule 345:  Literal ::= LongLiteral
  *</b>
  */'''
 class Literal1 ( AstToken ,ILiteral):
@@ -23518,23 +20900,15 @@ class Literal1 ( AstToken ,ILiteral):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitLiteral1(self)
-            v.endVisitLiteral1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLiteral1(self)
+        def  acceptWithArg(self, v, o) :   v.visitLiteral1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLiteral1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLiteral1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 346:  Literal ::= FloatingPointLiteral
+*<li>Rule 346:  Literal ::= FloatingPointLiteral
  *</b>
  */'''
 class Literal2 ( AstToken ,ILiteral):
@@ -23546,23 +20920,15 @@ class Literal2 ( AstToken ,ILiteral):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitLiteral2(self)
-            v.endVisitLiteral2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLiteral2(self)
+        def  acceptWithArg(self, v, o) :   v.visitLiteral2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLiteral2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLiteral2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 347:  Literal ::= DoubleLiteral
+*<li>Rule 347:  Literal ::= DoubleLiteral
  *</b>
  */'''
 class Literal3 ( AstToken ,ILiteral):
@@ -23574,23 +20940,15 @@ class Literal3 ( AstToken ,ILiteral):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitLiteral3(self)
-            v.endVisitLiteral3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLiteral3(self)
+        def  acceptWithArg(self, v, o) :   v.visitLiteral3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLiteral3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLiteral3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 349:  Literal ::= CharacterLiteral
+*<li>Rule 349:  Literal ::= CharacterLiteral
  *</b>
  */'''
 class Literal4 ( AstToken ,ILiteral):
@@ -23602,23 +20960,15 @@ class Literal4 ( AstToken ,ILiteral):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitLiteral4(self)
-            v.endVisitLiteral4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLiteral4(self)
+        def  acceptWithArg(self, v, o) :   v.visitLiteral4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLiteral4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLiteral4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 350:  Literal ::= StringLiteral
+*<li>Rule 350:  Literal ::= StringLiteral
  *</b>
  */'''
 class Literal5 ( AstToken ,ILiteral):
@@ -23630,23 +20980,15 @@ class Literal5 ( AstToken ,ILiteral):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitLiteral5(self)
-            v.endVisitLiteral5(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLiteral5(self)
+        def  acceptWithArg(self, v, o) :   v.visitLiteral5(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLiteral5(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLiteral5(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 351:  Literal ::= null
+*<li>Rule 351:  Literal ::= null
  *</b>
  */'''
 class Literal6 ( AstToken ,ILiteral):
@@ -23658,23 +21000,15 @@ class Literal6 ( AstToken ,ILiteral):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitLiteral6(self)
-            v.endVisitLiteral6(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitLiteral6(self)
+        def  acceptWithArg(self, v, o) :   v.visitLiteral6(self, o)
+        def  acceptWithResult(self, v) :  return v.visitLiteral6(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitLiteral6(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 352:  BooleanLiteral ::= true
+*<li>Rule 352:  BooleanLiteral ::= true
  *</b>
  */'''
 class BooleanLiteral0 ( AstToken ,IBooleanLiteral):
@@ -23686,23 +21020,15 @@ class BooleanLiteral0 ( AstToken ,IBooleanLiteral):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitBooleanLiteral0(self)
-            v.endVisitBooleanLiteral0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitBooleanLiteral0(self)
+        def  acceptWithArg(self, v, o) :   v.visitBooleanLiteral0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitBooleanLiteral0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitBooleanLiteral0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 353:  BooleanLiteral ::= false
+*<li>Rule 353:  BooleanLiteral ::= false
  *</b>
  */'''
 class BooleanLiteral1 ( AstToken ,IBooleanLiteral):
@@ -23714,23 +21040,15 @@ class BooleanLiteral1 ( AstToken ,IBooleanLiteral):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitBooleanLiteral1(self)
-            v.endVisitBooleanLiteral1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitBooleanLiteral1(self)
+        def  acceptWithArg(self, v, o) :   v.visitBooleanLiteral1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitBooleanLiteral1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitBooleanLiteral1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 354:  ClassInstanceCreationExpression ::= new TypeArgumentsopt ClassOrInterfaceType TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
+*<li>Rule 354:  ClassInstanceCreationExpression ::= new TypeArgumentsopt ClassOrInterfaceType TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
  *</b>
  */'''
 class ClassInstanceCreationExpression0 ( Ast ,IClassInstanceCreationExpression):
@@ -23789,7 +21107,7 @@ class ClassInstanceCreationExpression0 ( Ast ,IClassInstanceCreationExpression):
             if _TypeArgumentsopt4: _TypeArgumentsopt4.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -23815,34 +21133,15 @@ class ClassInstanceCreationExpression0 ( Ast ,IClassInstanceCreationExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitClassInstanceCreationExpression0(self)
-            if checkChildren:
-            
-                self._new.accept(v)
-                if self._TypeArgumentsopt: self._TypeArgumentsopt.accept(v)
-                self._ClassOrInterfaceType.accept(v)
-                if self._TypeArgumentsopt4: self._TypeArgumentsopt4.accept(v)
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-                if self._ClassBodyopt: self._ClassBodyopt.accept(v)
-            
-            v.endVisitClassInstanceCreationExpression0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassInstanceCreationExpression0(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassInstanceCreationExpression0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassInstanceCreationExpression0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassInstanceCreationExpression0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 355:  ClassInstanceCreationExpression ::= Primary . new TypeArgumentsopt identifier TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
+*<li>Rule 355:  ClassInstanceCreationExpression ::= Primary . new TypeArgumentsopt identifier TypeArgumentsopt ( ArgumentListopt ) ClassBodyopt
  *</b>
  */'''
 class ClassInstanceCreationExpression1 ( Ast ,IClassInstanceCreationExpression):
@@ -23897,7 +21196,7 @@ class ClassInstanceCreationExpression1 ( Ast ,IClassInstanceCreationExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Primary : IPrimary = _Primary
+            self._Primary : Ast = _Primary
             _Primary.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -23911,7 +21210,7 @@ class ClassInstanceCreationExpression1 ( Ast ,IClassInstanceCreationExpression):
             if _TypeArgumentsopt6: _TypeArgumentsopt6.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -23939,36 +21238,15 @@ class ClassInstanceCreationExpression1 ( Ast ,IClassInstanceCreationExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitClassInstanceCreationExpression1(self)
-            if checkChildren:
-            
-                self._Primary.accept(v)
-                self._DOT.accept(v)
-                self._new.accept(v)
-                if self._TypeArgumentsopt: self._TypeArgumentsopt.accept(v)
-                self._identifier.accept(v)
-                if self._TypeArgumentsopt6: self._TypeArgumentsopt6.accept(v)
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-                if self._ClassBodyopt: self._ClassBodyopt.accept(v)
-            
-            v.endVisitClassInstanceCreationExpression1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitClassInstanceCreationExpression1(self)
+        def  acceptWithArg(self, v, o) :   v.visitClassInstanceCreationExpression1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitClassInstanceCreationExpression1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitClassInstanceCreationExpression1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 358:  ArrayCreationExpression ::= new PrimitiveType DimExprs Dimsopt
+*<li>Rule 358:  ArrayCreationExpression ::= new PrimitiveType DimExprs Dimsopt
  *</b>
  */'''
 class ArrayCreationExpression0 ( Ast ,IArrayCreationExpression):
@@ -23998,11 +21276,11 @@ class ArrayCreationExpression0 ( Ast ,IArrayCreationExpression):
 
             self._new : AstToken = _new
             _new.setParent(self)
-            self._PrimitiveType : IPrimitiveType = _PrimitiveType
+            self._PrimitiveType : Ast = _PrimitiveType
             _PrimitiveType.setParent(self)
-            self._DimExprs : IDimExprs = _DimExprs
+            self._DimExprs : Ast = _DimExprs
             _DimExprs.setParent(self)
-            self._Dimsopt : IDimsopt = _Dimsopt
+            self._Dimsopt : Ast = _Dimsopt
             if _Dimsopt: _Dimsopt.setParent(self)
             self.initialize()
         
@@ -24020,30 +21298,15 @@ class ArrayCreationExpression0 ( Ast ,IArrayCreationExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitArrayCreationExpression0(self)
-            if checkChildren:
-            
-                self._new.accept(v)
-                self._PrimitiveType.accept(v)
-                self._DimExprs.accept(v)
-                if self._Dimsopt: self._Dimsopt.accept(v)
-            
-            v.endVisitArrayCreationExpression0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitArrayCreationExpression0(self)
+        def  acceptWithArg(self, v, o) :   v.visitArrayCreationExpression0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitArrayCreationExpression0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitArrayCreationExpression0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 359:  ArrayCreationExpression ::= new ClassOrInterfaceType DimExprs Dimsopt
+*<li>Rule 359:  ArrayCreationExpression ::= new ClassOrInterfaceType DimExprs Dimsopt
  *</b>
  */'''
 class ArrayCreationExpression1 ( Ast ,IArrayCreationExpression):
@@ -24075,9 +21338,9 @@ class ArrayCreationExpression1 ( Ast ,IArrayCreationExpression):
             _new.setParent(self)
             self._ClassOrInterfaceType : ClassType = _ClassOrInterfaceType
             _ClassOrInterfaceType.setParent(self)
-            self._DimExprs : IDimExprs = _DimExprs
+            self._DimExprs : Ast = _DimExprs
             _DimExprs.setParent(self)
-            self._Dimsopt : IDimsopt = _Dimsopt
+            self._Dimsopt : Ast = _Dimsopt
             if _Dimsopt: _Dimsopt.setParent(self)
             self.initialize()
         
@@ -24095,30 +21358,15 @@ class ArrayCreationExpression1 ( Ast ,IArrayCreationExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitArrayCreationExpression1(self)
-            if checkChildren:
-            
-                self._new.accept(v)
-                self._ClassOrInterfaceType.accept(v)
-                self._DimExprs.accept(v)
-                if self._Dimsopt: self._Dimsopt.accept(v)
-            
-            v.endVisitArrayCreationExpression1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitArrayCreationExpression1(self)
+        def  acceptWithArg(self, v, o) :   v.visitArrayCreationExpression1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitArrayCreationExpression1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitArrayCreationExpression1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 360:  ArrayCreationExpression ::= new PrimitiveType Dims ArrayInitializer
+*<li>Rule 360:  ArrayCreationExpression ::= new PrimitiveType Dims ArrayInitializer
  *</b>
  */'''
 class ArrayCreationExpression2 ( Ast ,IArrayCreationExpression):
@@ -24145,9 +21393,9 @@ class ArrayCreationExpression2 ( Ast ,IArrayCreationExpression):
 
             self._new : AstToken = _new
             _new.setParent(self)
-            self._PrimitiveType : IPrimitiveType = _PrimitiveType
+            self._PrimitiveType : Ast = _PrimitiveType
             _PrimitiveType.setParent(self)
-            self._Dims : IDims = _Dims
+            self._Dims : Ast = _Dims
             _Dims.setParent(self)
             self._ArrayInitializer : ArrayInitializer = _ArrayInitializer
             _ArrayInitializer.setParent(self)
@@ -24167,30 +21415,15 @@ class ArrayCreationExpression2 ( Ast ,IArrayCreationExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitArrayCreationExpression2(self)
-            if checkChildren:
-            
-                self._new.accept(v)
-                self._PrimitiveType.accept(v)
-                self._Dims.accept(v)
-                self._ArrayInitializer.accept(v)
-            
-            v.endVisitArrayCreationExpression2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitArrayCreationExpression2(self)
+        def  acceptWithArg(self, v, o) :   v.visitArrayCreationExpression2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitArrayCreationExpression2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitArrayCreationExpression2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 361:  ArrayCreationExpression ::= new ClassOrInterfaceType Dims ArrayInitializer
+*<li>Rule 361:  ArrayCreationExpression ::= new ClassOrInterfaceType Dims ArrayInitializer
  *</b>
  */'''
 class ArrayCreationExpression3 ( Ast ,IArrayCreationExpression):
@@ -24219,7 +21452,7 @@ class ArrayCreationExpression3 ( Ast ,IArrayCreationExpression):
             _new.setParent(self)
             self._ClassOrInterfaceType : ClassType = _ClassOrInterfaceType
             _ClassOrInterfaceType.setParent(self)
-            self._Dims : IDims = _Dims
+            self._Dims : Ast = _Dims
             _Dims.setParent(self)
             self._ArrayInitializer : ArrayInitializer = _ArrayInitializer
             _ArrayInitializer.setParent(self)
@@ -24239,30 +21472,15 @@ class ArrayCreationExpression3 ( Ast ,IArrayCreationExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitArrayCreationExpression3(self)
-            if checkChildren:
-            
-                self._new.accept(v)
-                self._ClassOrInterfaceType.accept(v)
-                self._Dims.accept(v)
-                self._ArrayInitializer.accept(v)
-            
-            v.endVisitArrayCreationExpression3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitArrayCreationExpression3(self)
+        def  acceptWithArg(self, v, o) :   v.visitArrayCreationExpression3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitArrayCreationExpression3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitArrayCreationExpression3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 365:  Dims ::= [ ]
+*<li>Rule 365:  Dims ::= [ ]
  *</b>
  */'''
 class Dims0 ( Ast ,IDims):
@@ -24299,28 +21517,15 @@ class Dims0 ( Ast ,IDims):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitDims0(self)
-            if checkChildren:
-            
-                self._LBRACKET.accept(v)
-                self._RBRACKET.accept(v)
-            
-            v.endVisitDims0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitDims0(self)
+        def  acceptWithArg(self, v, o) :   v.visitDims0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitDims0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitDims0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 366:  Dims ::= Dims [ ]
+*<li>Rule 366:  Dims ::= Dims [ ]
  *</b>
  */'''
 class Dims1 ( Ast ,IDims):
@@ -24342,7 +21547,7 @@ class Dims1 ( Ast ,IDims):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Dims : IDims = _Dims
+            self._Dims : Ast = _Dims
             _Dims.setParent(self)
             self._LBRACKET : AstToken = _LBRACKET
             _LBRACKET.setParent(self)
@@ -24363,29 +21568,15 @@ class Dims1 ( Ast ,IDims):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitDims1(self)
-            if checkChildren:
-            
-                self._Dims.accept(v)
-                self._LBRACKET.accept(v)
-                self._RBRACKET.accept(v)
-            
-            v.endVisitDims1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitDims1(self)
+        def  acceptWithArg(self, v, o) :   v.visitDims1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitDims1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitDims1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 367:  FieldAccess ::= Primary . identifier
+*<li>Rule 367:  FieldAccess ::= Primary . identifier
  *</b>
  */'''
 class FieldAccess0 ( Ast ,IFieldAccess):
@@ -24407,7 +21598,7 @@ class FieldAccess0 ( Ast ,IFieldAccess):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Primary : IPrimary = _Primary
+            self._Primary : Ast = _Primary
             _Primary.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -24428,29 +21619,15 @@ class FieldAccess0 ( Ast ,IFieldAccess):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitFieldAccess0(self)
-            if checkChildren:
-            
-                self._Primary.accept(v)
-                self._DOT.accept(v)
-                self._identifier.accept(v)
-            
-            v.endVisitFieldAccess0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldAccess0(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldAccess0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldAccess0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldAccess0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 368:  FieldAccess ::= super . identifier
+*<li>Rule 368:  FieldAccess ::= super . identifier
  *</b>
  */'''
 class FieldAccess1 ( Ast ,IFieldAccess):
@@ -24493,29 +21670,15 @@ class FieldAccess1 ( Ast ,IFieldAccess):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitFieldAccess1(self)
-            if checkChildren:
-            
-                self._super.accept(v)
-                self._DOT.accept(v)
-                self._identifier.accept(v)
-            
-            v.endVisitFieldAccess1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldAccess1(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldAccess1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldAccess1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldAccess1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 369:  FieldAccess ::= ClassName . super . identifier
+*<li>Rule 369:  FieldAccess ::= ClassName . super . identifier
  *</b>
  */'''
 class FieldAccess2 ( Ast ,IFieldAccess):
@@ -24543,7 +21706,7 @@ class FieldAccess2 ( Ast ,IFieldAccess):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ClassName : IClassName = _ClassName
+            self._ClassName : Ast = _ClassName
             _ClassName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -24570,31 +21733,15 @@ class FieldAccess2 ( Ast ,IFieldAccess):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitFieldAccess2(self)
-            if checkChildren:
-            
-                self._ClassName.accept(v)
-                self._DOT.accept(v)
-                self._super.accept(v)
-                self._DOT4.accept(v)
-                self._identifier.accept(v)
-            
-            v.endVisitFieldAccess2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitFieldAccess2(self)
+        def  acceptWithArg(self, v, o) :   v.visitFieldAccess2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitFieldAccess2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitFieldAccess2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 370:  MethodInvocation ::= MethodName ( ArgumentListopt )
+*<li>Rule 370:  MethodInvocation ::= MethodName ( ArgumentListopt )
  *</b>
  */'''
 class MethodInvocation0 ( Ast ,IMethodInvocation):
@@ -24622,11 +21769,11 @@ class MethodInvocation0 ( Ast ,IMethodInvocation):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._MethodName : IMethodName = _MethodName
+            self._MethodName : Ast = _MethodName
             _MethodName.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -24646,30 +21793,15 @@ class MethodInvocation0 ( Ast ,IMethodInvocation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodInvocation0(self)
-            if checkChildren:
-            
-                self._MethodName.accept(v)
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitMethodInvocation0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodInvocation0(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodInvocation0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodInvocation0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodInvocation0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 371:  MethodInvocation ::= Primary . TypeArgumentsopt identifier ( ArgumentListopt )
+*<li>Rule 371:  MethodInvocation ::= Primary . TypeArgumentsopt identifier ( ArgumentListopt )
  *</b>
  */'''
 class MethodInvocation1 ( Ast ,IMethodInvocation):
@@ -24709,7 +21841,7 @@ class MethodInvocation1 ( Ast ,IMethodInvocation):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._Primary : IPrimary = _Primary
+            self._Primary : Ast = _Primary
             _Primary.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -24719,7 +21851,7 @@ class MethodInvocation1 ( Ast ,IMethodInvocation):
             _identifier.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -24742,33 +21874,15 @@ class MethodInvocation1 ( Ast ,IMethodInvocation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodInvocation1(self)
-            if checkChildren:
-            
-                self._Primary.accept(v)
-                self._DOT.accept(v)
-                if self._TypeArgumentsopt: self._TypeArgumentsopt.accept(v)
-                self._identifier.accept(v)
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitMethodInvocation1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodInvocation1(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodInvocation1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodInvocation1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodInvocation1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 372:  MethodInvocation ::= super . TypeArgumentsopt identifier ( ArgumentListopt )
+*<li>Rule 372:  MethodInvocation ::= super . TypeArgumentsopt identifier ( ArgumentListopt )
  *</b>
  */'''
 class MethodInvocation2 ( Ast ,IMethodInvocation):
@@ -24818,7 +21932,7 @@ class MethodInvocation2 ( Ast ,IMethodInvocation):
             _identifier.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -24841,33 +21955,15 @@ class MethodInvocation2 ( Ast ,IMethodInvocation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodInvocation2(self)
-            if checkChildren:
-            
-                self._super.accept(v)
-                self._DOT.accept(v)
-                if self._TypeArgumentsopt: self._TypeArgumentsopt.accept(v)
-                self._identifier.accept(v)
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitMethodInvocation2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodInvocation2(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodInvocation2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodInvocation2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodInvocation2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 373:  MethodInvocation ::= ClassName . super . TypeArgumentsopt identifier ( ArgumentListopt )
+*<li>Rule 373:  MethodInvocation ::= ClassName . super . TypeArgumentsopt identifier ( ArgumentListopt )
  *</b>
  */'''
 class MethodInvocation3 ( Ast ,IMethodInvocation):
@@ -24913,7 +22009,7 @@ class MethodInvocation3 ( Ast ,IMethodInvocation):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ClassName : IClassName = _ClassName
+            self._ClassName : Ast = _ClassName
             _ClassName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -24927,7 +22023,7 @@ class MethodInvocation3 ( Ast ,IMethodInvocation):
             _identifier.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -24952,35 +22048,15 @@ class MethodInvocation3 ( Ast ,IMethodInvocation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodInvocation3(self)
-            if checkChildren:
-            
-                self._ClassName.accept(v)
-                self._DOT.accept(v)
-                self._super.accept(v)
-                self._DOT4.accept(v)
-                if self._TypeArgumentsopt: self._TypeArgumentsopt.accept(v)
-                self._identifier.accept(v)
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitMethodInvocation3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodInvocation3(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodInvocation3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodInvocation3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodInvocation3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 374:  MethodInvocation ::= TypeName . TypeArguments identifier ( ArgumentListopt )
+*<li>Rule 374:  MethodInvocation ::= TypeName . TypeArguments identifier ( ArgumentListopt )
  *</b>
  */'''
 class MethodInvocation4 ( Ast ,IMethodInvocation):
@@ -25017,7 +22093,7 @@ class MethodInvocation4 ( Ast ,IMethodInvocation):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._TypeName : ITypeName = _TypeName
+            self._TypeName : Ast = _TypeName
             _TypeName.setParent(self)
             self._DOT : AstToken = _DOT
             _DOT.setParent(self)
@@ -25027,7 +22103,7 @@ class MethodInvocation4 ( Ast ,IMethodInvocation):
             _identifier.setParent(self)
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ArgumentListopt : IArgumentListopt = _ArgumentListopt
+            self._ArgumentListopt : Ast = _ArgumentListopt
             if _ArgumentListopt: _ArgumentListopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
@@ -25050,33 +22126,15 @@ class MethodInvocation4 ( Ast ,IMethodInvocation):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMethodInvocation4(self)
-            if checkChildren:
-            
-                self._TypeName.accept(v)
-                self._DOT.accept(v)
-                self._TypeArguments.accept(v)
-                self._identifier.accept(v)
-                self._LPAREN.accept(v)
-                if self._ArgumentListopt: self._ArgumentListopt.accept(v)
-                self._RPAREN.accept(v)
-            
-            v.endVisitMethodInvocation4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMethodInvocation4(self)
+        def  acceptWithArg(self, v, o) :   v.visitMethodInvocation4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMethodInvocation4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMethodInvocation4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 375:  ArrayAccess ::= ExpressionName [ Expression ]
+*<li>Rule 375:  ArrayAccess ::= ExpressionName [ Expression ]
  *</b>
  */'''
 class ArrayAccess0 ( Ast ,IArrayAccess):
@@ -25101,11 +22159,11 @@ class ArrayAccess0 ( Ast ,IArrayAccess):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ExpressionName : IExpressionName = _ExpressionName
+            self._ExpressionName : Ast = _ExpressionName
             _ExpressionName.setParent(self)
             self._LBRACKET : AstToken = _LBRACKET
             _LBRACKET.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RBRACKET : AstToken = _RBRACKET
             _RBRACKET.setParent(self)
@@ -25125,30 +22183,15 @@ class ArrayAccess0 ( Ast ,IArrayAccess):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitArrayAccess0(self)
-            if checkChildren:
-            
-                self._ExpressionName.accept(v)
-                self._LBRACKET.accept(v)
-                self._Expression.accept(v)
-                self._RBRACKET.accept(v)
-            
-            v.endVisitArrayAccess0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitArrayAccess0(self)
+        def  acceptWithArg(self, v, o) :   v.visitArrayAccess0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitArrayAccess0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitArrayAccess0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 376:  ArrayAccess ::= PrimaryNoNewArray [ Expression ]
+*<li>Rule 376:  ArrayAccess ::= PrimaryNoNewArray [ Expression ]
  *</b>
  */'''
 class ArrayAccess1 ( Ast ,IArrayAccess):
@@ -25173,11 +22216,11 @@ class ArrayAccess1 ( Ast ,IArrayAccess):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._PrimaryNoNewArray : IPrimaryNoNewArray = _PrimaryNoNewArray
+            self._PrimaryNoNewArray : Ast = _PrimaryNoNewArray
             _PrimaryNoNewArray.setParent(self)
             self._LBRACKET : AstToken = _LBRACKET
             _LBRACKET.setParent(self)
-            self._Expression : IExpression = _Expression
+            self._Expression : Ast = _Expression
             _Expression.setParent(self)
             self._RBRACKET : AstToken = _RBRACKET
             _RBRACKET.setParent(self)
@@ -25197,30 +22240,15 @@ class ArrayAccess1 ( Ast ,IArrayAccess):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitArrayAccess1(self)
-            if checkChildren:
-            
-                self._PrimaryNoNewArray.accept(v)
-                self._LBRACKET.accept(v)
-                self._Expression.accept(v)
-                self._RBRACKET.accept(v)
-            
-            v.endVisitArrayAccess1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitArrayAccess1(self)
+        def  acceptWithArg(self, v, o) :   v.visitArrayAccess1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitArrayAccess1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitArrayAccess1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 385:  UnaryExpression ::= + UnaryExpression
+*<li>Rule 385:  UnaryExpression ::= + UnaryExpression
  *</b>
  */'''
 class UnaryExpression0 ( Ast ,IUnaryExpression):
@@ -25241,7 +22269,7 @@ class UnaryExpression0 ( Ast ,IUnaryExpression):
 
             self._PLUS : AstToken = _PLUS
             _PLUS.setParent(self)
-            self._UnaryExpression : IUnaryExpression = _UnaryExpression
+            self._UnaryExpression : Ast = _UnaryExpression
             _UnaryExpression.setParent(self)
             self.initialize()
         
@@ -25257,28 +22285,15 @@ class UnaryExpression0 ( Ast ,IUnaryExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitUnaryExpression0(self)
-            if checkChildren:
-            
-                self._PLUS.accept(v)
-                self._UnaryExpression.accept(v)
-            
-            v.endVisitUnaryExpression0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitUnaryExpression0(self)
+        def  acceptWithArg(self, v, o) :   v.visitUnaryExpression0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitUnaryExpression0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitUnaryExpression0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 386:  UnaryExpression ::= - UnaryExpression
+*<li>Rule 386:  UnaryExpression ::= - UnaryExpression
  *</b>
  */'''
 class UnaryExpression1 ( Ast ,IUnaryExpression):
@@ -25299,7 +22314,7 @@ class UnaryExpression1 ( Ast ,IUnaryExpression):
 
             self._MINUS : AstToken = _MINUS
             _MINUS.setParent(self)
-            self._UnaryExpression : IUnaryExpression = _UnaryExpression
+            self._UnaryExpression : Ast = _UnaryExpression
             _UnaryExpression.setParent(self)
             self.initialize()
         
@@ -25315,28 +22330,15 @@ class UnaryExpression1 ( Ast ,IUnaryExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitUnaryExpression1(self)
-            if checkChildren:
-            
-                self._MINUS.accept(v)
-                self._UnaryExpression.accept(v)
-            
-            v.endVisitUnaryExpression1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitUnaryExpression1(self)
+        def  acceptWithArg(self, v, o) :   v.visitUnaryExpression1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitUnaryExpression1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitUnaryExpression1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 391:  UnaryExpressionNotPlusMinus ::= ~ UnaryExpression
+*<li>Rule 391:  UnaryExpressionNotPlusMinus ::= ~ UnaryExpression
  *</b>
  */'''
 class UnaryExpressionNotPlusMinus0 ( Ast ,IUnaryExpressionNotPlusMinus):
@@ -25357,7 +22359,7 @@ class UnaryExpressionNotPlusMinus0 ( Ast ,IUnaryExpressionNotPlusMinus):
 
             self._TWIDDLE : AstToken = _TWIDDLE
             _TWIDDLE.setParent(self)
-            self._UnaryExpression : IUnaryExpression = _UnaryExpression
+            self._UnaryExpression : Ast = _UnaryExpression
             _UnaryExpression.setParent(self)
             self.initialize()
         
@@ -25373,28 +22375,15 @@ class UnaryExpressionNotPlusMinus0 ( Ast ,IUnaryExpressionNotPlusMinus):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitUnaryExpressionNotPlusMinus0(self)
-            if checkChildren:
-            
-                self._TWIDDLE.accept(v)
-                self._UnaryExpression.accept(v)
-            
-            v.endVisitUnaryExpressionNotPlusMinus0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitUnaryExpressionNotPlusMinus0(self)
+        def  acceptWithArg(self, v, o) :   v.visitUnaryExpressionNotPlusMinus0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitUnaryExpressionNotPlusMinus0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitUnaryExpressionNotPlusMinus0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 392:  UnaryExpressionNotPlusMinus ::= ! UnaryExpression
+*<li>Rule 392:  UnaryExpressionNotPlusMinus ::= ! UnaryExpression
  *</b>
  */'''
 class UnaryExpressionNotPlusMinus1 ( Ast ,IUnaryExpressionNotPlusMinus):
@@ -25415,7 +22404,7 @@ class UnaryExpressionNotPlusMinus1 ( Ast ,IUnaryExpressionNotPlusMinus):
 
             self._NOT : AstToken = _NOT
             _NOT.setParent(self)
-            self._UnaryExpression : IUnaryExpression = _UnaryExpression
+            self._UnaryExpression : Ast = _UnaryExpression
             _UnaryExpression.setParent(self)
             self.initialize()
         
@@ -25431,28 +22420,15 @@ class UnaryExpressionNotPlusMinus1 ( Ast ,IUnaryExpressionNotPlusMinus):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitUnaryExpressionNotPlusMinus1(self)
-            if checkChildren:
-            
-                self._NOT.accept(v)
-                self._UnaryExpression.accept(v)
-            
-            v.endVisitUnaryExpressionNotPlusMinus1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitUnaryExpressionNotPlusMinus1(self)
+        def  acceptWithArg(self, v, o) :   v.visitUnaryExpressionNotPlusMinus1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitUnaryExpressionNotPlusMinus1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitUnaryExpressionNotPlusMinus1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 394:  CastExpression ::= ( PrimitiveType Dimsopt ) UnaryExpression
+*<li>Rule 394:  CastExpression ::= ( PrimitiveType Dimsopt ) UnaryExpression
  *</b>
  */'''
 class CastExpression0 ( Ast ,ICastExpression):
@@ -25485,13 +22461,13 @@ class CastExpression0 ( Ast ,ICastExpression):
 
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._PrimitiveType : IPrimitiveType = _PrimitiveType
+            self._PrimitiveType : Ast = _PrimitiveType
             _PrimitiveType.setParent(self)
-            self._Dimsopt : IDimsopt = _Dimsopt
+            self._Dimsopt : Ast = _Dimsopt
             if _Dimsopt: _Dimsopt.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
-            self._UnaryExpression : IUnaryExpression = _UnaryExpression
+            self._UnaryExpression : Ast = _UnaryExpression
             _UnaryExpression.setParent(self)
             self.initialize()
         
@@ -25510,31 +22486,15 @@ class CastExpression0 ( Ast ,ICastExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitCastExpression0(self)
-            if checkChildren:
-            
-                self._LPAREN.accept(v)
-                self._PrimitiveType.accept(v)
-                if self._Dimsopt: self._Dimsopt.accept(v)
-                self._RPAREN.accept(v)
-                self._UnaryExpression.accept(v)
-            
-            v.endVisitCastExpression0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitCastExpression0(self)
+        def  acceptWithArg(self, v, o) :   v.visitCastExpression0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitCastExpression0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitCastExpression0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 395:  CastExpression ::= ( ReferenceType ) UnaryExpressionNotPlusMinus
+*<li>Rule 395:  CastExpression ::= ( ReferenceType ) UnaryExpressionNotPlusMinus
  *</b>
  */'''
 class CastExpression1 ( Ast ,ICastExpression):
@@ -25561,11 +22521,11 @@ class CastExpression1 ( Ast ,ICastExpression):
 
             self._LPAREN : AstToken = _LPAREN
             _LPAREN.setParent(self)
-            self._ReferenceType : IReferenceType = _ReferenceType
+            self._ReferenceType : Ast = _ReferenceType
             _ReferenceType.setParent(self)
             self._RPAREN : AstToken = _RPAREN
             _RPAREN.setParent(self)
-            self._UnaryExpressionNotPlusMinus : IUnaryExpressionNotPlusMinus = _UnaryExpressionNotPlusMinus
+            self._UnaryExpressionNotPlusMinus : Ast = _UnaryExpressionNotPlusMinus
             _UnaryExpressionNotPlusMinus.setParent(self)
             self.initialize()
         
@@ -25583,30 +22543,15 @@ class CastExpression1 ( Ast ,ICastExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitCastExpression1(self)
-            if checkChildren:
-            
-                self._LPAREN.accept(v)
-                self._ReferenceType.accept(v)
-                self._RPAREN.accept(v)
-                self._UnaryExpressionNotPlusMinus.accept(v)
-            
-            v.endVisitCastExpression1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitCastExpression1(self)
+        def  acceptWithArg(self, v, o) :   v.visitCastExpression1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitCastExpression1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitCastExpression1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 397:  MultiplicativeExpression ::= MultiplicativeExpression * UnaryExpression
+*<li>Rule 397:  MultiplicativeExpression ::= MultiplicativeExpression * UnaryExpression
  *</b>
  */'''
 class MultiplicativeExpression0 ( Ast ,IMultiplicativeExpression):
@@ -25628,11 +22573,11 @@ class MultiplicativeExpression0 ( Ast ,IMultiplicativeExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._MultiplicativeExpression : IMultiplicativeExpression = _MultiplicativeExpression
+            self._MultiplicativeExpression : Ast = _MultiplicativeExpression
             _MultiplicativeExpression.setParent(self)
             self._MULTIPLY : AstToken = _MULTIPLY
             _MULTIPLY.setParent(self)
-            self._UnaryExpression : IUnaryExpression = _UnaryExpression
+            self._UnaryExpression : Ast = _UnaryExpression
             _UnaryExpression.setParent(self)
             self.initialize()
         
@@ -25649,29 +22594,15 @@ class MultiplicativeExpression0 ( Ast ,IMultiplicativeExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMultiplicativeExpression0(self)
-            if checkChildren:
-            
-                self._MultiplicativeExpression.accept(v)
-                self._MULTIPLY.accept(v)
-                self._UnaryExpression.accept(v)
-            
-            v.endVisitMultiplicativeExpression0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMultiplicativeExpression0(self)
+        def  acceptWithArg(self, v, o) :   v.visitMultiplicativeExpression0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMultiplicativeExpression0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMultiplicativeExpression0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 398:  MultiplicativeExpression ::= MultiplicativeExpression / UnaryExpression
+*<li>Rule 398:  MultiplicativeExpression ::= MultiplicativeExpression / UnaryExpression
  *</b>
  */'''
 class MultiplicativeExpression1 ( Ast ,IMultiplicativeExpression):
@@ -25693,11 +22624,11 @@ class MultiplicativeExpression1 ( Ast ,IMultiplicativeExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._MultiplicativeExpression : IMultiplicativeExpression = _MultiplicativeExpression
+            self._MultiplicativeExpression : Ast = _MultiplicativeExpression
             _MultiplicativeExpression.setParent(self)
             self._DIVIDE : AstToken = _DIVIDE
             _DIVIDE.setParent(self)
-            self._UnaryExpression : IUnaryExpression = _UnaryExpression
+            self._UnaryExpression : Ast = _UnaryExpression
             _UnaryExpression.setParent(self)
             self.initialize()
         
@@ -25714,29 +22645,15 @@ class MultiplicativeExpression1 ( Ast ,IMultiplicativeExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMultiplicativeExpression1(self)
-            if checkChildren:
-            
-                self._MultiplicativeExpression.accept(v)
-                self._DIVIDE.accept(v)
-                self._UnaryExpression.accept(v)
-            
-            v.endVisitMultiplicativeExpression1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMultiplicativeExpression1(self)
+        def  acceptWithArg(self, v, o) :   v.visitMultiplicativeExpression1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMultiplicativeExpression1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMultiplicativeExpression1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 399:  MultiplicativeExpression ::= MultiplicativeExpression % UnaryExpression
+*<li>Rule 399:  MultiplicativeExpression ::= MultiplicativeExpression % UnaryExpression
  *</b>
  */'''
 class MultiplicativeExpression2 ( Ast ,IMultiplicativeExpression):
@@ -25758,11 +22675,11 @@ class MultiplicativeExpression2 ( Ast ,IMultiplicativeExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._MultiplicativeExpression : IMultiplicativeExpression = _MultiplicativeExpression
+            self._MultiplicativeExpression : Ast = _MultiplicativeExpression
             _MultiplicativeExpression.setParent(self)
             self._REMAINDER : AstToken = _REMAINDER
             _REMAINDER.setParent(self)
-            self._UnaryExpression : IUnaryExpression = _UnaryExpression
+            self._UnaryExpression : Ast = _UnaryExpression
             _UnaryExpression.setParent(self)
             self.initialize()
         
@@ -25779,29 +22696,15 @@ class MultiplicativeExpression2 ( Ast ,IMultiplicativeExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitMultiplicativeExpression2(self)
-            if checkChildren:
-            
-                self._MultiplicativeExpression.accept(v)
-                self._REMAINDER.accept(v)
-                self._UnaryExpression.accept(v)
-            
-            v.endVisitMultiplicativeExpression2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitMultiplicativeExpression2(self)
+        def  acceptWithArg(self, v, o) :   v.visitMultiplicativeExpression2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitMultiplicativeExpression2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitMultiplicativeExpression2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 401:  AdditiveExpression ::= AdditiveExpression + MultiplicativeExpression
+*<li>Rule 401:  AdditiveExpression ::= AdditiveExpression + MultiplicativeExpression
  *</b>
  */'''
 class AdditiveExpression0 ( Ast ,IAdditiveExpression):
@@ -25823,11 +22726,11 @@ class AdditiveExpression0 ( Ast ,IAdditiveExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AdditiveExpression : IAdditiveExpression = _AdditiveExpression
+            self._AdditiveExpression : Ast = _AdditiveExpression
             _AdditiveExpression.setParent(self)
             self._PLUS : AstToken = _PLUS
             _PLUS.setParent(self)
-            self._MultiplicativeExpression : IMultiplicativeExpression = _MultiplicativeExpression
+            self._MultiplicativeExpression : Ast = _MultiplicativeExpression
             _MultiplicativeExpression.setParent(self)
             self.initialize()
         
@@ -25844,29 +22747,15 @@ class AdditiveExpression0 ( Ast ,IAdditiveExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAdditiveExpression0(self)
-            if checkChildren:
-            
-                self._AdditiveExpression.accept(v)
-                self._PLUS.accept(v)
-                self._MultiplicativeExpression.accept(v)
-            
-            v.endVisitAdditiveExpression0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAdditiveExpression0(self)
+        def  acceptWithArg(self, v, o) :   v.visitAdditiveExpression0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAdditiveExpression0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAdditiveExpression0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 402:  AdditiveExpression ::= AdditiveExpression - MultiplicativeExpression
+*<li>Rule 402:  AdditiveExpression ::= AdditiveExpression - MultiplicativeExpression
  *</b>
  */'''
 class AdditiveExpression1 ( Ast ,IAdditiveExpression):
@@ -25888,11 +22777,11 @@ class AdditiveExpression1 ( Ast ,IAdditiveExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._AdditiveExpression : IAdditiveExpression = _AdditiveExpression
+            self._AdditiveExpression : Ast = _AdditiveExpression
             _AdditiveExpression.setParent(self)
             self._MINUS : AstToken = _MINUS
             _MINUS.setParent(self)
-            self._MultiplicativeExpression : IMultiplicativeExpression = _MultiplicativeExpression
+            self._MultiplicativeExpression : Ast = _MultiplicativeExpression
             _MultiplicativeExpression.setParent(self)
             self.initialize()
         
@@ -25909,29 +22798,15 @@ class AdditiveExpression1 ( Ast ,IAdditiveExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAdditiveExpression1(self)
-            if checkChildren:
-            
-                self._AdditiveExpression.accept(v)
-                self._MINUS.accept(v)
-                self._MultiplicativeExpression.accept(v)
-            
-            v.endVisitAdditiveExpression1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAdditiveExpression1(self)
+        def  acceptWithArg(self, v, o) :   v.visitAdditiveExpression1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAdditiveExpression1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAdditiveExpression1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 404:  ShiftExpression ::= ShiftExpression << AdditiveExpression
+*<li>Rule 404:  ShiftExpression ::= ShiftExpression << AdditiveExpression
  *</b>
  */'''
 class ShiftExpression0 ( Ast ,IShiftExpression):
@@ -25953,11 +22828,11 @@ class ShiftExpression0 ( Ast ,IShiftExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ShiftExpression : IShiftExpression = _ShiftExpression
+            self._ShiftExpression : Ast = _ShiftExpression
             _ShiftExpression.setParent(self)
             self._LEFT_SHIFT : AstToken = _LEFT_SHIFT
             _LEFT_SHIFT.setParent(self)
-            self._AdditiveExpression : IAdditiveExpression = _AdditiveExpression
+            self._AdditiveExpression : Ast = _AdditiveExpression
             _AdditiveExpression.setParent(self)
             self.initialize()
         
@@ -25974,29 +22849,15 @@ class ShiftExpression0 ( Ast ,IShiftExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitShiftExpression0(self)
-            if checkChildren:
-            
-                self._ShiftExpression.accept(v)
-                self._LEFT_SHIFT.accept(v)
-                self._AdditiveExpression.accept(v)
-            
-            v.endVisitShiftExpression0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitShiftExpression0(self)
+        def  acceptWithArg(self, v, o) :   v.visitShiftExpression0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitShiftExpression0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitShiftExpression0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 405:  ShiftExpression ::= ShiftExpression > > AdditiveExpression
+*<li>Rule 405:  ShiftExpression ::= ShiftExpression > > AdditiveExpression
  *</b>
  */'''
 class ShiftExpression1 ( Ast ,IShiftExpression):
@@ -26021,13 +22882,13 @@ class ShiftExpression1 ( Ast ,IShiftExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ShiftExpression : IShiftExpression = _ShiftExpression
+            self._ShiftExpression : Ast = _ShiftExpression
             _ShiftExpression.setParent(self)
             self._GREATER : AstToken = _GREATER
             _GREATER.setParent(self)
             self._GREATER3 : AstToken = _GREATER3
             _GREATER3.setParent(self)
-            self._AdditiveExpression : IAdditiveExpression = _AdditiveExpression
+            self._AdditiveExpression : Ast = _AdditiveExpression
             _AdditiveExpression.setParent(self)
             self.initialize()
         
@@ -26045,30 +22906,15 @@ class ShiftExpression1 ( Ast ,IShiftExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitShiftExpression1(self)
-            if checkChildren:
-            
-                self._ShiftExpression.accept(v)
-                self._GREATER.accept(v)
-                self._GREATER3.accept(v)
-                self._AdditiveExpression.accept(v)
-            
-            v.endVisitShiftExpression1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitShiftExpression1(self)
+        def  acceptWithArg(self, v, o) :   v.visitShiftExpression1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitShiftExpression1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitShiftExpression1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 406:  ShiftExpression ::= ShiftExpression > > > AdditiveExpression
+*<li>Rule 406:  ShiftExpression ::= ShiftExpression > > > AdditiveExpression
  *</b>
  */'''
 class ShiftExpression2 ( Ast ,IShiftExpression):
@@ -26096,7 +22942,7 @@ class ShiftExpression2 ( Ast ,IShiftExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._ShiftExpression : IShiftExpression = _ShiftExpression
+            self._ShiftExpression : Ast = _ShiftExpression
             _ShiftExpression.setParent(self)
             self._GREATER : AstToken = _GREATER
             _GREATER.setParent(self)
@@ -26104,7 +22950,7 @@ class ShiftExpression2 ( Ast ,IShiftExpression):
             _GREATER3.setParent(self)
             self._GREATER4 : AstToken = _GREATER4
             _GREATER4.setParent(self)
-            self._AdditiveExpression : IAdditiveExpression = _AdditiveExpression
+            self._AdditiveExpression : Ast = _AdditiveExpression
             _AdditiveExpression.setParent(self)
             self.initialize()
         
@@ -26123,31 +22969,15 @@ class ShiftExpression2 ( Ast ,IShiftExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitShiftExpression2(self)
-            if checkChildren:
-            
-                self._ShiftExpression.accept(v)
-                self._GREATER.accept(v)
-                self._GREATER3.accept(v)
-                self._GREATER4.accept(v)
-                self._AdditiveExpression.accept(v)
-            
-            v.endVisitShiftExpression2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitShiftExpression2(self)
+        def  acceptWithArg(self, v, o) :   v.visitShiftExpression2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitShiftExpression2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitShiftExpression2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 408:  RelationalExpression ::= RelationalExpression < ShiftExpression
+*<li>Rule 408:  RelationalExpression ::= RelationalExpression < ShiftExpression
  *</b>
  */'''
 class RelationalExpression0 ( Ast ,IRelationalExpression):
@@ -26169,11 +22999,11 @@ class RelationalExpression0 ( Ast ,IRelationalExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._RelationalExpression : IRelationalExpression = _RelationalExpression
+            self._RelationalExpression : Ast = _RelationalExpression
             _RelationalExpression.setParent(self)
             self._LESS : AstToken = _LESS
             _LESS.setParent(self)
-            self._ShiftExpression : IShiftExpression = _ShiftExpression
+            self._ShiftExpression : Ast = _ShiftExpression
             _ShiftExpression.setParent(self)
             self.initialize()
         
@@ -26190,29 +23020,15 @@ class RelationalExpression0 ( Ast ,IRelationalExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitRelationalExpression0(self)
-            if checkChildren:
-            
-                self._RelationalExpression.accept(v)
-                self._LESS.accept(v)
-                self._ShiftExpression.accept(v)
-            
-            v.endVisitRelationalExpression0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitRelationalExpression0(self)
+        def  acceptWithArg(self, v, o) :   v.visitRelationalExpression0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitRelationalExpression0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitRelationalExpression0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 409:  RelationalExpression ::= RelationalExpression > ShiftExpression
+*<li>Rule 409:  RelationalExpression ::= RelationalExpression > ShiftExpression
  *</b>
  */'''
 class RelationalExpression1 ( Ast ,IRelationalExpression):
@@ -26234,11 +23050,11 @@ class RelationalExpression1 ( Ast ,IRelationalExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._RelationalExpression : IRelationalExpression = _RelationalExpression
+            self._RelationalExpression : Ast = _RelationalExpression
             _RelationalExpression.setParent(self)
             self._GREATER : AstToken = _GREATER
             _GREATER.setParent(self)
-            self._ShiftExpression : IShiftExpression = _ShiftExpression
+            self._ShiftExpression : Ast = _ShiftExpression
             _ShiftExpression.setParent(self)
             self.initialize()
         
@@ -26255,29 +23071,15 @@ class RelationalExpression1 ( Ast ,IRelationalExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitRelationalExpression1(self)
-            if checkChildren:
-            
-                self._RelationalExpression.accept(v)
-                self._GREATER.accept(v)
-                self._ShiftExpression.accept(v)
-            
-            v.endVisitRelationalExpression1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitRelationalExpression1(self)
+        def  acceptWithArg(self, v, o) :   v.visitRelationalExpression1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitRelationalExpression1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitRelationalExpression1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 410:  RelationalExpression ::= RelationalExpression <= ShiftExpression
+*<li>Rule 410:  RelationalExpression ::= RelationalExpression <= ShiftExpression
  *</b>
  */'''
 class RelationalExpression2 ( Ast ,IRelationalExpression):
@@ -26299,11 +23101,11 @@ class RelationalExpression2 ( Ast ,IRelationalExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._RelationalExpression : IRelationalExpression = _RelationalExpression
+            self._RelationalExpression : Ast = _RelationalExpression
             _RelationalExpression.setParent(self)
             self._LESS_EQUAL : AstToken = _LESS_EQUAL
             _LESS_EQUAL.setParent(self)
-            self._ShiftExpression : IShiftExpression = _ShiftExpression
+            self._ShiftExpression : Ast = _ShiftExpression
             _ShiftExpression.setParent(self)
             self.initialize()
         
@@ -26320,29 +23122,15 @@ class RelationalExpression2 ( Ast ,IRelationalExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitRelationalExpression2(self)
-            if checkChildren:
-            
-                self._RelationalExpression.accept(v)
-                self._LESS_EQUAL.accept(v)
-                self._ShiftExpression.accept(v)
-            
-            v.endVisitRelationalExpression2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitRelationalExpression2(self)
+        def  acceptWithArg(self, v, o) :   v.visitRelationalExpression2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitRelationalExpression2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitRelationalExpression2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 411:  RelationalExpression ::= RelationalExpression > = ShiftExpression
+*<li>Rule 411:  RelationalExpression ::= RelationalExpression > = ShiftExpression
  *</b>
  */'''
 class RelationalExpression3 ( Ast ,IRelationalExpression):
@@ -26367,13 +23155,13 @@ class RelationalExpression3 ( Ast ,IRelationalExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._RelationalExpression : IRelationalExpression = _RelationalExpression
+            self._RelationalExpression : Ast = _RelationalExpression
             _RelationalExpression.setParent(self)
             self._GREATER : AstToken = _GREATER
             _GREATER.setParent(self)
             self._EQUAL : AstToken = _EQUAL
             _EQUAL.setParent(self)
-            self._ShiftExpression : IShiftExpression = _ShiftExpression
+            self._ShiftExpression : Ast = _ShiftExpression
             _ShiftExpression.setParent(self)
             self.initialize()
         
@@ -26391,30 +23179,15 @@ class RelationalExpression3 ( Ast ,IRelationalExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitRelationalExpression3(self)
-            if checkChildren:
-            
-                self._RelationalExpression.accept(v)
-                self._GREATER.accept(v)
-                self._EQUAL.accept(v)
-                self._ShiftExpression.accept(v)
-            
-            v.endVisitRelationalExpression3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitRelationalExpression3(self)
+        def  acceptWithArg(self, v, o) :   v.visitRelationalExpression3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitRelationalExpression3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitRelationalExpression3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 412:  RelationalExpression ::= RelationalExpression instanceof ReferenceType
+*<li>Rule 412:  RelationalExpression ::= RelationalExpression instanceof ReferenceType
  *</b>
  */'''
 class RelationalExpression4 ( Ast ,IRelationalExpression):
@@ -26436,11 +23209,11 @@ class RelationalExpression4 ( Ast ,IRelationalExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._RelationalExpression : IRelationalExpression = _RelationalExpression
+            self._RelationalExpression : Ast = _RelationalExpression
             _RelationalExpression.setParent(self)
             self._instanceof : AstToken = _instanceof
             _instanceof.setParent(self)
-            self._ReferenceType : IReferenceType = _ReferenceType
+            self._ReferenceType : Ast = _ReferenceType
             _ReferenceType.setParent(self)
             self.initialize()
         
@@ -26457,29 +23230,15 @@ class RelationalExpression4 ( Ast ,IRelationalExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitRelationalExpression4(self)
-            if checkChildren:
-            
-                self._RelationalExpression.accept(v)
-                self._instanceof.accept(v)
-                self._ReferenceType.accept(v)
-            
-            v.endVisitRelationalExpression4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitRelationalExpression4(self)
+        def  acceptWithArg(self, v, o) :   v.visitRelationalExpression4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitRelationalExpression4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitRelationalExpression4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 414:  EqualityExpression ::= EqualityExpression == RelationalExpression
+*<li>Rule 414:  EqualityExpression ::= EqualityExpression == RelationalExpression
  *</b>
  */'''
 class EqualityExpression0 ( Ast ,IEqualityExpression):
@@ -26501,11 +23260,11 @@ class EqualityExpression0 ( Ast ,IEqualityExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._EqualityExpression : IEqualityExpression = _EqualityExpression
+            self._EqualityExpression : Ast = _EqualityExpression
             _EqualityExpression.setParent(self)
             self._EQUAL_EQUAL : AstToken = _EQUAL_EQUAL
             _EQUAL_EQUAL.setParent(self)
-            self._RelationalExpression : IRelationalExpression = _RelationalExpression
+            self._RelationalExpression : Ast = _RelationalExpression
             _RelationalExpression.setParent(self)
             self.initialize()
         
@@ -26522,29 +23281,15 @@ class EqualityExpression0 ( Ast ,IEqualityExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitEqualityExpression0(self)
-            if checkChildren:
-            
-                self._EqualityExpression.accept(v)
-                self._EQUAL_EQUAL.accept(v)
-                self._RelationalExpression.accept(v)
-            
-            v.endVisitEqualityExpression0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitEqualityExpression0(self)
+        def  acceptWithArg(self, v, o) :   v.visitEqualityExpression0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitEqualityExpression0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitEqualityExpression0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 415:  EqualityExpression ::= EqualityExpression != RelationalExpression
+*<li>Rule 415:  EqualityExpression ::= EqualityExpression != RelationalExpression
  *</b>
  */'''
 class EqualityExpression1 ( Ast ,IEqualityExpression):
@@ -26566,11 +23311,11 @@ class EqualityExpression1 ( Ast ,IEqualityExpression):
         
             super().__init__(leftIToken, rightIToken)
 
-            self._EqualityExpression : IEqualityExpression = _EqualityExpression
+            self._EqualityExpression : Ast = _EqualityExpression
             _EqualityExpression.setParent(self)
             self._NOT_EQUAL : AstToken = _NOT_EQUAL
             _NOT_EQUAL.setParent(self)
-            self._RelationalExpression : IRelationalExpression = _RelationalExpression
+            self._RelationalExpression : Ast = _RelationalExpression
             _RelationalExpression.setParent(self)
             self.initialize()
         
@@ -26587,29 +23332,15 @@ class EqualityExpression1 ( Ast ,IEqualityExpression):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitEqualityExpression1(self)
-            if checkChildren:
-            
-                self._EqualityExpression.accept(v)
-                self._NOT_EQUAL.accept(v)
-                self._RelationalExpression.accept(v)
-            
-            v.endVisitEqualityExpression1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitEqualityExpression1(self)
+        def  acceptWithArg(self, v, o) :   v.visitEqualityExpression1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitEqualityExpression1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitEqualityExpression1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 434:  AssignmentOperator ::= =
+*<li>Rule 434:  AssignmentOperator ::= =
  *</b>
  */'''
 class AssignmentOperator0 ( AstToken ,IAssignmentOperator):
@@ -26621,23 +23352,15 @@ class AssignmentOperator0 ( AstToken ,IAssignmentOperator):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAssignmentOperator0(self)
-            v.endVisitAssignmentOperator0(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator0(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator0(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator0(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator0(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 435:  AssignmentOperator ::= *=
+*<li>Rule 435:  AssignmentOperator ::= *=
  *</b>
  */'''
 class AssignmentOperator1 ( AstToken ,IAssignmentOperator):
@@ -26649,23 +23372,15 @@ class AssignmentOperator1 ( AstToken ,IAssignmentOperator):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAssignmentOperator1(self)
-            v.endVisitAssignmentOperator1(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator1(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator1(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator1(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator1(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 436:  AssignmentOperator ::= /=
+*<li>Rule 436:  AssignmentOperator ::= /=
  *</b>
  */'''
 class AssignmentOperator2 ( AstToken ,IAssignmentOperator):
@@ -26677,23 +23392,15 @@ class AssignmentOperator2 ( AstToken ,IAssignmentOperator):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAssignmentOperator2(self)
-            v.endVisitAssignmentOperator2(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator2(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator2(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator2(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator2(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 437:  AssignmentOperator ::= %=
+*<li>Rule 437:  AssignmentOperator ::= %=
  *</b>
  */'''
 class AssignmentOperator3 ( AstToken ,IAssignmentOperator):
@@ -26705,23 +23412,15 @@ class AssignmentOperator3 ( AstToken ,IAssignmentOperator):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAssignmentOperator3(self)
-            v.endVisitAssignmentOperator3(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator3(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator3(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator3(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator3(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 438:  AssignmentOperator ::= +=
+*<li>Rule 438:  AssignmentOperator ::= +=
  *</b>
  */'''
 class AssignmentOperator4 ( AstToken ,IAssignmentOperator):
@@ -26733,23 +23432,15 @@ class AssignmentOperator4 ( AstToken ,IAssignmentOperator):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAssignmentOperator4(self)
-            v.endVisitAssignmentOperator4(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator4(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator4(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator4(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator4(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 439:  AssignmentOperator ::= -=
+*<li>Rule 439:  AssignmentOperator ::= -=
  *</b>
  */'''
 class AssignmentOperator5 ( AstToken ,IAssignmentOperator):
@@ -26761,23 +23452,15 @@ class AssignmentOperator5 ( AstToken ,IAssignmentOperator):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAssignmentOperator5(self)
-            v.endVisitAssignmentOperator5(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator5(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator5(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator5(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator5(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 440:  AssignmentOperator ::= <<=
+*<li>Rule 440:  AssignmentOperator ::= <<=
  *</b>
  */'''
 class AssignmentOperator6 ( AstToken ,IAssignmentOperator):
@@ -26789,23 +23472,15 @@ class AssignmentOperator6 ( AstToken ,IAssignmentOperator):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAssignmentOperator6(self)
-            v.endVisitAssignmentOperator6(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator6(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator6(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator6(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator6(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 441:  AssignmentOperator ::= > > =
+*<li>Rule 441:  AssignmentOperator ::= > > =
  *</b>
  */'''
 class AssignmentOperator7 ( Ast ,IAssignmentOperator):
@@ -26848,29 +23523,15 @@ class AssignmentOperator7 ( Ast ,IAssignmentOperator):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAssignmentOperator7(self)
-            if checkChildren:
-            
-                self._GREATER.accept(v)
-                self._GREATER2.accept(v)
-                self._EQUAL.accept(v)
-            
-            v.endVisitAssignmentOperator7(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator7(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator7(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator7(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator7(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 442:  AssignmentOperator ::= > > > =
+*<li>Rule 442:  AssignmentOperator ::= > > > =
  *</b>
  */'''
 class AssignmentOperator8 ( Ast ,IAssignmentOperator):
@@ -26919,30 +23580,15 @@ class AssignmentOperator8 ( Ast ,IAssignmentOperator):
             return _content
         
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            checkChildren = v.visitAssignmentOperator8(self)
-            if checkChildren:
-            
-                self._GREATER.accept(v)
-                self._GREATER2.accept(v)
-                self._GREATER3.accept(v)
-                self._EQUAL.accept(v)
-            
-            v.endVisitAssignmentOperator8(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator8(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator8(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator8(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator8(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 443:  AssignmentOperator ::= &=
+*<li>Rule 443:  AssignmentOperator ::= &=
  *</b>
  */'''
 class AssignmentOperator9 ( AstToken ,IAssignmentOperator):
@@ -26954,23 +23600,15 @@ class AssignmentOperator9 ( AstToken ,IAssignmentOperator):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAssignmentOperator9(self)
-            v.endVisitAssignmentOperator9(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator9(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator9(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator9(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator9(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 444:  AssignmentOperator ::= ^=
+*<li>Rule 444:  AssignmentOperator ::= ^=
  *</b>
  */'''
 class AssignmentOperator10 ( AstToken ,IAssignmentOperator):
@@ -26982,23 +23620,15 @@ class AssignmentOperator10 ( AstToken ,IAssignmentOperator):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAssignmentOperator10(self)
-            v.endVisitAssignmentOperator10(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator10(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator10(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator10(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator10(self, o)
     
 
 '''/**
  *<b>
-#*<li>Rule 445:  AssignmentOperator ::= |=
+*<li>Rule 445:  AssignmentOperator ::= |=
  *</b>
  */'''
 class AssignmentOperator11 ( AstToken ,IAssignmentOperator):
@@ -27010,2735 +23640,2746 @@ class AssignmentOperator11 ( AstToken ,IAssignmentOperator):
             super().__init__(token)
             self.initialize()
 
-        def  accept(self, v: IAstVisitor ) : 
-        
-            if not v.preVisit(self): return
-            self.enter( v)
-            v.postVisit(self)
-        
-
-        def  enter(self, v) : 
-        
-            v.visitAssignmentOperator11(self)
-            v.endVisitAssignmentOperator11(self)
-        
+        def  acceptWithVisitor(self, v) :  v.visitAssignmentOperator11(self)
+        def  acceptWithArg(self, v, o) :   v.visitAssignmentOperator11(self, o)
+        def  acceptWithResult(self, v) :  return v.visitAssignmentOperator11(self)
+        def  acceptWithResultArgument(self, v, o) :  return v.visitAssignmentOperator11(self, o)
     
 
-class Visitor (IAstVisitor):
-    
-        __slots__ = ()
-        def visit(self, n) -> bool : pass
-        def endVisit(self,n) : pass
-
-        def visitAstToken(self, n) -> bool :pass
-        def endVisitAstToken(self, n) : pass
-
-        def visitidentifier(self, n) -> bool :pass
-        def endVisitidentifier(self, n) : pass
-
-        def visitPrimitiveType(self, n) -> bool :pass
-        def endVisitPrimitiveType(self, n) : pass
-
-        def visitClassType(self, n) -> bool :pass
-        def endVisitClassType(self, n) : pass
-
-        def visitInterfaceType(self, n) -> bool :pass
-        def endVisitInterfaceType(self, n) : pass
-
-        def visitTypeName(self, n) -> bool :pass
-        def endVisitTypeName(self, n) : pass
-
-        def visitArrayType(self, n) -> bool :pass
-        def endVisitArrayType(self, n) : pass
-
-        def visitTypeParameter(self, n) -> bool :pass
-        def endVisitTypeParameter(self, n) : pass
-
-        def visitTypeBound(self, n) -> bool :pass
-        def endVisitTypeBound(self, n) : pass
-
-        def visitAdditionalBoundList(self, n) -> bool :pass
-        def endVisitAdditionalBoundList(self, n) : pass
-
-        def visitAdditionalBound(self, n) -> bool :pass
-        def endVisitAdditionalBound(self, n) : pass
-
-        def visitTypeArguments(self, n) -> bool :pass
-        def endVisitTypeArguments(self, n) : pass
-
-        def visitActualTypeArgumentList(self, n) -> bool :pass
-        def endVisitActualTypeArgumentList(self, n) : pass
-
-        def visitWildcard(self, n) -> bool :pass
-        def endVisitWildcard(self, n) : pass
-
-        def visitPackageName(self, n) -> bool :pass
-        def endVisitPackageName(self, n) : pass
-
-        def visitExpressionName(self, n) -> bool :pass
-        def endVisitExpressionName(self, n) : pass
-
-        def visitMethodName(self, n) -> bool :pass
-        def endVisitMethodName(self, n) : pass
-
-        def visitPackageOrTypeName(self, n) -> bool :pass
-        def endVisitPackageOrTypeName(self, n) : pass
-
-        def visitAmbiguousName(self, n) -> bool :pass
-        def endVisitAmbiguousName(self, n) : pass
-
-        def visitCompilationUnit(self, n) -> bool :pass
-        def endVisitCompilationUnit(self, n) : pass
-
-        def visitImportDeclarations(self, n) -> bool :pass
-        def endVisitImportDeclarations(self, n) : pass
-
-        def visitTypeDeclarations(self, n) -> bool :pass
-        def endVisitTypeDeclarations(self, n) : pass
-
-        def visitPackageDeclaration(self, n) -> bool :pass
-        def endVisitPackageDeclaration(self, n) : pass
-
-        def visitSingleTypeImportDeclaration(self, n) -> bool :pass
-        def endVisitSingleTypeImportDeclaration(self, n) : pass
-
-        def visitTypeImportOnDemandDeclaration(self, n) -> bool :pass
-        def endVisitTypeImportOnDemandDeclaration(self, n) : pass
-
-        def visitSingleStaticImportDeclaration(self, n) -> bool :pass
-        def endVisitSingleStaticImportDeclaration(self, n) : pass
-
-        def visitStaticImportOnDemandDeclaration(self, n) -> bool :pass
-        def endVisitStaticImportOnDemandDeclaration(self, n) : pass
-
-        def visitTypeDeclaration(self, n) -> bool :pass
-        def endVisitTypeDeclaration(self, n) : pass
-
-        def visitNormalClassDeclaration(self, n) -> bool :pass
-        def endVisitNormalClassDeclaration(self, n) : pass
-
-        def visitClassModifiers(self, n) -> bool :pass
-        def endVisitClassModifiers(self, n) : pass
-
-        def visitTypeParameters(self, n) -> bool :pass
-        def endVisitTypeParameters(self, n) : pass
-
-        def visitTypeParameterList(self, n) -> bool :pass
-        def endVisitTypeParameterList(self, n) : pass
-
-        def visitSuper(self, n) -> bool :pass
-        def endVisitSuper(self, n) : pass
-
-        def visitInterfaces(self, n) -> bool :pass
-        def endVisitInterfaces(self, n) : pass
-
-        def visitInterfaceTypeList(self, n) -> bool :pass
-        def endVisitInterfaceTypeList(self, n) : pass
-
-        def visitClassBody(self, n) -> bool :pass
-        def endVisitClassBody(self, n) : pass
-
-        def visitClassBodyDeclarations(self, n) -> bool :pass
-        def endVisitClassBodyDeclarations(self, n) : pass
-
-        def visitClassMemberDeclaration(self, n) -> bool :pass
-        def endVisitClassMemberDeclaration(self, n) : pass
-
-        def visitFieldDeclaration(self, n) -> bool :pass
-        def endVisitFieldDeclaration(self, n) : pass
-
-        def visitVariableDeclarators(self, n) -> bool :pass
-        def endVisitVariableDeclarators(self, n) : pass
-
-        def visitVariableDeclarator(self, n) -> bool :pass
-        def endVisitVariableDeclarator(self, n) : pass
-
-        def visitVariableDeclaratorId(self, n) -> bool :pass
-        def endVisitVariableDeclaratorId(self, n) : pass
-
-        def visitFieldModifiers(self, n) -> bool :pass
-        def endVisitFieldModifiers(self, n) : pass
-
-        def visitMethodDeclaration(self, n) -> bool :pass
-        def endVisitMethodDeclaration(self, n) : pass
-
-        def visitMethodHeader(self, n) -> bool :pass
-        def endVisitMethodHeader(self, n) : pass
-
-        def visitResultType(self, n) -> bool :pass
-        def endVisitResultType(self, n) : pass
-
-        def visitFormalParameterList(self, n) -> bool :pass
-        def endVisitFormalParameterList(self, n) : pass
-
-        def visitFormalParameters(self, n) -> bool :pass
-        def endVisitFormalParameters(self, n) : pass
-
-        def visitFormalParameter(self, n) -> bool :pass
-        def endVisitFormalParameter(self, n) : pass
-
-        def visitVariableModifiers(self, n) -> bool :pass
-        def endVisitVariableModifiers(self, n) : pass
-
-        def visitVariableModifier(self, n) -> bool :pass
-        def endVisitVariableModifier(self, n) : pass
-
-        def visitLastFormalParameter(self, n) -> bool :pass
-        def endVisitLastFormalParameter(self, n) : pass
-
-        def visitMethodModifiers(self, n) -> bool :pass
-        def endVisitMethodModifiers(self, n) : pass
-
-        def visitThrows(self, n) -> bool :pass
-        def endVisitThrows(self, n) : pass
-
-        def visitExceptionTypeList(self, n) -> bool :pass
-        def endVisitExceptionTypeList(self, n) : pass
-
-        def visitMethodBody(self, n) -> bool :pass
-        def endVisitMethodBody(self, n) : pass
-
-        def visitStaticInitializer(self, n) -> bool :pass
-        def endVisitStaticInitializer(self, n) : pass
-
-        def visitConstructorDeclaration(self, n) -> bool :pass
-        def endVisitConstructorDeclaration(self, n) : pass
-
-        def visitConstructorDeclarator(self, n) -> bool :pass
-        def endVisitConstructorDeclarator(self, n) : pass
-
-        def visitConstructorModifiers(self, n) -> bool :pass
-        def endVisitConstructorModifiers(self, n) : pass
-
-        def visitConstructorBody(self, n) -> bool :pass
-        def endVisitConstructorBody(self, n) : pass
-
-        def visitEnumDeclaration(self, n) -> bool :pass
-        def endVisitEnumDeclaration(self, n) : pass
-
-        def visitEnumBody(self, n) -> bool :pass
-        def endVisitEnumBody(self, n) : pass
-
-        def visitEnumConstants(self, n) -> bool :pass
-        def endVisitEnumConstants(self, n) : pass
-
-        def visitEnumConstant(self, n) -> bool :pass
-        def endVisitEnumConstant(self, n) : pass
-
-        def visitArguments(self, n) -> bool :pass
-        def endVisitArguments(self, n) : pass
-
-        def visitEnumBodyDeclarations(self, n) -> bool :pass
-        def endVisitEnumBodyDeclarations(self, n) : pass
-
-        def visitNormalInterfaceDeclaration(self, n) -> bool :pass
-        def endVisitNormalInterfaceDeclaration(self, n) : pass
-
-        def visitInterfaceModifiers(self, n) -> bool :pass
-        def endVisitInterfaceModifiers(self, n) : pass
-
-        def visitInterfaceBody(self, n) -> bool :pass
-        def endVisitInterfaceBody(self, n) : pass
-
-        def visitInterfaceMemberDeclarations(self, n) -> bool :pass
-        def endVisitInterfaceMemberDeclarations(self, n) : pass
-
-        def visitInterfaceMemberDeclaration(self, n) -> bool :pass
-        def endVisitInterfaceMemberDeclaration(self, n) : pass
-
-        def visitConstantDeclaration(self, n) -> bool :pass
-        def endVisitConstantDeclaration(self, n) : pass
-
-        def visitConstantModifiers(self, n) -> bool :pass
-        def endVisitConstantModifiers(self, n) : pass
-
-        def visitAbstractMethodDeclaration(self, n) -> bool :pass
-        def endVisitAbstractMethodDeclaration(self, n) : pass
-
-        def visitAbstractMethodModifiers(self, n) -> bool :pass
-        def endVisitAbstractMethodModifiers(self, n) : pass
-
-        def visitAnnotationTypeDeclaration(self, n) -> bool :pass
-        def endVisitAnnotationTypeDeclaration(self, n) : pass
-
-        def visitAnnotationTypeBody(self, n) -> bool :pass
-        def endVisitAnnotationTypeBody(self, n) : pass
-
-        def visitAnnotationTypeElementDeclarations(self, n) -> bool :pass
-        def endVisitAnnotationTypeElementDeclarations(self, n) : pass
-
-        def visitDefaultValue(self, n) -> bool :pass
-        def endVisitDefaultValue(self, n) : pass
-
-        def visitAnnotations(self, n) -> bool :pass
-        def endVisitAnnotations(self, n) : pass
-
-        def visitNormalAnnotation(self, n) -> bool :pass
-        def endVisitNormalAnnotation(self, n) : pass
-
-        def visitElementValuePairs(self, n) -> bool :pass
-        def endVisitElementValuePairs(self, n) : pass
-
-        def visitElementValuePair(self, n) -> bool :pass
-        def endVisitElementValuePair(self, n) : pass
-
-        def visitElementValueArrayInitializer(self, n) -> bool :pass
-        def endVisitElementValueArrayInitializer(self, n) : pass
-
-        def visitElementValues(self, n) -> bool :pass
-        def endVisitElementValues(self, n) : pass
-
-        def visitMarkerAnnotation(self, n) -> bool :pass
-        def endVisitMarkerAnnotation(self, n) : pass
-
-        def visitSingleElementAnnotation(self, n) -> bool :pass
-        def endVisitSingleElementAnnotation(self, n) : pass
-
-        def visitArrayInitializer(self, n) -> bool :pass
-        def endVisitArrayInitializer(self, n) : pass
-
-        def visitVariableInitializers(self, n) -> bool :pass
-        def endVisitVariableInitializers(self, n) : pass
-
-        def visitBlock(self, n) -> bool :pass
-        def endVisitBlock(self, n) : pass
-
-        def visitBlockStatements(self, n) -> bool :pass
-        def endVisitBlockStatements(self, n) : pass
-
-        def visitLocalVariableDeclarationStatement(self, n) -> bool :pass
-        def endVisitLocalVariableDeclarationStatement(self, n) : pass
-
-        def visitLocalVariableDeclaration(self, n) -> bool :pass
-        def endVisitLocalVariableDeclaration(self, n) : pass
-
-        def visitIfThenStatement(self, n) -> bool :pass
-        def endVisitIfThenStatement(self, n) : pass
-
-        def visitIfThenElseStatement(self, n) -> bool :pass
-        def endVisitIfThenElseStatement(self, n) : pass
-
-        def visitIfThenElseStatementNoShortIf(self, n) -> bool :pass
-        def endVisitIfThenElseStatementNoShortIf(self, n) : pass
-
-        def visitEmptyStatement(self, n) -> bool :pass
-        def endVisitEmptyStatement(self, n) : pass
-
-        def visitLabeledStatement(self, n) -> bool :pass
-        def endVisitLabeledStatement(self, n) : pass
-
-        def visitLabeledStatementNoShortIf(self, n) -> bool :pass
-        def endVisitLabeledStatementNoShortIf(self, n) : pass
-
-        def visitExpressionStatement(self, n) -> bool :pass
-        def endVisitExpressionStatement(self, n) : pass
-
-        def visitSwitchStatement(self, n) -> bool :pass
-        def endVisitSwitchStatement(self, n) : pass
-
-        def visitSwitchBlock(self, n) -> bool :pass
-        def endVisitSwitchBlock(self, n) : pass
-
-        def visitSwitchBlockStatementGroups(self, n) -> bool :pass
-        def endVisitSwitchBlockStatementGroups(self, n) : pass
-
-        def visitSwitchBlockStatementGroup(self, n) -> bool :pass
-        def endVisitSwitchBlockStatementGroup(self, n) : pass
-
-        def visitSwitchLabels(self, n) -> bool :pass
-        def endVisitSwitchLabels(self, n) : pass
-
-        def visitWhileStatement(self, n) -> bool :pass
-        def endVisitWhileStatement(self, n) : pass
-
-        def visitWhileStatementNoShortIf(self, n) -> bool :pass
-        def endVisitWhileStatementNoShortIf(self, n) : pass
-
-        def visitDoStatement(self, n) -> bool :pass
-        def endVisitDoStatement(self, n) : pass
-
-        def visitBasicForStatement(self, n) -> bool :pass
-        def endVisitBasicForStatement(self, n) : pass
-
-        def visitForStatementNoShortIf(self, n) -> bool :pass
-        def endVisitForStatementNoShortIf(self, n) : pass
-
-        def visitStatementExpressionList(self, n) -> bool :pass
-        def endVisitStatementExpressionList(self, n) : pass
-
-        def visitEnhancedForStatement(self, n) -> bool :pass
-        def endVisitEnhancedForStatement(self, n) : pass
-
-        def visitBreakStatement(self, n) -> bool :pass
-        def endVisitBreakStatement(self, n) : pass
-
-        def visitContinueStatement(self, n) -> bool :pass
-        def endVisitContinueStatement(self, n) : pass
-
-        def visitReturnStatement(self, n) -> bool :pass
-        def endVisitReturnStatement(self, n) : pass
-
-        def visitThrowStatement(self, n) -> bool :pass
-        def endVisitThrowStatement(self, n) : pass
-
-        def visitSynchronizedStatement(self, n) -> bool :pass
-        def endVisitSynchronizedStatement(self, n) : pass
-
-        def visitCatches(self, n) -> bool :pass
-        def endVisitCatches(self, n) : pass
-
-        def visitCatchClause(self, n) -> bool :pass
-        def endVisitCatchClause(self, n) : pass
-
-        def visitFinally(self, n) -> bool :pass
-        def endVisitFinally(self, n) : pass
-
-        def visitArgumentList(self, n) -> bool :pass
-        def endVisitArgumentList(self, n) : pass
-
-        def visitDimExprs(self, n) -> bool :pass
-        def endVisitDimExprs(self, n) : pass
-
-        def visitDimExpr(self, n) -> bool :pass
-        def endVisitDimExpr(self, n) : pass
-
-        def visitPostIncrementExpression(self, n) -> bool :pass
-        def endVisitPostIncrementExpression(self, n) : pass
-
-        def visitPostDecrementExpression(self, n) -> bool :pass
-        def endVisitPostDecrementExpression(self, n) : pass
-
-        def visitPreIncrementExpression(self, n) -> bool :pass
-        def endVisitPreIncrementExpression(self, n) : pass
-
-        def visitPreDecrementExpression(self, n) -> bool :pass
-        def endVisitPreDecrementExpression(self, n) : pass
-
-        def visitAndExpression(self, n) -> bool :pass
-        def endVisitAndExpression(self, n) : pass
-
-        def visitExclusiveOrExpression(self, n) -> bool :pass
-        def endVisitExclusiveOrExpression(self, n) : pass
-
-        def visitInclusiveOrExpression(self, n) -> bool :pass
-        def endVisitInclusiveOrExpression(self, n) : pass
-
-        def visitConditionalAndExpression(self, n) -> bool :pass
-        def endVisitConditionalAndExpression(self, n) : pass
-
-        def visitConditionalOrExpression(self, n) -> bool :pass
-        def endVisitConditionalOrExpression(self, n) : pass
-
-        def visitConditionalExpression(self, n) -> bool :pass
-        def endVisitConditionalExpression(self, n) : pass
-
-        def visitAssignment(self, n) -> bool :pass
-        def endVisitAssignment(self, n) : pass
-
-        def visitCommaopt(self, n) -> bool :pass
-        def endVisitCommaopt(self, n) : pass
-
-        def visitEllipsisopt(self, n) -> bool :pass
-        def endVisitEllipsisopt(self, n) : pass
-
-        def visitLPGUserAction0(self, n) -> bool :pass
-        def endVisitLPGUserAction0(self, n) : pass
-
-        def visitLPGUserAction1(self, n) -> bool :pass
-        def endVisitLPGUserAction1(self, n) : pass
-
-        def visitLPGUserAction2(self, n) -> bool :pass
-        def endVisitLPGUserAction2(self, n) : pass
-
-        def visitLPGUserAction3(self, n) -> bool :pass
-        def endVisitLPGUserAction3(self, n) : pass
-
-        def visitLPGUserAction4(self, n) -> bool :pass
-        def endVisitLPGUserAction4(self, n) : pass
-
-        def visitIntegralType0(self, n) -> bool :pass
-        def endVisitIntegralType0(self, n) : pass
-
-        def visitIntegralType1(self, n) -> bool :pass
-        def endVisitIntegralType1(self, n) : pass
-
-        def visitIntegralType2(self, n) -> bool :pass
-        def endVisitIntegralType2(self, n) : pass
-
-        def visitIntegralType3(self, n) -> bool :pass
-        def endVisitIntegralType3(self, n) : pass
-
-        def visitIntegralType4(self, n) -> bool :pass
-        def endVisitIntegralType4(self, n) : pass
-
-        def visitFloatingPointType0(self, n) -> bool :pass
-        def endVisitFloatingPointType0(self, n) : pass
-
-        def visitFloatingPointType1(self, n) -> bool :pass
-        def endVisitFloatingPointType1(self, n) : pass
-
-        def visitWildcardBounds0(self, n) -> bool :pass
-        def endVisitWildcardBounds0(self, n) : pass
-
-        def visitWildcardBounds1(self, n) -> bool :pass
-        def endVisitWildcardBounds1(self, n) : pass
-
-        def visitClassModifier0(self, n) -> bool :pass
-        def endVisitClassModifier0(self, n) : pass
-
-        def visitClassModifier1(self, n) -> bool :pass
-        def endVisitClassModifier1(self, n) : pass
-
-        def visitClassModifier2(self, n) -> bool :pass
-        def endVisitClassModifier2(self, n) : pass
-
-        def visitClassModifier3(self, n) -> bool :pass
-        def endVisitClassModifier3(self, n) : pass
-
-        def visitClassModifier4(self, n) -> bool :pass
-        def endVisitClassModifier4(self, n) : pass
-
-        def visitClassModifier5(self, n) -> bool :pass
-        def endVisitClassModifier5(self, n) : pass
-
-        def visitClassModifier6(self, n) -> bool :pass
-        def endVisitClassModifier6(self, n) : pass
-
-        def visitFieldModifier0(self, n) -> bool :pass
-        def endVisitFieldModifier0(self, n) : pass
-
-        def visitFieldModifier1(self, n) -> bool :pass
-        def endVisitFieldModifier1(self, n) : pass
-
-        def visitFieldModifier2(self, n) -> bool :pass
-        def endVisitFieldModifier2(self, n) : pass
-
-        def visitFieldModifier3(self, n) -> bool :pass
-        def endVisitFieldModifier3(self, n) : pass
-
-        def visitFieldModifier4(self, n) -> bool :pass
-        def endVisitFieldModifier4(self, n) : pass
-
-        def visitFieldModifier5(self, n) -> bool :pass
-        def endVisitFieldModifier5(self, n) : pass
-
-        def visitFieldModifier6(self, n) -> bool :pass
-        def endVisitFieldModifier6(self, n) : pass
-
-        def visitMethodDeclarator0(self, n) -> bool :pass
-        def endVisitMethodDeclarator0(self, n) : pass
-
-        def visitMethodDeclarator1(self, n) -> bool :pass
-        def endVisitMethodDeclarator1(self, n) : pass
-
-        def visitMethodModifier0(self, n) -> bool :pass
-        def endVisitMethodModifier0(self, n) : pass
-
-        def visitMethodModifier1(self, n) -> bool :pass
-        def endVisitMethodModifier1(self, n) : pass
-
-        def visitMethodModifier2(self, n) -> bool :pass
-        def endVisitMethodModifier2(self, n) : pass
-
-        def visitMethodModifier3(self, n) -> bool :pass
-        def endVisitMethodModifier3(self, n) : pass
-
-        def visitMethodModifier4(self, n) -> bool :pass
-        def endVisitMethodModifier4(self, n) : pass
-
-        def visitMethodModifier5(self, n) -> bool :pass
-        def endVisitMethodModifier5(self, n) : pass
-
-        def visitMethodModifier6(self, n) -> bool :pass
-        def endVisitMethodModifier6(self, n) : pass
-
-        def visitMethodModifier7(self, n) -> bool :pass
-        def endVisitMethodModifier7(self, n) : pass
-
-        def visitMethodModifier8(self, n) -> bool :pass
-        def endVisitMethodModifier8(self, n) : pass
-
-        def visitConstructorModifier0(self, n) -> bool :pass
-        def endVisitConstructorModifier0(self, n) : pass
-
-        def visitConstructorModifier1(self, n) -> bool :pass
-        def endVisitConstructorModifier1(self, n) : pass
-
-        def visitConstructorModifier2(self, n) -> bool :pass
-        def endVisitConstructorModifier2(self, n) : pass
-
-        def visitExplicitConstructorInvocation0(self, n) -> bool :pass
-        def endVisitExplicitConstructorInvocation0(self, n) : pass
-
-        def visitExplicitConstructorInvocation1(self, n) -> bool :pass
-        def endVisitExplicitConstructorInvocation1(self, n) : pass
-
-        def visitExplicitConstructorInvocation2(self, n) -> bool :pass
-        def endVisitExplicitConstructorInvocation2(self, n) : pass
-
-        def visitInterfaceModifier0(self, n) -> bool :pass
-        def endVisitInterfaceModifier0(self, n) : pass
-
-        def visitInterfaceModifier1(self, n) -> bool :pass
-        def endVisitInterfaceModifier1(self, n) : pass
-
-        def visitInterfaceModifier2(self, n) -> bool :pass
-        def endVisitInterfaceModifier2(self, n) : pass
-
-        def visitInterfaceModifier3(self, n) -> bool :pass
-        def endVisitInterfaceModifier3(self, n) : pass
-
-        def visitInterfaceModifier4(self, n) -> bool :pass
-        def endVisitInterfaceModifier4(self, n) : pass
-
-        def visitInterfaceModifier5(self, n) -> bool :pass
-        def endVisitInterfaceModifier5(self, n) : pass
-
-        def visitExtendsInterfaces0(self, n) -> bool :pass
-        def endVisitExtendsInterfaces0(self, n) : pass
-
-        def visitExtendsInterfaces1(self, n) -> bool :pass
-        def endVisitExtendsInterfaces1(self, n) : pass
-
-        def visitConstantModifier0(self, n) -> bool :pass
-        def endVisitConstantModifier0(self, n) : pass
-
-        def visitConstantModifier1(self, n) -> bool :pass
-        def endVisitConstantModifier1(self, n) : pass
-
-        def visitConstantModifier2(self, n) -> bool :pass
-        def endVisitConstantModifier2(self, n) : pass
-
-        def visitAbstractMethodModifier0(self, n) -> bool :pass
-        def endVisitAbstractMethodModifier0(self, n) : pass
-
-        def visitAbstractMethodModifier1(self, n) -> bool :pass
-        def endVisitAbstractMethodModifier1(self, n) : pass
-
-        def visitAnnotationTypeElementDeclaration0(self, n) -> bool :pass
-        def endVisitAnnotationTypeElementDeclaration0(self, n) : pass
-
-        def visitAnnotationTypeElementDeclaration1(self, n) -> bool :pass
-        def endVisitAnnotationTypeElementDeclaration1(self, n) : pass
-
-        def visitAssertStatement0(self, n) -> bool :pass
-        def endVisitAssertStatement0(self, n) : pass
-
-        def visitAssertStatement1(self, n) -> bool :pass
-        def endVisitAssertStatement1(self, n) : pass
-
-        def visitSwitchLabel0(self, n) -> bool :pass
-        def endVisitSwitchLabel0(self, n) : pass
-
-        def visitSwitchLabel1(self, n) -> bool :pass
-        def endVisitSwitchLabel1(self, n) : pass
-
-        def visitSwitchLabel2(self, n) -> bool :pass
-        def endVisitSwitchLabel2(self, n) : pass
-
-        def visitTryStatement0(self, n) -> bool :pass
-        def endVisitTryStatement0(self, n) : pass
-
-        def visitTryStatement1(self, n) -> bool :pass
-        def endVisitTryStatement1(self, n) : pass
-
-        def visitPrimaryNoNewArray0(self, n) -> bool :pass
-        def endVisitPrimaryNoNewArray0(self, n) : pass
-
-        def visitPrimaryNoNewArray1(self, n) -> bool :pass
-        def endVisitPrimaryNoNewArray1(self, n) : pass
-
-        def visitPrimaryNoNewArray2(self, n) -> bool :pass
-        def endVisitPrimaryNoNewArray2(self, n) : pass
-
-        def visitPrimaryNoNewArray3(self, n) -> bool :pass
-        def endVisitPrimaryNoNewArray3(self, n) : pass
-
-        def visitPrimaryNoNewArray4(self, n) -> bool :pass
-        def endVisitPrimaryNoNewArray4(self, n) : pass
-
-        def visitLiteral0(self, n) -> bool :pass
-        def endVisitLiteral0(self, n) : pass
-
-        def visitLiteral1(self, n) -> bool :pass
-        def endVisitLiteral1(self, n) : pass
-
-        def visitLiteral2(self, n) -> bool :pass
-        def endVisitLiteral2(self, n) : pass
-
-        def visitLiteral3(self, n) -> bool :pass
-        def endVisitLiteral3(self, n) : pass
-
-        def visitLiteral4(self, n) -> bool :pass
-        def endVisitLiteral4(self, n) : pass
-
-        def visitLiteral5(self, n) -> bool :pass
-        def endVisitLiteral5(self, n) : pass
-
-        def visitLiteral6(self, n) -> bool :pass
-        def endVisitLiteral6(self, n) : pass
-
-        def visitBooleanLiteral0(self, n) -> bool :pass
-        def endVisitBooleanLiteral0(self, n) : pass
-
-        def visitBooleanLiteral1(self, n) -> bool :pass
-        def endVisitBooleanLiteral1(self, n) : pass
-
-        def visitClassInstanceCreationExpression0(self, n) -> bool :pass
-        def endVisitClassInstanceCreationExpression0(self, n) : pass
-
-        def visitClassInstanceCreationExpression1(self, n) -> bool :pass
-        def endVisitClassInstanceCreationExpression1(self, n) : pass
-
-        def visitArrayCreationExpression0(self, n) -> bool :pass
-        def endVisitArrayCreationExpression0(self, n) : pass
-
-        def visitArrayCreationExpression1(self, n) -> bool :pass
-        def endVisitArrayCreationExpression1(self, n) : pass
-
-        def visitArrayCreationExpression2(self, n) -> bool :pass
-        def endVisitArrayCreationExpression2(self, n) : pass
-
-        def visitArrayCreationExpression3(self, n) -> bool :pass
-        def endVisitArrayCreationExpression3(self, n) : pass
-
-        def visitDims0(self, n) -> bool :pass
-        def endVisitDims0(self, n) : pass
-
-        def visitDims1(self, n) -> bool :pass
-        def endVisitDims1(self, n) : pass
-
-        def visitFieldAccess0(self, n) -> bool :pass
-        def endVisitFieldAccess0(self, n) : pass
-
-        def visitFieldAccess1(self, n) -> bool :pass
-        def endVisitFieldAccess1(self, n) : pass
-
-        def visitFieldAccess2(self, n) -> bool :pass
-        def endVisitFieldAccess2(self, n) : pass
-
-        def visitMethodInvocation0(self, n) -> bool :pass
-        def endVisitMethodInvocation0(self, n) : pass
-
-        def visitMethodInvocation1(self, n) -> bool :pass
-        def endVisitMethodInvocation1(self, n) : pass
-
-        def visitMethodInvocation2(self, n) -> bool :pass
-        def endVisitMethodInvocation2(self, n) : pass
-
-        def visitMethodInvocation3(self, n) -> bool :pass
-        def endVisitMethodInvocation3(self, n) : pass
-
-        def visitMethodInvocation4(self, n) -> bool :pass
-        def endVisitMethodInvocation4(self, n) : pass
-
-        def visitArrayAccess0(self, n) -> bool :pass
-        def endVisitArrayAccess0(self, n) : pass
-
-        def visitArrayAccess1(self, n) -> bool :pass
-        def endVisitArrayAccess1(self, n) : pass
-
-        def visitUnaryExpression0(self, n) -> bool :pass
-        def endVisitUnaryExpression0(self, n) : pass
-
-        def visitUnaryExpression1(self, n) -> bool :pass
-        def endVisitUnaryExpression1(self, n) : pass
-
-        def visitUnaryExpressionNotPlusMinus0(self, n) -> bool :pass
-        def endVisitUnaryExpressionNotPlusMinus0(self, n) : pass
-
-        def visitUnaryExpressionNotPlusMinus1(self, n) -> bool :pass
-        def endVisitUnaryExpressionNotPlusMinus1(self, n) : pass
-
-        def visitCastExpression0(self, n) -> bool :pass
-        def endVisitCastExpression0(self, n) : pass
-
-        def visitCastExpression1(self, n) -> bool :pass
-        def endVisitCastExpression1(self, n) : pass
-
-        def visitMultiplicativeExpression0(self, n) -> bool :pass
-        def endVisitMultiplicativeExpression0(self, n) : pass
-
-        def visitMultiplicativeExpression1(self, n) -> bool :pass
-        def endVisitMultiplicativeExpression1(self, n) : pass
-
-        def visitMultiplicativeExpression2(self, n) -> bool :pass
-        def endVisitMultiplicativeExpression2(self, n) : pass
-
-        def visitAdditiveExpression0(self, n) -> bool :pass
-        def endVisitAdditiveExpression0(self, n) : pass
-
-        def visitAdditiveExpression1(self, n) -> bool :pass
-        def endVisitAdditiveExpression1(self, n) : pass
-
-        def visitShiftExpression0(self, n) -> bool :pass
-        def endVisitShiftExpression0(self, n) : pass
-
-        def visitShiftExpression1(self, n) -> bool :pass
-        def endVisitShiftExpression1(self, n) : pass
-
-        def visitShiftExpression2(self, n) -> bool :pass
-        def endVisitShiftExpression2(self, n) : pass
-
-        def visitRelationalExpression0(self, n) -> bool :pass
-        def endVisitRelationalExpression0(self, n) : pass
-
-        def visitRelationalExpression1(self, n) -> bool :pass
-        def endVisitRelationalExpression1(self, n) : pass
-
-        def visitRelationalExpression2(self, n) -> bool :pass
-        def endVisitRelationalExpression2(self, n) : pass
-
-        def visitRelationalExpression3(self, n) -> bool :pass
-        def endVisitRelationalExpression3(self, n) : pass
-
-        def visitRelationalExpression4(self, n) -> bool :pass
-        def endVisitRelationalExpression4(self, n) : pass
-
-        def visitEqualityExpression0(self, n) -> bool :pass
-        def endVisitEqualityExpression0(self, n) : pass
-
-        def visitEqualityExpression1(self, n) -> bool :pass
-        def endVisitEqualityExpression1(self, n) : pass
-
-        def visitAssignmentOperator0(self, n) -> bool :pass
-        def endVisitAssignmentOperator0(self, n) : pass
-
-        def visitAssignmentOperator1(self, n) -> bool :pass
-        def endVisitAssignmentOperator1(self, n) : pass
-
-        def visitAssignmentOperator2(self, n) -> bool :pass
-        def endVisitAssignmentOperator2(self, n) : pass
-
-        def visitAssignmentOperator3(self, n) -> bool :pass
-        def endVisitAssignmentOperator3(self, n) : pass
-
-        def visitAssignmentOperator4(self, n) -> bool :pass
-        def endVisitAssignmentOperator4(self, n) : pass
-
-        def visitAssignmentOperator5(self, n) -> bool :pass
-        def endVisitAssignmentOperator5(self, n) : pass
-
-        def visitAssignmentOperator6(self, n) -> bool :pass
-        def endVisitAssignmentOperator6(self, n) : pass
-
-        def visitAssignmentOperator7(self, n) -> bool :pass
-        def endVisitAssignmentOperator7(self, n) : pass
-
-        def visitAssignmentOperator8(self, n) -> bool :pass
-        def endVisitAssignmentOperator8(self, n) : pass
-
-        def visitAssignmentOperator9(self, n) -> bool :pass
-        def endVisitAssignmentOperator9(self, n) : pass
-
-        def visitAssignmentOperator10(self, n) -> bool :pass
-        def endVisitAssignmentOperator10(self, n) : pass
-
-        def visitAssignmentOperator11(self, n) -> bool :pass
-        def endVisitAssignmentOperator11(self, n) : pass
-
-    
-
-class AbstractVisitor(Visitor):
+class Visitor(object):
         __slots__ = ()
     
-        def  unimplementedVisitor(self,s : str) : raise TypeError('Can not instantiate abstract class  with abstract methods')
-
-        def  preVisit(self, element : IAst) -> bool : return True
-
-        def  postVisit(self,element : IAst) : pass
-
-        def visitAstToken(self, n) -> bool :
-            self.unimplementedVisitor("visit(AstToken)")
-            return True
-        def endVisitAstToken(self, n) :  self.unimplementedVisitor("endVisit(AstToken)")
-
-        def visitidentifier(self, n) -> bool :
-            self.unimplementedVisitor("visit(identifier)")
-            return True
-        def endVisitidentifier(self, n) :  self.unimplementedVisitor("endVisit(identifier)")
-
-        def visitPrimitiveType(self, n) -> bool :
-            self.unimplementedVisitor("visit(PrimitiveType)")
-            return True
-        def endVisitPrimitiveType(self, n) :  self.unimplementedVisitor("endVisit(PrimitiveType)")
-
-        def visitClassType(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassType)")
-            return True
-        def endVisitClassType(self, n) :  self.unimplementedVisitor("endVisit(ClassType)")
-
-        def visitInterfaceType(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceType)")
-            return True
-        def endVisitInterfaceType(self, n) :  self.unimplementedVisitor("endVisit(InterfaceType)")
-
-        def visitTypeName(self, n) -> bool :
-            self.unimplementedVisitor("visit(TypeName)")
-            return True
-        def endVisitTypeName(self, n) :  self.unimplementedVisitor("endVisit(TypeName)")
-
-        def visitArrayType(self, n) -> bool :
-            self.unimplementedVisitor("visit(ArrayType)")
-            return True
-        def endVisitArrayType(self, n) :  self.unimplementedVisitor("endVisit(ArrayType)")
-
-        def visitTypeParameter(self, n) -> bool :
-            self.unimplementedVisitor("visit(TypeParameter)")
-            return True
-        def endVisitTypeParameter(self, n) :  self.unimplementedVisitor("endVisit(TypeParameter)")
-
-        def visitTypeBound(self, n) -> bool :
-            self.unimplementedVisitor("visit(TypeBound)")
-            return True
-        def endVisitTypeBound(self, n) :  self.unimplementedVisitor("endVisit(TypeBound)")
-
-        def visitAdditionalBoundList(self, n) -> bool :
-            self.unimplementedVisitor("visit(AdditionalBoundList)")
-            return True
-        def endVisitAdditionalBoundList(self, n) :  self.unimplementedVisitor("endVisit(AdditionalBoundList)")
-
-        def visitAdditionalBound(self, n) -> bool :
-            self.unimplementedVisitor("visit(AdditionalBound)")
-            return True
-        def endVisitAdditionalBound(self, n) :  self.unimplementedVisitor("endVisit(AdditionalBound)")
-
-        def visitTypeArguments(self, n) -> bool :
-            self.unimplementedVisitor("visit(TypeArguments)")
-            return True
-        def endVisitTypeArguments(self, n) :  self.unimplementedVisitor("endVisit(TypeArguments)")
-
-        def visitActualTypeArgumentList(self, n) -> bool :
-            self.unimplementedVisitor("visit(ActualTypeArgumentList)")
-            return True
-        def endVisitActualTypeArgumentList(self, n) :  self.unimplementedVisitor("endVisit(ActualTypeArgumentList)")
-
-        def visitWildcard(self, n) -> bool :
-            self.unimplementedVisitor("visit(Wildcard)")
-            return True
-        def endVisitWildcard(self, n) :  self.unimplementedVisitor("endVisit(Wildcard)")
-
-        def visitPackageName(self, n) -> bool :
-            self.unimplementedVisitor("visit(PackageName)")
-            return True
-        def endVisitPackageName(self, n) :  self.unimplementedVisitor("endVisit(PackageName)")
-
-        def visitExpressionName(self, n) -> bool :
-            self.unimplementedVisitor("visit(ExpressionName)")
-            return True
-        def endVisitExpressionName(self, n) :  self.unimplementedVisitor("endVisit(ExpressionName)")
-
-        def visitMethodName(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodName)")
-            return True
-        def endVisitMethodName(self, n) :  self.unimplementedVisitor("endVisit(MethodName)")
-
-        def visitPackageOrTypeName(self, n) -> bool :
-            self.unimplementedVisitor("visit(PackageOrTypeName)")
-            return True
-        def endVisitPackageOrTypeName(self, n) :  self.unimplementedVisitor("endVisit(PackageOrTypeName)")
-
-        def visitAmbiguousName(self, n) -> bool :
-            self.unimplementedVisitor("visit(AmbiguousName)")
-            return True
-        def endVisitAmbiguousName(self, n) :  self.unimplementedVisitor("endVisit(AmbiguousName)")
-
-        def visitCompilationUnit(self, n) -> bool :
-            self.unimplementedVisitor("visit(CompilationUnit)")
-            return True
-        def endVisitCompilationUnit(self, n) :  self.unimplementedVisitor("endVisit(CompilationUnit)")
-
-        def visitImportDeclarations(self, n) -> bool :
-            self.unimplementedVisitor("visit(ImportDeclarations)")
-            return True
-        def endVisitImportDeclarations(self, n) :  self.unimplementedVisitor("endVisit(ImportDeclarations)")
-
-        def visitTypeDeclarations(self, n) -> bool :
-            self.unimplementedVisitor("visit(TypeDeclarations)")
-            return True
-        def endVisitTypeDeclarations(self, n) :  self.unimplementedVisitor("endVisit(TypeDeclarations)")
-
-        def visitPackageDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(PackageDeclaration)")
-            return True
-        def endVisitPackageDeclaration(self, n) :  self.unimplementedVisitor("endVisit(PackageDeclaration)")
-
-        def visitSingleTypeImportDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(SingleTypeImportDeclaration)")
-            return True
-        def endVisitSingleTypeImportDeclaration(self, n) :  self.unimplementedVisitor("endVisit(SingleTypeImportDeclaration)")
-
-        def visitTypeImportOnDemandDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(TypeImportOnDemandDeclaration)")
-            return True
-        def endVisitTypeImportOnDemandDeclaration(self, n) :  self.unimplementedVisitor("endVisit(TypeImportOnDemandDeclaration)")
-
-        def visitSingleStaticImportDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(SingleStaticImportDeclaration)")
-            return True
-        def endVisitSingleStaticImportDeclaration(self, n) :  self.unimplementedVisitor("endVisit(SingleStaticImportDeclaration)")
-
-        def visitStaticImportOnDemandDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(StaticImportOnDemandDeclaration)")
-            return True
-        def endVisitStaticImportOnDemandDeclaration(self, n) :  self.unimplementedVisitor("endVisit(StaticImportOnDemandDeclaration)")
-
-        def visitTypeDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(TypeDeclaration)")
-            return True
-        def endVisitTypeDeclaration(self, n) :  self.unimplementedVisitor("endVisit(TypeDeclaration)")
-
-        def visitNormalClassDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(NormalClassDeclaration)")
-            return True
-        def endVisitNormalClassDeclaration(self, n) :  self.unimplementedVisitor("endVisit(NormalClassDeclaration)")
-
-        def visitClassModifiers(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassModifiers)")
-            return True
-        def endVisitClassModifiers(self, n) :  self.unimplementedVisitor("endVisit(ClassModifiers)")
-
-        def visitTypeParameters(self, n) -> bool :
-            self.unimplementedVisitor("visit(TypeParameters)")
-            return True
-        def endVisitTypeParameters(self, n) :  self.unimplementedVisitor("endVisit(TypeParameters)")
-
-        def visitTypeParameterList(self, n) -> bool :
-            self.unimplementedVisitor("visit(TypeParameterList)")
-            return True
-        def endVisitTypeParameterList(self, n) :  self.unimplementedVisitor("endVisit(TypeParameterList)")
-
-        def visitSuper(self, n) -> bool :
-            self.unimplementedVisitor("visit(Super)")
-            return True
-        def endVisitSuper(self, n) :  self.unimplementedVisitor("endVisit(Super)")
-
-        def visitInterfaces(self, n) -> bool :
-            self.unimplementedVisitor("visit(Interfaces)")
-            return True
-        def endVisitInterfaces(self, n) :  self.unimplementedVisitor("endVisit(Interfaces)")
-
-        def visitInterfaceTypeList(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceTypeList)")
-            return True
-        def endVisitInterfaceTypeList(self, n) :  self.unimplementedVisitor("endVisit(InterfaceTypeList)")
-
-        def visitClassBody(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassBody)")
-            return True
-        def endVisitClassBody(self, n) :  self.unimplementedVisitor("endVisit(ClassBody)")
-
-        def visitClassBodyDeclarations(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassBodyDeclarations)")
-            return True
-        def endVisitClassBodyDeclarations(self, n) :  self.unimplementedVisitor("endVisit(ClassBodyDeclarations)")
-
-        def visitClassMemberDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassMemberDeclaration)")
-            return True
-        def endVisitClassMemberDeclaration(self, n) :  self.unimplementedVisitor("endVisit(ClassMemberDeclaration)")
-
-        def visitFieldDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldDeclaration)")
-            return True
-        def endVisitFieldDeclaration(self, n) :  self.unimplementedVisitor("endVisit(FieldDeclaration)")
-
-        def visitVariableDeclarators(self, n) -> bool :
-            self.unimplementedVisitor("visit(VariableDeclarators)")
-            return True
-        def endVisitVariableDeclarators(self, n) :  self.unimplementedVisitor("endVisit(VariableDeclarators)")
-
-        def visitVariableDeclarator(self, n) -> bool :
-            self.unimplementedVisitor("visit(VariableDeclarator)")
-            return True
-        def endVisitVariableDeclarator(self, n) :  self.unimplementedVisitor("endVisit(VariableDeclarator)")
-
-        def visitVariableDeclaratorId(self, n) -> bool :
-            self.unimplementedVisitor("visit(VariableDeclaratorId)")
-            return True
-        def endVisitVariableDeclaratorId(self, n) :  self.unimplementedVisitor("endVisit(VariableDeclaratorId)")
-
-        def visitFieldModifiers(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldModifiers)")
-            return True
-        def endVisitFieldModifiers(self, n) :  self.unimplementedVisitor("endVisit(FieldModifiers)")
-
-        def visitMethodDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodDeclaration)")
-            return True
-        def endVisitMethodDeclaration(self, n) :  self.unimplementedVisitor("endVisit(MethodDeclaration)")
-
-        def visitMethodHeader(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodHeader)")
-            return True
-        def endVisitMethodHeader(self, n) :  self.unimplementedVisitor("endVisit(MethodHeader)")
-
-        def visitResultType(self, n) -> bool :
-            self.unimplementedVisitor("visit(ResultType)")
-            return True
-        def endVisitResultType(self, n) :  self.unimplementedVisitor("endVisit(ResultType)")
-
-        def visitFormalParameterList(self, n) -> bool :
-            self.unimplementedVisitor("visit(FormalParameterList)")
-            return True
-        def endVisitFormalParameterList(self, n) :  self.unimplementedVisitor("endVisit(FormalParameterList)")
-
-        def visitFormalParameters(self, n) -> bool :
-            self.unimplementedVisitor("visit(FormalParameters)")
-            return True
-        def endVisitFormalParameters(self, n) :  self.unimplementedVisitor("endVisit(FormalParameters)")
-
-        def visitFormalParameter(self, n) -> bool :
-            self.unimplementedVisitor("visit(FormalParameter)")
-            return True
-        def endVisitFormalParameter(self, n) :  self.unimplementedVisitor("endVisit(FormalParameter)")
-
-        def visitVariableModifiers(self, n) -> bool :
-            self.unimplementedVisitor("visit(VariableModifiers)")
-            return True
-        def endVisitVariableModifiers(self, n) :  self.unimplementedVisitor("endVisit(VariableModifiers)")
-
-        def visitVariableModifier(self, n) -> bool :
-            self.unimplementedVisitor("visit(VariableModifier)")
-            return True
-        def endVisitVariableModifier(self, n) :  self.unimplementedVisitor("endVisit(VariableModifier)")
-
-        def visitLastFormalParameter(self, n) -> bool :
-            self.unimplementedVisitor("visit(LastFormalParameter)")
-            return True
-        def endVisitLastFormalParameter(self, n) :  self.unimplementedVisitor("endVisit(LastFormalParameter)")
-
-        def visitMethodModifiers(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodModifiers)")
-            return True
-        def endVisitMethodModifiers(self, n) :  self.unimplementedVisitor("endVisit(MethodModifiers)")
-
-        def visitThrows(self, n) -> bool :
-            self.unimplementedVisitor("visit(Throws)")
-            return True
-        def endVisitThrows(self, n) :  self.unimplementedVisitor("endVisit(Throws)")
-
-        def visitExceptionTypeList(self, n) -> bool :
-            self.unimplementedVisitor("visit(ExceptionTypeList)")
-            return True
-        def endVisitExceptionTypeList(self, n) :  self.unimplementedVisitor("endVisit(ExceptionTypeList)")
-
-        def visitMethodBody(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodBody)")
-            return True
-        def endVisitMethodBody(self, n) :  self.unimplementedVisitor("endVisit(MethodBody)")
-
-        def visitStaticInitializer(self, n) -> bool :
-            self.unimplementedVisitor("visit(StaticInitializer)")
-            return True
-        def endVisitStaticInitializer(self, n) :  self.unimplementedVisitor("endVisit(StaticInitializer)")
-
-        def visitConstructorDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstructorDeclaration)")
-            return True
-        def endVisitConstructorDeclaration(self, n) :  self.unimplementedVisitor("endVisit(ConstructorDeclaration)")
-
-        def visitConstructorDeclarator(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstructorDeclarator)")
-            return True
-        def endVisitConstructorDeclarator(self, n) :  self.unimplementedVisitor("endVisit(ConstructorDeclarator)")
-
-        def visitConstructorModifiers(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstructorModifiers)")
-            return True
-        def endVisitConstructorModifiers(self, n) :  self.unimplementedVisitor("endVisit(ConstructorModifiers)")
-
-        def visitConstructorBody(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstructorBody)")
-            return True
-        def endVisitConstructorBody(self, n) :  self.unimplementedVisitor("endVisit(ConstructorBody)")
-
-        def visitEnumDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(EnumDeclaration)")
-            return True
-        def endVisitEnumDeclaration(self, n) :  self.unimplementedVisitor("endVisit(EnumDeclaration)")
-
-        def visitEnumBody(self, n) -> bool :
-            self.unimplementedVisitor("visit(EnumBody)")
-            return True
-        def endVisitEnumBody(self, n) :  self.unimplementedVisitor("endVisit(EnumBody)")
-
-        def visitEnumConstants(self, n) -> bool :
-            self.unimplementedVisitor("visit(EnumConstants)")
-            return True
-        def endVisitEnumConstants(self, n) :  self.unimplementedVisitor("endVisit(EnumConstants)")
-
-        def visitEnumConstant(self, n) -> bool :
-            self.unimplementedVisitor("visit(EnumConstant)")
-            return True
-        def endVisitEnumConstant(self, n) :  self.unimplementedVisitor("endVisit(EnumConstant)")
-
-        def visitArguments(self, n) -> bool :
-            self.unimplementedVisitor("visit(Arguments)")
-            return True
-        def endVisitArguments(self, n) :  self.unimplementedVisitor("endVisit(Arguments)")
-
-        def visitEnumBodyDeclarations(self, n) -> bool :
-            self.unimplementedVisitor("visit(EnumBodyDeclarations)")
-            return True
-        def endVisitEnumBodyDeclarations(self, n) :  self.unimplementedVisitor("endVisit(EnumBodyDeclarations)")
-
-        def visitNormalInterfaceDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(NormalInterfaceDeclaration)")
-            return True
-        def endVisitNormalInterfaceDeclaration(self, n) :  self.unimplementedVisitor("endVisit(NormalInterfaceDeclaration)")
-
-        def visitInterfaceModifiers(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceModifiers)")
-            return True
-        def endVisitInterfaceModifiers(self, n) :  self.unimplementedVisitor("endVisit(InterfaceModifiers)")
-
-        def visitInterfaceBody(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceBody)")
-            return True
-        def endVisitInterfaceBody(self, n) :  self.unimplementedVisitor("endVisit(InterfaceBody)")
-
-        def visitInterfaceMemberDeclarations(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceMemberDeclarations)")
-            return True
-        def endVisitInterfaceMemberDeclarations(self, n) :  self.unimplementedVisitor("endVisit(InterfaceMemberDeclarations)")
-
-        def visitInterfaceMemberDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceMemberDeclaration)")
-            return True
-        def endVisitInterfaceMemberDeclaration(self, n) :  self.unimplementedVisitor("endVisit(InterfaceMemberDeclaration)")
-
-        def visitConstantDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstantDeclaration)")
-            return True
-        def endVisitConstantDeclaration(self, n) :  self.unimplementedVisitor("endVisit(ConstantDeclaration)")
-
-        def visitConstantModifiers(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstantModifiers)")
-            return True
-        def endVisitConstantModifiers(self, n) :  self.unimplementedVisitor("endVisit(ConstantModifiers)")
-
-        def visitAbstractMethodDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(AbstractMethodDeclaration)")
-            return True
-        def endVisitAbstractMethodDeclaration(self, n) :  self.unimplementedVisitor("endVisit(AbstractMethodDeclaration)")
-
-        def visitAbstractMethodModifiers(self, n) -> bool :
-            self.unimplementedVisitor("visit(AbstractMethodModifiers)")
-            return True
-        def endVisitAbstractMethodModifiers(self, n) :  self.unimplementedVisitor("endVisit(AbstractMethodModifiers)")
-
-        def visitAnnotationTypeDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(AnnotationTypeDeclaration)")
-            return True
-        def endVisitAnnotationTypeDeclaration(self, n) :  self.unimplementedVisitor("endVisit(AnnotationTypeDeclaration)")
-
-        def visitAnnotationTypeBody(self, n) -> bool :
-            self.unimplementedVisitor("visit(AnnotationTypeBody)")
-            return True
-        def endVisitAnnotationTypeBody(self, n) :  self.unimplementedVisitor("endVisit(AnnotationTypeBody)")
-
-        def visitAnnotationTypeElementDeclarations(self, n) -> bool :
-            self.unimplementedVisitor("visit(AnnotationTypeElementDeclarations)")
-            return True
-        def endVisitAnnotationTypeElementDeclarations(self, n) :  self.unimplementedVisitor("endVisit(AnnotationTypeElementDeclarations)")
-
-        def visitDefaultValue(self, n) -> bool :
-            self.unimplementedVisitor("visit(DefaultValue)")
-            return True
-        def endVisitDefaultValue(self, n) :  self.unimplementedVisitor("endVisit(DefaultValue)")
-
-        def visitAnnotations(self, n) -> bool :
-            self.unimplementedVisitor("visit(Annotations)")
-            return True
-        def endVisitAnnotations(self, n) :  self.unimplementedVisitor("endVisit(Annotations)")
-
-        def visitNormalAnnotation(self, n) -> bool :
-            self.unimplementedVisitor("visit(NormalAnnotation)")
-            return True
-        def endVisitNormalAnnotation(self, n) :  self.unimplementedVisitor("endVisit(NormalAnnotation)")
-
-        def visitElementValuePairs(self, n) -> bool :
-            self.unimplementedVisitor("visit(ElementValuePairs)")
-            return True
-        def endVisitElementValuePairs(self, n) :  self.unimplementedVisitor("endVisit(ElementValuePairs)")
-
-        def visitElementValuePair(self, n) -> bool :
-            self.unimplementedVisitor("visit(ElementValuePair)")
-            return True
-        def endVisitElementValuePair(self, n) :  self.unimplementedVisitor("endVisit(ElementValuePair)")
-
-        def visitElementValueArrayInitializer(self, n) -> bool :
-            self.unimplementedVisitor("visit(ElementValueArrayInitializer)")
-            return True
-        def endVisitElementValueArrayInitializer(self, n) :  self.unimplementedVisitor("endVisit(ElementValueArrayInitializer)")
-
-        def visitElementValues(self, n) -> bool :
-            self.unimplementedVisitor("visit(ElementValues)")
-            return True
-        def endVisitElementValues(self, n) :  self.unimplementedVisitor("endVisit(ElementValues)")
-
-        def visitMarkerAnnotation(self, n) -> bool :
-            self.unimplementedVisitor("visit(MarkerAnnotation)")
-            return True
-        def endVisitMarkerAnnotation(self, n) :  self.unimplementedVisitor("endVisit(MarkerAnnotation)")
-
-        def visitSingleElementAnnotation(self, n) -> bool :
-            self.unimplementedVisitor("visit(SingleElementAnnotation)")
-            return True
-        def endVisitSingleElementAnnotation(self, n) :  self.unimplementedVisitor("endVisit(SingleElementAnnotation)")
-
-        def visitArrayInitializer(self, n) -> bool :
-            self.unimplementedVisitor("visit(ArrayInitializer)")
-            return True
-        def endVisitArrayInitializer(self, n) :  self.unimplementedVisitor("endVisit(ArrayInitializer)")
-
-        def visitVariableInitializers(self, n) -> bool :
-            self.unimplementedVisitor("visit(VariableInitializers)")
-            return True
-        def endVisitVariableInitializers(self, n) :  self.unimplementedVisitor("endVisit(VariableInitializers)")
-
-        def visitBlock(self, n) -> bool :
-            self.unimplementedVisitor("visit(Block)")
-            return True
-        def endVisitBlock(self, n) :  self.unimplementedVisitor("endVisit(Block)")
-
-        def visitBlockStatements(self, n) -> bool :
-            self.unimplementedVisitor("visit(BlockStatements)")
-            return True
-        def endVisitBlockStatements(self, n) :  self.unimplementedVisitor("endVisit(BlockStatements)")
-
-        def visitLocalVariableDeclarationStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(LocalVariableDeclarationStatement)")
-            return True
-        def endVisitLocalVariableDeclarationStatement(self, n) :  self.unimplementedVisitor("endVisit(LocalVariableDeclarationStatement)")
-
-        def visitLocalVariableDeclaration(self, n) -> bool :
-            self.unimplementedVisitor("visit(LocalVariableDeclaration)")
-            return True
-        def endVisitLocalVariableDeclaration(self, n) :  self.unimplementedVisitor("endVisit(LocalVariableDeclaration)")
-
-        def visitIfThenStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(IfThenStatement)")
-            return True
-        def endVisitIfThenStatement(self, n) :  self.unimplementedVisitor("endVisit(IfThenStatement)")
-
-        def visitIfThenElseStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(IfThenElseStatement)")
-            return True
-        def endVisitIfThenElseStatement(self, n) :  self.unimplementedVisitor("endVisit(IfThenElseStatement)")
-
-        def visitIfThenElseStatementNoShortIf(self, n) -> bool :
-            self.unimplementedVisitor("visit(IfThenElseStatementNoShortIf)")
-            return True
-        def endVisitIfThenElseStatementNoShortIf(self, n) :  self.unimplementedVisitor("endVisit(IfThenElseStatementNoShortIf)")
-
-        def visitEmptyStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(EmptyStatement)")
-            return True
-        def endVisitEmptyStatement(self, n) :  self.unimplementedVisitor("endVisit(EmptyStatement)")
-
-        def visitLabeledStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(LabeledStatement)")
-            return True
-        def endVisitLabeledStatement(self, n) :  self.unimplementedVisitor("endVisit(LabeledStatement)")
-
-        def visitLabeledStatementNoShortIf(self, n) -> bool :
-            self.unimplementedVisitor("visit(LabeledStatementNoShortIf)")
-            return True
-        def endVisitLabeledStatementNoShortIf(self, n) :  self.unimplementedVisitor("endVisit(LabeledStatementNoShortIf)")
-
-        def visitExpressionStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(ExpressionStatement)")
-            return True
-        def endVisitExpressionStatement(self, n) :  self.unimplementedVisitor("endVisit(ExpressionStatement)")
-
-        def visitSwitchStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(SwitchStatement)")
-            return True
-        def endVisitSwitchStatement(self, n) :  self.unimplementedVisitor("endVisit(SwitchStatement)")
-
-        def visitSwitchBlock(self, n) -> bool :
-            self.unimplementedVisitor("visit(SwitchBlock)")
-            return True
-        def endVisitSwitchBlock(self, n) :  self.unimplementedVisitor("endVisit(SwitchBlock)")
-
-        def visitSwitchBlockStatementGroups(self, n) -> bool :
-            self.unimplementedVisitor("visit(SwitchBlockStatementGroups)")
-            return True
-        def endVisitSwitchBlockStatementGroups(self, n) :  self.unimplementedVisitor("endVisit(SwitchBlockStatementGroups)")
-
-        def visitSwitchBlockStatementGroup(self, n) -> bool :
-            self.unimplementedVisitor("visit(SwitchBlockStatementGroup)")
-            return True
-        def endVisitSwitchBlockStatementGroup(self, n) :  self.unimplementedVisitor("endVisit(SwitchBlockStatementGroup)")
-
-        def visitSwitchLabels(self, n) -> bool :
-            self.unimplementedVisitor("visit(SwitchLabels)")
-            return True
-        def endVisitSwitchLabels(self, n) :  self.unimplementedVisitor("endVisit(SwitchLabels)")
-
-        def visitWhileStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(WhileStatement)")
-            return True
-        def endVisitWhileStatement(self, n) :  self.unimplementedVisitor("endVisit(WhileStatement)")
-
-        def visitWhileStatementNoShortIf(self, n) -> bool :
-            self.unimplementedVisitor("visit(WhileStatementNoShortIf)")
-            return True
-        def endVisitWhileStatementNoShortIf(self, n) :  self.unimplementedVisitor("endVisit(WhileStatementNoShortIf)")
-
-        def visitDoStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(DoStatement)")
-            return True
-        def endVisitDoStatement(self, n) :  self.unimplementedVisitor("endVisit(DoStatement)")
-
-        def visitBasicForStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(BasicForStatement)")
-            return True
-        def endVisitBasicForStatement(self, n) :  self.unimplementedVisitor("endVisit(BasicForStatement)")
-
-        def visitForStatementNoShortIf(self, n) -> bool :
-            self.unimplementedVisitor("visit(ForStatementNoShortIf)")
-            return True
-        def endVisitForStatementNoShortIf(self, n) :  self.unimplementedVisitor("endVisit(ForStatementNoShortIf)")
-
-        def visitStatementExpressionList(self, n) -> bool :
-            self.unimplementedVisitor("visit(StatementExpressionList)")
-            return True
-        def endVisitStatementExpressionList(self, n) :  self.unimplementedVisitor("endVisit(StatementExpressionList)")
-
-        def visitEnhancedForStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(EnhancedForStatement)")
-            return True
-        def endVisitEnhancedForStatement(self, n) :  self.unimplementedVisitor("endVisit(EnhancedForStatement)")
-
-        def visitBreakStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(BreakStatement)")
-            return True
-        def endVisitBreakStatement(self, n) :  self.unimplementedVisitor("endVisit(BreakStatement)")
-
-        def visitContinueStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(ContinueStatement)")
-            return True
-        def endVisitContinueStatement(self, n) :  self.unimplementedVisitor("endVisit(ContinueStatement)")
-
-        def visitReturnStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(ReturnStatement)")
-            return True
-        def endVisitReturnStatement(self, n) :  self.unimplementedVisitor("endVisit(ReturnStatement)")
-
-        def visitThrowStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(ThrowStatement)")
-            return True
-        def endVisitThrowStatement(self, n) :  self.unimplementedVisitor("endVisit(ThrowStatement)")
-
-        def visitSynchronizedStatement(self, n) -> bool :
-            self.unimplementedVisitor("visit(SynchronizedStatement)")
-            return True
-        def endVisitSynchronizedStatement(self, n) :  self.unimplementedVisitor("endVisit(SynchronizedStatement)")
-
-        def visitCatches(self, n) -> bool :
-            self.unimplementedVisitor("visit(Catches)")
-            return True
-        def endVisitCatches(self, n) :  self.unimplementedVisitor("endVisit(Catches)")
-
-        def visitCatchClause(self, n) -> bool :
-            self.unimplementedVisitor("visit(CatchClause)")
-            return True
-        def endVisitCatchClause(self, n) :  self.unimplementedVisitor("endVisit(CatchClause)")
-
-        def visitFinally(self, n) -> bool :
-            self.unimplementedVisitor("visit(Finally)")
-            return True
-        def endVisitFinally(self, n) :  self.unimplementedVisitor("endVisit(Finally)")
-
-        def visitArgumentList(self, n) -> bool :
-            self.unimplementedVisitor("visit(ArgumentList)")
-            return True
-        def endVisitArgumentList(self, n) :  self.unimplementedVisitor("endVisit(ArgumentList)")
-
-        def visitDimExprs(self, n) -> bool :
-            self.unimplementedVisitor("visit(DimExprs)")
-            return True
-        def endVisitDimExprs(self, n) :  self.unimplementedVisitor("endVisit(DimExprs)")
-
-        def visitDimExpr(self, n) -> bool :
-            self.unimplementedVisitor("visit(DimExpr)")
-            return True
-        def endVisitDimExpr(self, n) :  self.unimplementedVisitor("endVisit(DimExpr)")
-
-        def visitPostIncrementExpression(self, n) -> bool :
-            self.unimplementedVisitor("visit(PostIncrementExpression)")
-            return True
-        def endVisitPostIncrementExpression(self, n) :  self.unimplementedVisitor("endVisit(PostIncrementExpression)")
-
-        def visitPostDecrementExpression(self, n) -> bool :
-            self.unimplementedVisitor("visit(PostDecrementExpression)")
-            return True
-        def endVisitPostDecrementExpression(self, n) :  self.unimplementedVisitor("endVisit(PostDecrementExpression)")
-
-        def visitPreIncrementExpression(self, n) -> bool :
-            self.unimplementedVisitor("visit(PreIncrementExpression)")
-            return True
-        def endVisitPreIncrementExpression(self, n) :  self.unimplementedVisitor("endVisit(PreIncrementExpression)")
-
-        def visitPreDecrementExpression(self, n) -> bool :
-            self.unimplementedVisitor("visit(PreDecrementExpression)")
-            return True
-        def endVisitPreDecrementExpression(self, n) :  self.unimplementedVisitor("endVisit(PreDecrementExpression)")
-
-        def visitAndExpression(self, n) -> bool :
-            self.unimplementedVisitor("visit(AndExpression)")
-            return True
-        def endVisitAndExpression(self, n) :  self.unimplementedVisitor("endVisit(AndExpression)")
-
-        def visitExclusiveOrExpression(self, n) -> bool :
-            self.unimplementedVisitor("visit(ExclusiveOrExpression)")
-            return True
-        def endVisitExclusiveOrExpression(self, n) :  self.unimplementedVisitor("endVisit(ExclusiveOrExpression)")
-
-        def visitInclusiveOrExpression(self, n) -> bool :
-            self.unimplementedVisitor("visit(InclusiveOrExpression)")
-            return True
-        def endVisitInclusiveOrExpression(self, n) :  self.unimplementedVisitor("endVisit(InclusiveOrExpression)")
-
-        def visitConditionalAndExpression(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConditionalAndExpression)")
-            return True
-        def endVisitConditionalAndExpression(self, n) :  self.unimplementedVisitor("endVisit(ConditionalAndExpression)")
-
-        def visitConditionalOrExpression(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConditionalOrExpression)")
-            return True
-        def endVisitConditionalOrExpression(self, n) :  self.unimplementedVisitor("endVisit(ConditionalOrExpression)")
-
-        def visitConditionalExpression(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConditionalExpression)")
-            return True
-        def endVisitConditionalExpression(self, n) :  self.unimplementedVisitor("endVisit(ConditionalExpression)")
-
-        def visitAssignment(self, n) -> bool :
-            self.unimplementedVisitor("visit(Assignment)")
-            return True
-        def endVisitAssignment(self, n) :  self.unimplementedVisitor("endVisit(Assignment)")
-
-        def visitCommaopt(self, n) -> bool :
-            self.unimplementedVisitor("visit(Commaopt)")
-            return True
-        def endVisitCommaopt(self, n) :  self.unimplementedVisitor("endVisit(Commaopt)")
-
-        def visitEllipsisopt(self, n) -> bool :
-            self.unimplementedVisitor("visit(Ellipsisopt)")
-            return True
-        def endVisitEllipsisopt(self, n) :  self.unimplementedVisitor("endVisit(Ellipsisopt)")
-
-        def visitLPGUserAction0(self, n) -> bool :
-            self.unimplementedVisitor("visit(LPGUserAction0)")
-            return True
-        def endVisitLPGUserAction0(self, n) :  self.unimplementedVisitor("endVisit(LPGUserAction0)")
-
-        def visitLPGUserAction1(self, n) -> bool :
-            self.unimplementedVisitor("visit(LPGUserAction1)")
-            return True
-        def endVisitLPGUserAction1(self, n) :  self.unimplementedVisitor("endVisit(LPGUserAction1)")
-
-        def visitLPGUserAction2(self, n) -> bool :
-            self.unimplementedVisitor("visit(LPGUserAction2)")
-            return True
-        def endVisitLPGUserAction2(self, n) :  self.unimplementedVisitor("endVisit(LPGUserAction2)")
-
-        def visitLPGUserAction3(self, n) -> bool :
-            self.unimplementedVisitor("visit(LPGUserAction3)")
-            return True
-        def endVisitLPGUserAction3(self, n) :  self.unimplementedVisitor("endVisit(LPGUserAction3)")
-
-        def visitLPGUserAction4(self, n) -> bool :
-            self.unimplementedVisitor("visit(LPGUserAction4)")
-            return True
-        def endVisitLPGUserAction4(self, n) :  self.unimplementedVisitor("endVisit(LPGUserAction4)")
-
-        def visitIntegralType0(self, n) -> bool :
-            self.unimplementedVisitor("visit(IntegralType0)")
-            return True
-        def endVisitIntegralType0(self, n) :  self.unimplementedVisitor("endVisit(IntegralType0)")
-
-        def visitIntegralType1(self, n) -> bool :
-            self.unimplementedVisitor("visit(IntegralType1)")
-            return True
-        def endVisitIntegralType1(self, n) :  self.unimplementedVisitor("endVisit(IntegralType1)")
-
-        def visitIntegralType2(self, n) -> bool :
-            self.unimplementedVisitor("visit(IntegralType2)")
-            return True
-        def endVisitIntegralType2(self, n) :  self.unimplementedVisitor("endVisit(IntegralType2)")
-
-        def visitIntegralType3(self, n) -> bool :
-            self.unimplementedVisitor("visit(IntegralType3)")
-            return True
-        def endVisitIntegralType3(self, n) :  self.unimplementedVisitor("endVisit(IntegralType3)")
-
-        def visitIntegralType4(self, n) -> bool :
-            self.unimplementedVisitor("visit(IntegralType4)")
-            return True
-        def endVisitIntegralType4(self, n) :  self.unimplementedVisitor("endVisit(IntegralType4)")
-
-        def visitFloatingPointType0(self, n) -> bool :
-            self.unimplementedVisitor("visit(FloatingPointType0)")
-            return True
-        def endVisitFloatingPointType0(self, n) :  self.unimplementedVisitor("endVisit(FloatingPointType0)")
-
-        def visitFloatingPointType1(self, n) -> bool :
-            self.unimplementedVisitor("visit(FloatingPointType1)")
-            return True
-        def endVisitFloatingPointType1(self, n) :  self.unimplementedVisitor("endVisit(FloatingPointType1)")
-
-        def visitWildcardBounds0(self, n) -> bool :
-            self.unimplementedVisitor("visit(WildcardBounds0)")
-            return True
-        def endVisitWildcardBounds0(self, n) :  self.unimplementedVisitor("endVisit(WildcardBounds0)")
-
-        def visitWildcardBounds1(self, n) -> bool :
-            self.unimplementedVisitor("visit(WildcardBounds1)")
-            return True
-        def endVisitWildcardBounds1(self, n) :  self.unimplementedVisitor("endVisit(WildcardBounds1)")
-
-        def visitClassModifier0(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassModifier0)")
-            return True
-        def endVisitClassModifier0(self, n) :  self.unimplementedVisitor("endVisit(ClassModifier0)")
-
-        def visitClassModifier1(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassModifier1)")
-            return True
-        def endVisitClassModifier1(self, n) :  self.unimplementedVisitor("endVisit(ClassModifier1)")
-
-        def visitClassModifier2(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassModifier2)")
-            return True
-        def endVisitClassModifier2(self, n) :  self.unimplementedVisitor("endVisit(ClassModifier2)")
-
-        def visitClassModifier3(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassModifier3)")
-            return True
-        def endVisitClassModifier3(self, n) :  self.unimplementedVisitor("endVisit(ClassModifier3)")
-
-        def visitClassModifier4(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassModifier4)")
-            return True
-        def endVisitClassModifier4(self, n) :  self.unimplementedVisitor("endVisit(ClassModifier4)")
-
-        def visitClassModifier5(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassModifier5)")
-            return True
-        def endVisitClassModifier5(self, n) :  self.unimplementedVisitor("endVisit(ClassModifier5)")
-
-        def visitClassModifier6(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassModifier6)")
-            return True
-        def endVisitClassModifier6(self, n) :  self.unimplementedVisitor("endVisit(ClassModifier6)")
-
-        def visitFieldModifier0(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldModifier0)")
-            return True
-        def endVisitFieldModifier0(self, n) :  self.unimplementedVisitor("endVisit(FieldModifier0)")
-
-        def visitFieldModifier1(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldModifier1)")
-            return True
-        def endVisitFieldModifier1(self, n) :  self.unimplementedVisitor("endVisit(FieldModifier1)")
-
-        def visitFieldModifier2(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldModifier2)")
-            return True
-        def endVisitFieldModifier2(self, n) :  self.unimplementedVisitor("endVisit(FieldModifier2)")
-
-        def visitFieldModifier3(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldModifier3)")
-            return True
-        def endVisitFieldModifier3(self, n) :  self.unimplementedVisitor("endVisit(FieldModifier3)")
-
-        def visitFieldModifier4(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldModifier4)")
-            return True
-        def endVisitFieldModifier4(self, n) :  self.unimplementedVisitor("endVisit(FieldModifier4)")
-
-        def visitFieldModifier5(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldModifier5)")
-            return True
-        def endVisitFieldModifier5(self, n) :  self.unimplementedVisitor("endVisit(FieldModifier5)")
-
-        def visitFieldModifier6(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldModifier6)")
-            return True
-        def endVisitFieldModifier6(self, n) :  self.unimplementedVisitor("endVisit(FieldModifier6)")
-
-        def visitMethodDeclarator0(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodDeclarator0)")
-            return True
-        def endVisitMethodDeclarator0(self, n) :  self.unimplementedVisitor("endVisit(MethodDeclarator0)")
-
-        def visitMethodDeclarator1(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodDeclarator1)")
-            return True
-        def endVisitMethodDeclarator1(self, n) :  self.unimplementedVisitor("endVisit(MethodDeclarator1)")
-
-        def visitMethodModifier0(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodModifier0)")
-            return True
-        def endVisitMethodModifier0(self, n) :  self.unimplementedVisitor("endVisit(MethodModifier0)")
-
-        def visitMethodModifier1(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodModifier1)")
-            return True
-        def endVisitMethodModifier1(self, n) :  self.unimplementedVisitor("endVisit(MethodModifier1)")
-
-        def visitMethodModifier2(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodModifier2)")
-            return True
-        def endVisitMethodModifier2(self, n) :  self.unimplementedVisitor("endVisit(MethodModifier2)")
-
-        def visitMethodModifier3(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodModifier3)")
-            return True
-        def endVisitMethodModifier3(self, n) :  self.unimplementedVisitor("endVisit(MethodModifier3)")
-
-        def visitMethodModifier4(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodModifier4)")
-            return True
-        def endVisitMethodModifier4(self, n) :  self.unimplementedVisitor("endVisit(MethodModifier4)")
-
-        def visitMethodModifier5(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodModifier5)")
-            return True
-        def endVisitMethodModifier5(self, n) :  self.unimplementedVisitor("endVisit(MethodModifier5)")
-
-        def visitMethodModifier6(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodModifier6)")
-            return True
-        def endVisitMethodModifier6(self, n) :  self.unimplementedVisitor("endVisit(MethodModifier6)")
-
-        def visitMethodModifier7(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodModifier7)")
-            return True
-        def endVisitMethodModifier7(self, n) :  self.unimplementedVisitor("endVisit(MethodModifier7)")
-
-        def visitMethodModifier8(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodModifier8)")
-            return True
-        def endVisitMethodModifier8(self, n) :  self.unimplementedVisitor("endVisit(MethodModifier8)")
-
-        def visitConstructorModifier0(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstructorModifier0)")
-            return True
-        def endVisitConstructorModifier0(self, n) :  self.unimplementedVisitor("endVisit(ConstructorModifier0)")
-
-        def visitConstructorModifier1(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstructorModifier1)")
-            return True
-        def endVisitConstructorModifier1(self, n) :  self.unimplementedVisitor("endVisit(ConstructorModifier1)")
-
-        def visitConstructorModifier2(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstructorModifier2)")
-            return True
-        def endVisitConstructorModifier2(self, n) :  self.unimplementedVisitor("endVisit(ConstructorModifier2)")
-
-        def visitExplicitConstructorInvocation0(self, n) -> bool :
-            self.unimplementedVisitor("visit(ExplicitConstructorInvocation0)")
-            return True
-        def endVisitExplicitConstructorInvocation0(self, n) :  self.unimplementedVisitor("endVisit(ExplicitConstructorInvocation0)")
-
-        def visitExplicitConstructorInvocation1(self, n) -> bool :
-            self.unimplementedVisitor("visit(ExplicitConstructorInvocation1)")
-            return True
-        def endVisitExplicitConstructorInvocation1(self, n) :  self.unimplementedVisitor("endVisit(ExplicitConstructorInvocation1)")
-
-        def visitExplicitConstructorInvocation2(self, n) -> bool :
-            self.unimplementedVisitor("visit(ExplicitConstructorInvocation2)")
-            return True
-        def endVisitExplicitConstructorInvocation2(self, n) :  self.unimplementedVisitor("endVisit(ExplicitConstructorInvocation2)")
-
-        def visitInterfaceModifier0(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceModifier0)")
-            return True
-        def endVisitInterfaceModifier0(self, n) :  self.unimplementedVisitor("endVisit(InterfaceModifier0)")
-
-        def visitInterfaceModifier1(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceModifier1)")
-            return True
-        def endVisitInterfaceModifier1(self, n) :  self.unimplementedVisitor("endVisit(InterfaceModifier1)")
-
-        def visitInterfaceModifier2(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceModifier2)")
-            return True
-        def endVisitInterfaceModifier2(self, n) :  self.unimplementedVisitor("endVisit(InterfaceModifier2)")
-
-        def visitInterfaceModifier3(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceModifier3)")
-            return True
-        def endVisitInterfaceModifier3(self, n) :  self.unimplementedVisitor("endVisit(InterfaceModifier3)")
-
-        def visitInterfaceModifier4(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceModifier4)")
-            return True
-        def endVisitInterfaceModifier4(self, n) :  self.unimplementedVisitor("endVisit(InterfaceModifier4)")
-
-        def visitInterfaceModifier5(self, n) -> bool :
-            self.unimplementedVisitor("visit(InterfaceModifier5)")
-            return True
-        def endVisitInterfaceModifier5(self, n) :  self.unimplementedVisitor("endVisit(InterfaceModifier5)")
-
-        def visitExtendsInterfaces0(self, n) -> bool :
-            self.unimplementedVisitor("visit(ExtendsInterfaces0)")
-            return True
-        def endVisitExtendsInterfaces0(self, n) :  self.unimplementedVisitor("endVisit(ExtendsInterfaces0)")
-
-        def visitExtendsInterfaces1(self, n) -> bool :
-            self.unimplementedVisitor("visit(ExtendsInterfaces1)")
-            return True
-        def endVisitExtendsInterfaces1(self, n) :  self.unimplementedVisitor("endVisit(ExtendsInterfaces1)")
-
-        def visitConstantModifier0(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstantModifier0)")
-            return True
-        def endVisitConstantModifier0(self, n) :  self.unimplementedVisitor("endVisit(ConstantModifier0)")
-
-        def visitConstantModifier1(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstantModifier1)")
-            return True
-        def endVisitConstantModifier1(self, n) :  self.unimplementedVisitor("endVisit(ConstantModifier1)")
-
-        def visitConstantModifier2(self, n) -> bool :
-            self.unimplementedVisitor("visit(ConstantModifier2)")
-            return True
-        def endVisitConstantModifier2(self, n) :  self.unimplementedVisitor("endVisit(ConstantModifier2)")
-
-        def visitAbstractMethodModifier0(self, n) -> bool :
-            self.unimplementedVisitor("visit(AbstractMethodModifier0)")
-            return True
-        def endVisitAbstractMethodModifier0(self, n) :  self.unimplementedVisitor("endVisit(AbstractMethodModifier0)")
-
-        def visitAbstractMethodModifier1(self, n) -> bool :
-            self.unimplementedVisitor("visit(AbstractMethodModifier1)")
-            return True
-        def endVisitAbstractMethodModifier1(self, n) :  self.unimplementedVisitor("endVisit(AbstractMethodModifier1)")
-
-        def visitAnnotationTypeElementDeclaration0(self, n) -> bool :
-            self.unimplementedVisitor("visit(AnnotationTypeElementDeclaration0)")
-            return True
-        def endVisitAnnotationTypeElementDeclaration0(self, n) :  self.unimplementedVisitor("endVisit(AnnotationTypeElementDeclaration0)")
-
-        def visitAnnotationTypeElementDeclaration1(self, n) -> bool :
-            self.unimplementedVisitor("visit(AnnotationTypeElementDeclaration1)")
-            return True
-        def endVisitAnnotationTypeElementDeclaration1(self, n) :  self.unimplementedVisitor("endVisit(AnnotationTypeElementDeclaration1)")
-
-        def visitAssertStatement0(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssertStatement0)")
-            return True
-        def endVisitAssertStatement0(self, n) :  self.unimplementedVisitor("endVisit(AssertStatement0)")
-
-        def visitAssertStatement1(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssertStatement1)")
-            return True
-        def endVisitAssertStatement1(self, n) :  self.unimplementedVisitor("endVisit(AssertStatement1)")
-
-        def visitSwitchLabel0(self, n) -> bool :
-            self.unimplementedVisitor("visit(SwitchLabel0)")
-            return True
-        def endVisitSwitchLabel0(self, n) :  self.unimplementedVisitor("endVisit(SwitchLabel0)")
-
-        def visitSwitchLabel1(self, n) -> bool :
-            self.unimplementedVisitor("visit(SwitchLabel1)")
-            return True
-        def endVisitSwitchLabel1(self, n) :  self.unimplementedVisitor("endVisit(SwitchLabel1)")
-
-        def visitSwitchLabel2(self, n) -> bool :
-            self.unimplementedVisitor("visit(SwitchLabel2)")
-            return True
-        def endVisitSwitchLabel2(self, n) :  self.unimplementedVisitor("endVisit(SwitchLabel2)")
-
-        def visitTryStatement0(self, n) -> bool :
-            self.unimplementedVisitor("visit(TryStatement0)")
-            return True
-        def endVisitTryStatement0(self, n) :  self.unimplementedVisitor("endVisit(TryStatement0)")
-
-        def visitTryStatement1(self, n) -> bool :
-            self.unimplementedVisitor("visit(TryStatement1)")
-            return True
-        def endVisitTryStatement1(self, n) :  self.unimplementedVisitor("endVisit(TryStatement1)")
-
-        def visitPrimaryNoNewArray0(self, n) -> bool :
-            self.unimplementedVisitor("visit(PrimaryNoNewArray0)")
-            return True
-        def endVisitPrimaryNoNewArray0(self, n) :  self.unimplementedVisitor("endVisit(PrimaryNoNewArray0)")
-
-        def visitPrimaryNoNewArray1(self, n) -> bool :
-            self.unimplementedVisitor("visit(PrimaryNoNewArray1)")
-            return True
-        def endVisitPrimaryNoNewArray1(self, n) :  self.unimplementedVisitor("endVisit(PrimaryNoNewArray1)")
-
-        def visitPrimaryNoNewArray2(self, n) -> bool :
-            self.unimplementedVisitor("visit(PrimaryNoNewArray2)")
-            return True
-        def endVisitPrimaryNoNewArray2(self, n) :  self.unimplementedVisitor("endVisit(PrimaryNoNewArray2)")
-
-        def visitPrimaryNoNewArray3(self, n) -> bool :
-            self.unimplementedVisitor("visit(PrimaryNoNewArray3)")
-            return True
-        def endVisitPrimaryNoNewArray3(self, n) :  self.unimplementedVisitor("endVisit(PrimaryNoNewArray3)")
-
-        def visitPrimaryNoNewArray4(self, n) -> bool :
-            self.unimplementedVisitor("visit(PrimaryNoNewArray4)")
-            return True
-        def endVisitPrimaryNoNewArray4(self, n) :  self.unimplementedVisitor("endVisit(PrimaryNoNewArray4)")
-
-        def visitLiteral0(self, n) -> bool :
-            self.unimplementedVisitor("visit(Literal0)")
-            return True
-        def endVisitLiteral0(self, n) :  self.unimplementedVisitor("endVisit(Literal0)")
-
-        def visitLiteral1(self, n) -> bool :
-            self.unimplementedVisitor("visit(Literal1)")
-            return True
-        def endVisitLiteral1(self, n) :  self.unimplementedVisitor("endVisit(Literal1)")
-
-        def visitLiteral2(self, n) -> bool :
-            self.unimplementedVisitor("visit(Literal2)")
-            return True
-        def endVisitLiteral2(self, n) :  self.unimplementedVisitor("endVisit(Literal2)")
-
-        def visitLiteral3(self, n) -> bool :
-            self.unimplementedVisitor("visit(Literal3)")
-            return True
-        def endVisitLiteral3(self, n) :  self.unimplementedVisitor("endVisit(Literal3)")
-
-        def visitLiteral4(self, n) -> bool :
-            self.unimplementedVisitor("visit(Literal4)")
-            return True
-        def endVisitLiteral4(self, n) :  self.unimplementedVisitor("endVisit(Literal4)")
-
-        def visitLiteral5(self, n) -> bool :
-            self.unimplementedVisitor("visit(Literal5)")
-            return True
-        def endVisitLiteral5(self, n) :  self.unimplementedVisitor("endVisit(Literal5)")
-
-        def visitLiteral6(self, n) -> bool :
-            self.unimplementedVisitor("visit(Literal6)")
-            return True
-        def endVisitLiteral6(self, n) :  self.unimplementedVisitor("endVisit(Literal6)")
-
-        def visitBooleanLiteral0(self, n) -> bool :
-            self.unimplementedVisitor("visit(BooleanLiteral0)")
-            return True
-        def endVisitBooleanLiteral0(self, n) :  self.unimplementedVisitor("endVisit(BooleanLiteral0)")
-
-        def visitBooleanLiteral1(self, n) -> bool :
-            self.unimplementedVisitor("visit(BooleanLiteral1)")
-            return True
-        def endVisitBooleanLiteral1(self, n) :  self.unimplementedVisitor("endVisit(BooleanLiteral1)")
-
-        def visitClassInstanceCreationExpression0(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassInstanceCreationExpression0)")
-            return True
-        def endVisitClassInstanceCreationExpression0(self, n) :  self.unimplementedVisitor("endVisit(ClassInstanceCreationExpression0)")
-
-        def visitClassInstanceCreationExpression1(self, n) -> bool :
-            self.unimplementedVisitor("visit(ClassInstanceCreationExpression1)")
-            return True
-        def endVisitClassInstanceCreationExpression1(self, n) :  self.unimplementedVisitor("endVisit(ClassInstanceCreationExpression1)")
-
-        def visitArrayCreationExpression0(self, n) -> bool :
-            self.unimplementedVisitor("visit(ArrayCreationExpression0)")
-            return True
-        def endVisitArrayCreationExpression0(self, n) :  self.unimplementedVisitor("endVisit(ArrayCreationExpression0)")
-
-        def visitArrayCreationExpression1(self, n) -> bool :
-            self.unimplementedVisitor("visit(ArrayCreationExpression1)")
-            return True
-        def endVisitArrayCreationExpression1(self, n) :  self.unimplementedVisitor("endVisit(ArrayCreationExpression1)")
-
-        def visitArrayCreationExpression2(self, n) -> bool :
-            self.unimplementedVisitor("visit(ArrayCreationExpression2)")
-            return True
-        def endVisitArrayCreationExpression2(self, n) :  self.unimplementedVisitor("endVisit(ArrayCreationExpression2)")
-
-        def visitArrayCreationExpression3(self, n) -> bool :
-            self.unimplementedVisitor("visit(ArrayCreationExpression3)")
-            return True
-        def endVisitArrayCreationExpression3(self, n) :  self.unimplementedVisitor("endVisit(ArrayCreationExpression3)")
-
-        def visitDims0(self, n) -> bool :
-            self.unimplementedVisitor("visit(Dims0)")
-            return True
-        def endVisitDims0(self, n) :  self.unimplementedVisitor("endVisit(Dims0)")
-
-        def visitDims1(self, n) -> bool :
-            self.unimplementedVisitor("visit(Dims1)")
-            return True
-        def endVisitDims1(self, n) :  self.unimplementedVisitor("endVisit(Dims1)")
-
-        def visitFieldAccess0(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldAccess0)")
-            return True
-        def endVisitFieldAccess0(self, n) :  self.unimplementedVisitor("endVisit(FieldAccess0)")
-
-        def visitFieldAccess1(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldAccess1)")
-            return True
-        def endVisitFieldAccess1(self, n) :  self.unimplementedVisitor("endVisit(FieldAccess1)")
-
-        def visitFieldAccess2(self, n) -> bool :
-            self.unimplementedVisitor("visit(FieldAccess2)")
-            return True
-        def endVisitFieldAccess2(self, n) :  self.unimplementedVisitor("endVisit(FieldAccess2)")
-
-        def visitMethodInvocation0(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodInvocation0)")
-            return True
-        def endVisitMethodInvocation0(self, n) :  self.unimplementedVisitor("endVisit(MethodInvocation0)")
-
-        def visitMethodInvocation1(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodInvocation1)")
-            return True
-        def endVisitMethodInvocation1(self, n) :  self.unimplementedVisitor("endVisit(MethodInvocation1)")
-
-        def visitMethodInvocation2(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodInvocation2)")
-            return True
-        def endVisitMethodInvocation2(self, n) :  self.unimplementedVisitor("endVisit(MethodInvocation2)")
-
-        def visitMethodInvocation3(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodInvocation3)")
-            return True
-        def endVisitMethodInvocation3(self, n) :  self.unimplementedVisitor("endVisit(MethodInvocation3)")
-
-        def visitMethodInvocation4(self, n) -> bool :
-            self.unimplementedVisitor("visit(MethodInvocation4)")
-            return True
-        def endVisitMethodInvocation4(self, n) :  self.unimplementedVisitor("endVisit(MethodInvocation4)")
-
-        def visitArrayAccess0(self, n) -> bool :
-            self.unimplementedVisitor("visit(ArrayAccess0)")
-            return True
-        def endVisitArrayAccess0(self, n) :  self.unimplementedVisitor("endVisit(ArrayAccess0)")
-
-        def visitArrayAccess1(self, n) -> bool :
-            self.unimplementedVisitor("visit(ArrayAccess1)")
-            return True
-        def endVisitArrayAccess1(self, n) :  self.unimplementedVisitor("endVisit(ArrayAccess1)")
-
-        def visitUnaryExpression0(self, n) -> bool :
-            self.unimplementedVisitor("visit(UnaryExpression0)")
-            return True
-        def endVisitUnaryExpression0(self, n) :  self.unimplementedVisitor("endVisit(UnaryExpression0)")
-
-        def visitUnaryExpression1(self, n) -> bool :
-            self.unimplementedVisitor("visit(UnaryExpression1)")
-            return True
-        def endVisitUnaryExpression1(self, n) :  self.unimplementedVisitor("endVisit(UnaryExpression1)")
-
-        def visitUnaryExpressionNotPlusMinus0(self, n) -> bool :
-            self.unimplementedVisitor("visit(UnaryExpressionNotPlusMinus0)")
-            return True
-        def endVisitUnaryExpressionNotPlusMinus0(self, n) :  self.unimplementedVisitor("endVisit(UnaryExpressionNotPlusMinus0)")
-
-        def visitUnaryExpressionNotPlusMinus1(self, n) -> bool :
-            self.unimplementedVisitor("visit(UnaryExpressionNotPlusMinus1)")
-            return True
-        def endVisitUnaryExpressionNotPlusMinus1(self, n) :  self.unimplementedVisitor("endVisit(UnaryExpressionNotPlusMinus1)")
-
-        def visitCastExpression0(self, n) -> bool :
-            self.unimplementedVisitor("visit(CastExpression0)")
-            return True
-        def endVisitCastExpression0(self, n) :  self.unimplementedVisitor("endVisit(CastExpression0)")
-
-        def visitCastExpression1(self, n) -> bool :
-            self.unimplementedVisitor("visit(CastExpression1)")
-            return True
-        def endVisitCastExpression1(self, n) :  self.unimplementedVisitor("endVisit(CastExpression1)")
-
-        def visitMultiplicativeExpression0(self, n) -> bool :
-            self.unimplementedVisitor("visit(MultiplicativeExpression0)")
-            return True
-        def endVisitMultiplicativeExpression0(self, n) :  self.unimplementedVisitor("endVisit(MultiplicativeExpression0)")
-
-        def visitMultiplicativeExpression1(self, n) -> bool :
-            self.unimplementedVisitor("visit(MultiplicativeExpression1)")
-            return True
-        def endVisitMultiplicativeExpression1(self, n) :  self.unimplementedVisitor("endVisit(MultiplicativeExpression1)")
-
-        def visitMultiplicativeExpression2(self, n) -> bool :
-            self.unimplementedVisitor("visit(MultiplicativeExpression2)")
-            return True
-        def endVisitMultiplicativeExpression2(self, n) :  self.unimplementedVisitor("endVisit(MultiplicativeExpression2)")
-
-        def visitAdditiveExpression0(self, n) -> bool :
-            self.unimplementedVisitor("visit(AdditiveExpression0)")
-            return True
-        def endVisitAdditiveExpression0(self, n) :  self.unimplementedVisitor("endVisit(AdditiveExpression0)")
-
-        def visitAdditiveExpression1(self, n) -> bool :
-            self.unimplementedVisitor("visit(AdditiveExpression1)")
-            return True
-        def endVisitAdditiveExpression1(self, n) :  self.unimplementedVisitor("endVisit(AdditiveExpression1)")
-
-        def visitShiftExpression0(self, n) -> bool :
-            self.unimplementedVisitor("visit(ShiftExpression0)")
-            return True
-        def endVisitShiftExpression0(self, n) :  self.unimplementedVisitor("endVisit(ShiftExpression0)")
-
-        def visitShiftExpression1(self, n) -> bool :
-            self.unimplementedVisitor("visit(ShiftExpression1)")
-            return True
-        def endVisitShiftExpression1(self, n) :  self.unimplementedVisitor("endVisit(ShiftExpression1)")
-
-        def visitShiftExpression2(self, n) -> bool :
-            self.unimplementedVisitor("visit(ShiftExpression2)")
-            return True
-        def endVisitShiftExpression2(self, n) :  self.unimplementedVisitor("endVisit(ShiftExpression2)")
-
-        def visitRelationalExpression0(self, n) -> bool :
-            self.unimplementedVisitor("visit(RelationalExpression0)")
-            return True
-        def endVisitRelationalExpression0(self, n) :  self.unimplementedVisitor("endVisit(RelationalExpression0)")
-
-        def visitRelationalExpression1(self, n) -> bool :
-            self.unimplementedVisitor("visit(RelationalExpression1)")
-            return True
-        def endVisitRelationalExpression1(self, n) :  self.unimplementedVisitor("endVisit(RelationalExpression1)")
-
-        def visitRelationalExpression2(self, n) -> bool :
-            self.unimplementedVisitor("visit(RelationalExpression2)")
-            return True
-        def endVisitRelationalExpression2(self, n) :  self.unimplementedVisitor("endVisit(RelationalExpression2)")
-
-        def visitRelationalExpression3(self, n) -> bool :
-            self.unimplementedVisitor("visit(RelationalExpression3)")
-            return True
-        def endVisitRelationalExpression3(self, n) :  self.unimplementedVisitor("endVisit(RelationalExpression3)")
-
-        def visitRelationalExpression4(self, n) -> bool :
-            self.unimplementedVisitor("visit(RelationalExpression4)")
-            return True
-        def endVisitRelationalExpression4(self, n) :  self.unimplementedVisitor("endVisit(RelationalExpression4)")
-
-        def visitEqualityExpression0(self, n) -> bool :
-            self.unimplementedVisitor("visit(EqualityExpression0)")
-            return True
-        def endVisitEqualityExpression0(self, n) :  self.unimplementedVisitor("endVisit(EqualityExpression0)")
-
-        def visitEqualityExpression1(self, n) -> bool :
-            self.unimplementedVisitor("visit(EqualityExpression1)")
-            return True
-        def endVisitEqualityExpression1(self, n) :  self.unimplementedVisitor("endVisit(EqualityExpression1)")
-
-        def visitAssignmentOperator0(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator0)")
-            return True
-        def endVisitAssignmentOperator0(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator0)")
-
-        def visitAssignmentOperator1(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator1)")
-            return True
-        def endVisitAssignmentOperator1(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator1)")
-
-        def visitAssignmentOperator2(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator2)")
-            return True
-        def endVisitAssignmentOperator2(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator2)")
-
-        def visitAssignmentOperator3(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator3)")
-            return True
-        def endVisitAssignmentOperator3(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator3)")
-
-        def visitAssignmentOperator4(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator4)")
-            return True
-        def endVisitAssignmentOperator4(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator4)")
-
-        def visitAssignmentOperator5(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator5)")
-            return True
-        def endVisitAssignmentOperator5(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator5)")
-
-        def visitAssignmentOperator6(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator6)")
-            return True
-        def endVisitAssignmentOperator6(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator6)")
-
-        def visitAssignmentOperator7(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator7)")
-            return True
-        def endVisitAssignmentOperator7(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator7)")
-
-        def visitAssignmentOperator8(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator8)")
-            return True
-        def endVisitAssignmentOperator8(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator8)")
-
-        def visitAssignmentOperator9(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator9)")
-            return True
-        def endVisitAssignmentOperator9(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator9)")
-
-        def visitAssignmentOperator10(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator10)")
-            return True
-        def endVisitAssignmentOperator10(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator10)")
-
-        def visitAssignmentOperator11(self, n) -> bool :
-            self.unimplementedVisitor("visit(AssignmentOperator11)")
-            return True
-        def endVisitAssignmentOperator11(self, n) :  self.unimplementedVisitor("endVisit(AssignmentOperator11)")
-
-
-        def visit(self, n) -> bool :
+        def visitAstToken(self, n) : pass
+        def visitidentifier(self, n) : pass
+        def visitPrimitiveType(self, n) : pass
+        def visitClassType(self, n) : pass
+        def visitInterfaceType(self, n) : pass
+        def visitTypeName(self, n) : pass
+        def visitArrayType(self, n) : pass
+        def visitTypeParameter(self, n) : pass
+        def visitTypeBound(self, n) : pass
+        def visitAdditionalBoundList(self, n) : pass
+        def visitAdditionalBound(self, n) : pass
+        def visitTypeArguments(self, n) : pass
+        def visitActualTypeArgumentList(self, n) : pass
+        def visitWildcard(self, n) : pass
+        def visitPackageName(self, n) : pass
+        def visitExpressionName(self, n) : pass
+        def visitMethodName(self, n) : pass
+        def visitPackageOrTypeName(self, n) : pass
+        def visitAmbiguousName(self, n) : pass
+        def visitCompilationUnit(self, n) : pass
+        def visitImportDeclarations(self, n) : pass
+        def visitTypeDeclarations(self, n) : pass
+        def visitPackageDeclaration(self, n) : pass
+        def visitSingleTypeImportDeclaration(self, n) : pass
+        def visitTypeImportOnDemandDeclaration(self, n) : pass
+        def visitSingleStaticImportDeclaration(self, n) : pass
+        def visitStaticImportOnDemandDeclaration(self, n) : pass
+        def visitTypeDeclaration(self, n) : pass
+        def visitNormalClassDeclaration(self, n) : pass
+        def visitClassModifiers(self, n) : pass
+        def visitTypeParameters(self, n) : pass
+        def visitTypeParameterList(self, n) : pass
+        def visitSuper(self, n) : pass
+        def visitInterfaces(self, n) : pass
+        def visitInterfaceTypeList(self, n) : pass
+        def visitClassBody(self, n) : pass
+        def visitClassBodyDeclarations(self, n) : pass
+        def visitClassMemberDeclaration(self, n) : pass
+        def visitFieldDeclaration(self, n) : pass
+        def visitVariableDeclarators(self, n) : pass
+        def visitVariableDeclarator(self, n) : pass
+        def visitVariableDeclaratorId(self, n) : pass
+        def visitFieldModifiers(self, n) : pass
+        def visitMethodDeclaration(self, n) : pass
+        def visitMethodHeader(self, n) : pass
+        def visitResultType(self, n) : pass
+        def visitFormalParameterList(self, n) : pass
+        def visitFormalParameters(self, n) : pass
+        def visitFormalParameter(self, n) : pass
+        def visitVariableModifiers(self, n) : pass
+        def visitVariableModifier(self, n) : pass
+        def visitLastFormalParameter(self, n) : pass
+        def visitMethodModifiers(self, n) : pass
+        def visitThrows(self, n) : pass
+        def visitExceptionTypeList(self, n) : pass
+        def visitMethodBody(self, n) : pass
+        def visitStaticInitializer(self, n) : pass
+        def visitConstructorDeclaration(self, n) : pass
+        def visitConstructorDeclarator(self, n) : pass
+        def visitConstructorModifiers(self, n) : pass
+        def visitConstructorBody(self, n) : pass
+        def visitEnumDeclaration(self, n) : pass
+        def visitEnumBody(self, n) : pass
+        def visitEnumConstants(self, n) : pass
+        def visitEnumConstant(self, n) : pass
+        def visitArguments(self, n) : pass
+        def visitEnumBodyDeclarations(self, n) : pass
+        def visitNormalInterfaceDeclaration(self, n) : pass
+        def visitInterfaceModifiers(self, n) : pass
+        def visitInterfaceBody(self, n) : pass
+        def visitInterfaceMemberDeclarations(self, n) : pass
+        def visitInterfaceMemberDeclaration(self, n) : pass
+        def visitConstantDeclaration(self, n) : pass
+        def visitConstantModifiers(self, n) : pass
+        def visitAbstractMethodDeclaration(self, n) : pass
+        def visitAbstractMethodModifiers(self, n) : pass
+        def visitAnnotationTypeDeclaration(self, n) : pass
+        def visitAnnotationTypeBody(self, n) : pass
+        def visitAnnotationTypeElementDeclarations(self, n) : pass
+        def visitDefaultValue(self, n) : pass
+        def visitAnnotations(self, n) : pass
+        def visitNormalAnnotation(self, n) : pass
+        def visitElementValuePairs(self, n) : pass
+        def visitElementValuePair(self, n) : pass
+        def visitElementValueArrayInitializer(self, n) : pass
+        def visitElementValues(self, n) : pass
+        def visitMarkerAnnotation(self, n) : pass
+        def visitSingleElementAnnotation(self, n) : pass
+        def visitArrayInitializer(self, n) : pass
+        def visitVariableInitializers(self, n) : pass
+        def visitBlock(self, n) : pass
+        def visitBlockStatements(self, n) : pass
+        def visitLocalVariableDeclarationStatement(self, n) : pass
+        def visitLocalVariableDeclaration(self, n) : pass
+        def visitIfThenStatement(self, n) : pass
+        def visitIfThenElseStatement(self, n) : pass
+        def visitIfThenElseStatementNoShortIf(self, n) : pass
+        def visitEmptyStatement(self, n) : pass
+        def visitLabeledStatement(self, n) : pass
+        def visitLabeledStatementNoShortIf(self, n) : pass
+        def visitExpressionStatement(self, n) : pass
+        def visitSwitchStatement(self, n) : pass
+        def visitSwitchBlock(self, n) : pass
+        def visitSwitchBlockStatementGroups(self, n) : pass
+        def visitSwitchBlockStatementGroup(self, n) : pass
+        def visitSwitchLabels(self, n) : pass
+        def visitWhileStatement(self, n) : pass
+        def visitWhileStatementNoShortIf(self, n) : pass
+        def visitDoStatement(self, n) : pass
+        def visitBasicForStatement(self, n) : pass
+        def visitForStatementNoShortIf(self, n) : pass
+        def visitStatementExpressionList(self, n) : pass
+        def visitEnhancedForStatement(self, n) : pass
+        def visitBreakStatement(self, n) : pass
+        def visitContinueStatement(self, n) : pass
+        def visitReturnStatement(self, n) : pass
+        def visitThrowStatement(self, n) : pass
+        def visitSynchronizedStatement(self, n) : pass
+        def visitCatches(self, n) : pass
+        def visitCatchClause(self, n) : pass
+        def visitFinally(self, n) : pass
+        def visitArgumentList(self, n) : pass
+        def visitDimExprs(self, n) : pass
+        def visitDimExpr(self, n) : pass
+        def visitPostIncrementExpression(self, n) : pass
+        def visitPostDecrementExpression(self, n) : pass
+        def visitPreIncrementExpression(self, n) : pass
+        def visitPreDecrementExpression(self, n) : pass
+        def visitAndExpression(self, n) : pass
+        def visitExclusiveOrExpression(self, n) : pass
+        def visitInclusiveOrExpression(self, n) : pass
+        def visitConditionalAndExpression(self, n) : pass
+        def visitConditionalOrExpression(self, n) : pass
+        def visitConditionalExpression(self, n) : pass
+        def visitAssignment(self, n) : pass
+        def visitCommaopt(self, n) : pass
+        def visitEllipsisopt(self, n) : pass
+        def visitLPGUserAction0(self, n) : pass
+        def visitLPGUserAction1(self, n) : pass
+        def visitLPGUserAction2(self, n) : pass
+        def visitLPGUserAction3(self, n) : pass
+        def visitLPGUserAction4(self, n) : pass
+        def visitIntegralType0(self, n) : pass
+        def visitIntegralType1(self, n) : pass
+        def visitIntegralType2(self, n) : pass
+        def visitIntegralType3(self, n) : pass
+        def visitIntegralType4(self, n) : pass
+        def visitFloatingPointType0(self, n) : pass
+        def visitFloatingPointType1(self, n) : pass
+        def visitWildcardBounds0(self, n) : pass
+        def visitWildcardBounds1(self, n) : pass
+        def visitClassModifier0(self, n) : pass
+        def visitClassModifier1(self, n) : pass
+        def visitClassModifier2(self, n) : pass
+        def visitClassModifier3(self, n) : pass
+        def visitClassModifier4(self, n) : pass
+        def visitClassModifier5(self, n) : pass
+        def visitClassModifier6(self, n) : pass
+        def visitFieldModifier0(self, n) : pass
+        def visitFieldModifier1(self, n) : pass
+        def visitFieldModifier2(self, n) : pass
+        def visitFieldModifier3(self, n) : pass
+        def visitFieldModifier4(self, n) : pass
+        def visitFieldModifier5(self, n) : pass
+        def visitFieldModifier6(self, n) : pass
+        def visitMethodDeclarator0(self, n) : pass
+        def visitMethodDeclarator1(self, n) : pass
+        def visitMethodModifier0(self, n) : pass
+        def visitMethodModifier1(self, n) : pass
+        def visitMethodModifier2(self, n) : pass
+        def visitMethodModifier3(self, n) : pass
+        def visitMethodModifier4(self, n) : pass
+        def visitMethodModifier5(self, n) : pass
+        def visitMethodModifier6(self, n) : pass
+        def visitMethodModifier7(self, n) : pass
+        def visitMethodModifier8(self, n) : pass
+        def visitConstructorModifier0(self, n) : pass
+        def visitConstructorModifier1(self, n) : pass
+        def visitConstructorModifier2(self, n) : pass
+        def visitExplicitConstructorInvocation0(self, n) : pass
+        def visitExplicitConstructorInvocation1(self, n) : pass
+        def visitExplicitConstructorInvocation2(self, n) : pass
+        def visitInterfaceModifier0(self, n) : pass
+        def visitInterfaceModifier1(self, n) : pass
+        def visitInterfaceModifier2(self, n) : pass
+        def visitInterfaceModifier3(self, n) : pass
+        def visitInterfaceModifier4(self, n) : pass
+        def visitInterfaceModifier5(self, n) : pass
+        def visitExtendsInterfaces0(self, n) : pass
+        def visitExtendsInterfaces1(self, n) : pass
+        def visitConstantModifier0(self, n) : pass
+        def visitConstantModifier1(self, n) : pass
+        def visitConstantModifier2(self, n) : pass
+        def visitAbstractMethodModifier0(self, n) : pass
+        def visitAbstractMethodModifier1(self, n) : pass
+        def visitAnnotationTypeElementDeclaration0(self, n) : pass
+        def visitAnnotationTypeElementDeclaration1(self, n) : pass
+        def visitAssertStatement0(self, n) : pass
+        def visitAssertStatement1(self, n) : pass
+        def visitSwitchLabel0(self, n) : pass
+        def visitSwitchLabel1(self, n) : pass
+        def visitSwitchLabel2(self, n) : pass
+        def visitTryStatement0(self, n) : pass
+        def visitTryStatement1(self, n) : pass
+        def visitPrimaryNoNewArray0(self, n) : pass
+        def visitPrimaryNoNewArray1(self, n) : pass
+        def visitPrimaryNoNewArray2(self, n) : pass
+        def visitPrimaryNoNewArray3(self, n) : pass
+        def visitPrimaryNoNewArray4(self, n) : pass
+        def visitLiteral0(self, n) : pass
+        def visitLiteral1(self, n) : pass
+        def visitLiteral2(self, n) : pass
+        def visitLiteral3(self, n) : pass
+        def visitLiteral4(self, n) : pass
+        def visitLiteral5(self, n) : pass
+        def visitLiteral6(self, n) : pass
+        def visitBooleanLiteral0(self, n) : pass
+        def visitBooleanLiteral1(self, n) : pass
+        def visitClassInstanceCreationExpression0(self, n) : pass
+        def visitClassInstanceCreationExpression1(self, n) : pass
+        def visitArrayCreationExpression0(self, n) : pass
+        def visitArrayCreationExpression1(self, n) : pass
+        def visitArrayCreationExpression2(self, n) : pass
+        def visitArrayCreationExpression3(self, n) : pass
+        def visitDims0(self, n) : pass
+        def visitDims1(self, n) : pass
+        def visitFieldAccess0(self, n) : pass
+        def visitFieldAccess1(self, n) : pass
+        def visitFieldAccess2(self, n) : pass
+        def visitMethodInvocation0(self, n) : pass
+        def visitMethodInvocation1(self, n) : pass
+        def visitMethodInvocation2(self, n) : pass
+        def visitMethodInvocation3(self, n) : pass
+        def visitMethodInvocation4(self, n) : pass
+        def visitArrayAccess0(self, n) : pass
+        def visitArrayAccess1(self, n) : pass
+        def visitUnaryExpression0(self, n) : pass
+        def visitUnaryExpression1(self, n) : pass
+        def visitUnaryExpressionNotPlusMinus0(self, n) : pass
+        def visitUnaryExpressionNotPlusMinus1(self, n) : pass
+        def visitCastExpression0(self, n) : pass
+        def visitCastExpression1(self, n) : pass
+        def visitMultiplicativeExpression0(self, n) : pass
+        def visitMultiplicativeExpression1(self, n) : pass
+        def visitMultiplicativeExpression2(self, n) : pass
+        def visitAdditiveExpression0(self, n) : pass
+        def visitAdditiveExpression1(self, n) : pass
+        def visitShiftExpression0(self, n) : pass
+        def visitShiftExpression1(self, n) : pass
+        def visitShiftExpression2(self, n) : pass
+        def visitRelationalExpression0(self, n) : pass
+        def visitRelationalExpression1(self, n) : pass
+        def visitRelationalExpression2(self, n) : pass
+        def visitRelationalExpression3(self, n) : pass
+        def visitRelationalExpression4(self, n) : pass
+        def visitEqualityExpression0(self, n) : pass
+        def visitEqualityExpression1(self, n) : pass
+        def visitAssignmentOperator0(self, n) : pass
+        def visitAssignmentOperator1(self, n) : pass
+        def visitAssignmentOperator2(self, n) : pass
+        def visitAssignmentOperator3(self, n) : pass
+        def visitAssignmentOperator4(self, n) : pass
+        def visitAssignmentOperator5(self, n) : pass
+        def visitAssignmentOperator6(self, n) : pass
+        def visitAssignmentOperator7(self, n) : pass
+        def visitAssignmentOperator8(self, n) : pass
+        def visitAssignmentOperator9(self, n) : pass
+        def visitAssignmentOperator10(self, n) : pass
+        def visitAssignmentOperator11(self, n) : pass
+
+        def visit(self, n) : pass
+    
+class ArgumentVisitor(object):
+        __slots__ = ()
+    
+        def visitAstToken(self, n, o) : pass
+        def visitidentifier(self, n, o) : pass
+        def visitPrimitiveType(self, n, o) : pass
+        def visitClassType(self, n, o) : pass
+        def visitInterfaceType(self, n, o) : pass
+        def visitTypeName(self, n, o) : pass
+        def visitArrayType(self, n, o) : pass
+        def visitTypeParameter(self, n, o) : pass
+        def visitTypeBound(self, n, o) : pass
+        def visitAdditionalBoundList(self, n, o) : pass
+        def visitAdditionalBound(self, n, o) : pass
+        def visitTypeArguments(self, n, o) : pass
+        def visitActualTypeArgumentList(self, n, o) : pass
+        def visitWildcard(self, n, o) : pass
+        def visitPackageName(self, n, o) : pass
+        def visitExpressionName(self, n, o) : pass
+        def visitMethodName(self, n, o) : pass
+        def visitPackageOrTypeName(self, n, o) : pass
+        def visitAmbiguousName(self, n, o) : pass
+        def visitCompilationUnit(self, n, o) : pass
+        def visitImportDeclarations(self, n, o) : pass
+        def visitTypeDeclarations(self, n, o) : pass
+        def visitPackageDeclaration(self, n, o) : pass
+        def visitSingleTypeImportDeclaration(self, n, o) : pass
+        def visitTypeImportOnDemandDeclaration(self, n, o) : pass
+        def visitSingleStaticImportDeclaration(self, n, o) : pass
+        def visitStaticImportOnDemandDeclaration(self, n, o) : pass
+        def visitTypeDeclaration(self, n, o) : pass
+        def visitNormalClassDeclaration(self, n, o) : pass
+        def visitClassModifiers(self, n, o) : pass
+        def visitTypeParameters(self, n, o) : pass
+        def visitTypeParameterList(self, n, o) : pass
+        def visitSuper(self, n, o) : pass
+        def visitInterfaces(self, n, o) : pass
+        def visitInterfaceTypeList(self, n, o) : pass
+        def visitClassBody(self, n, o) : pass
+        def visitClassBodyDeclarations(self, n, o) : pass
+        def visitClassMemberDeclaration(self, n, o) : pass
+        def visitFieldDeclaration(self, n, o) : pass
+        def visitVariableDeclarators(self, n, o) : pass
+        def visitVariableDeclarator(self, n, o) : pass
+        def visitVariableDeclaratorId(self, n, o) : pass
+        def visitFieldModifiers(self, n, o) : pass
+        def visitMethodDeclaration(self, n, o) : pass
+        def visitMethodHeader(self, n, o) : pass
+        def visitResultType(self, n, o) : pass
+        def visitFormalParameterList(self, n, o) : pass
+        def visitFormalParameters(self, n, o) : pass
+        def visitFormalParameter(self, n, o) : pass
+        def visitVariableModifiers(self, n, o) : pass
+        def visitVariableModifier(self, n, o) : pass
+        def visitLastFormalParameter(self, n, o) : pass
+        def visitMethodModifiers(self, n, o) : pass
+        def visitThrows(self, n, o) : pass
+        def visitExceptionTypeList(self, n, o) : pass
+        def visitMethodBody(self, n, o) : pass
+        def visitStaticInitializer(self, n, o) : pass
+        def visitConstructorDeclaration(self, n, o) : pass
+        def visitConstructorDeclarator(self, n, o) : pass
+        def visitConstructorModifiers(self, n, o) : pass
+        def visitConstructorBody(self, n, o) : pass
+        def visitEnumDeclaration(self, n, o) : pass
+        def visitEnumBody(self, n, o) : pass
+        def visitEnumConstants(self, n, o) : pass
+        def visitEnumConstant(self, n, o) : pass
+        def visitArguments(self, n, o) : pass
+        def visitEnumBodyDeclarations(self, n, o) : pass
+        def visitNormalInterfaceDeclaration(self, n, o) : pass
+        def visitInterfaceModifiers(self, n, o) : pass
+        def visitInterfaceBody(self, n, o) : pass
+        def visitInterfaceMemberDeclarations(self, n, o) : pass
+        def visitInterfaceMemberDeclaration(self, n, o) : pass
+        def visitConstantDeclaration(self, n, o) : pass
+        def visitConstantModifiers(self, n, o) : pass
+        def visitAbstractMethodDeclaration(self, n, o) : pass
+        def visitAbstractMethodModifiers(self, n, o) : pass
+        def visitAnnotationTypeDeclaration(self, n, o) : pass
+        def visitAnnotationTypeBody(self, n, o) : pass
+        def visitAnnotationTypeElementDeclarations(self, n, o) : pass
+        def visitDefaultValue(self, n, o) : pass
+        def visitAnnotations(self, n, o) : pass
+        def visitNormalAnnotation(self, n, o) : pass
+        def visitElementValuePairs(self, n, o) : pass
+        def visitElementValuePair(self, n, o) : pass
+        def visitElementValueArrayInitializer(self, n, o) : pass
+        def visitElementValues(self, n, o) : pass
+        def visitMarkerAnnotation(self, n, o) : pass
+        def visitSingleElementAnnotation(self, n, o) : pass
+        def visitArrayInitializer(self, n, o) : pass
+        def visitVariableInitializers(self, n, o) : pass
+        def visitBlock(self, n, o) : pass
+        def visitBlockStatements(self, n, o) : pass
+        def visitLocalVariableDeclarationStatement(self, n, o) : pass
+        def visitLocalVariableDeclaration(self, n, o) : pass
+        def visitIfThenStatement(self, n, o) : pass
+        def visitIfThenElseStatement(self, n, o) : pass
+        def visitIfThenElseStatementNoShortIf(self, n, o) : pass
+        def visitEmptyStatement(self, n, o) : pass
+        def visitLabeledStatement(self, n, o) : pass
+        def visitLabeledStatementNoShortIf(self, n, o) : pass
+        def visitExpressionStatement(self, n, o) : pass
+        def visitSwitchStatement(self, n, o) : pass
+        def visitSwitchBlock(self, n, o) : pass
+        def visitSwitchBlockStatementGroups(self, n, o) : pass
+        def visitSwitchBlockStatementGroup(self, n, o) : pass
+        def visitSwitchLabels(self, n, o) : pass
+        def visitWhileStatement(self, n, o) : pass
+        def visitWhileStatementNoShortIf(self, n, o) : pass
+        def visitDoStatement(self, n, o) : pass
+        def visitBasicForStatement(self, n, o) : pass
+        def visitForStatementNoShortIf(self, n, o) : pass
+        def visitStatementExpressionList(self, n, o) : pass
+        def visitEnhancedForStatement(self, n, o) : pass
+        def visitBreakStatement(self, n, o) : pass
+        def visitContinueStatement(self, n, o) : pass
+        def visitReturnStatement(self, n, o) : pass
+        def visitThrowStatement(self, n, o) : pass
+        def visitSynchronizedStatement(self, n, o) : pass
+        def visitCatches(self, n, o) : pass
+        def visitCatchClause(self, n, o) : pass
+        def visitFinally(self, n, o) : pass
+        def visitArgumentList(self, n, o) : pass
+        def visitDimExprs(self, n, o) : pass
+        def visitDimExpr(self, n, o) : pass
+        def visitPostIncrementExpression(self, n, o) : pass
+        def visitPostDecrementExpression(self, n, o) : pass
+        def visitPreIncrementExpression(self, n, o) : pass
+        def visitPreDecrementExpression(self, n, o) : pass
+        def visitAndExpression(self, n, o) : pass
+        def visitExclusiveOrExpression(self, n, o) : pass
+        def visitInclusiveOrExpression(self, n, o) : pass
+        def visitConditionalAndExpression(self, n, o) : pass
+        def visitConditionalOrExpression(self, n, o) : pass
+        def visitConditionalExpression(self, n, o) : pass
+        def visitAssignment(self, n, o) : pass
+        def visitCommaopt(self, n, o) : pass
+        def visitEllipsisopt(self, n, o) : pass
+        def visitLPGUserAction0(self, n, o) : pass
+        def visitLPGUserAction1(self, n, o) : pass
+        def visitLPGUserAction2(self, n, o) : pass
+        def visitLPGUserAction3(self, n, o) : pass
+        def visitLPGUserAction4(self, n, o) : pass
+        def visitIntegralType0(self, n, o) : pass
+        def visitIntegralType1(self, n, o) : pass
+        def visitIntegralType2(self, n, o) : pass
+        def visitIntegralType3(self, n, o) : pass
+        def visitIntegralType4(self, n, o) : pass
+        def visitFloatingPointType0(self, n, o) : pass
+        def visitFloatingPointType1(self, n, o) : pass
+        def visitWildcardBounds0(self, n, o) : pass
+        def visitWildcardBounds1(self, n, o) : pass
+        def visitClassModifier0(self, n, o) : pass
+        def visitClassModifier1(self, n, o) : pass
+        def visitClassModifier2(self, n, o) : pass
+        def visitClassModifier3(self, n, o) : pass
+        def visitClassModifier4(self, n, o) : pass
+        def visitClassModifier5(self, n, o) : pass
+        def visitClassModifier6(self, n, o) : pass
+        def visitFieldModifier0(self, n, o) : pass
+        def visitFieldModifier1(self, n, o) : pass
+        def visitFieldModifier2(self, n, o) : pass
+        def visitFieldModifier3(self, n, o) : pass
+        def visitFieldModifier4(self, n, o) : pass
+        def visitFieldModifier5(self, n, o) : pass
+        def visitFieldModifier6(self, n, o) : pass
+        def visitMethodDeclarator0(self, n, o) : pass
+        def visitMethodDeclarator1(self, n, o) : pass
+        def visitMethodModifier0(self, n, o) : pass
+        def visitMethodModifier1(self, n, o) : pass
+        def visitMethodModifier2(self, n, o) : pass
+        def visitMethodModifier3(self, n, o) : pass
+        def visitMethodModifier4(self, n, o) : pass
+        def visitMethodModifier5(self, n, o) : pass
+        def visitMethodModifier6(self, n, o) : pass
+        def visitMethodModifier7(self, n, o) : pass
+        def visitMethodModifier8(self, n, o) : pass
+        def visitConstructorModifier0(self, n, o) : pass
+        def visitConstructorModifier1(self, n, o) : pass
+        def visitConstructorModifier2(self, n, o) : pass
+        def visitExplicitConstructorInvocation0(self, n, o) : pass
+        def visitExplicitConstructorInvocation1(self, n, o) : pass
+        def visitExplicitConstructorInvocation2(self, n, o) : pass
+        def visitInterfaceModifier0(self, n, o) : pass
+        def visitInterfaceModifier1(self, n, o) : pass
+        def visitInterfaceModifier2(self, n, o) : pass
+        def visitInterfaceModifier3(self, n, o) : pass
+        def visitInterfaceModifier4(self, n, o) : pass
+        def visitInterfaceModifier5(self, n, o) : pass
+        def visitExtendsInterfaces0(self, n, o) : pass
+        def visitExtendsInterfaces1(self, n, o) : pass
+        def visitConstantModifier0(self, n, o) : pass
+        def visitConstantModifier1(self, n, o) : pass
+        def visitConstantModifier2(self, n, o) : pass
+        def visitAbstractMethodModifier0(self, n, o) : pass
+        def visitAbstractMethodModifier1(self, n, o) : pass
+        def visitAnnotationTypeElementDeclaration0(self, n, o) : pass
+        def visitAnnotationTypeElementDeclaration1(self, n, o) : pass
+        def visitAssertStatement0(self, n, o) : pass
+        def visitAssertStatement1(self, n, o) : pass
+        def visitSwitchLabel0(self, n, o) : pass
+        def visitSwitchLabel1(self, n, o) : pass
+        def visitSwitchLabel2(self, n, o) : pass
+        def visitTryStatement0(self, n, o) : pass
+        def visitTryStatement1(self, n, o) : pass
+        def visitPrimaryNoNewArray0(self, n, o) : pass
+        def visitPrimaryNoNewArray1(self, n, o) : pass
+        def visitPrimaryNoNewArray2(self, n, o) : pass
+        def visitPrimaryNoNewArray3(self, n, o) : pass
+        def visitPrimaryNoNewArray4(self, n, o) : pass
+        def visitLiteral0(self, n, o) : pass
+        def visitLiteral1(self, n, o) : pass
+        def visitLiteral2(self, n, o) : pass
+        def visitLiteral3(self, n, o) : pass
+        def visitLiteral4(self, n, o) : pass
+        def visitLiteral5(self, n, o) : pass
+        def visitLiteral6(self, n, o) : pass
+        def visitBooleanLiteral0(self, n, o) : pass
+        def visitBooleanLiteral1(self, n, o) : pass
+        def visitClassInstanceCreationExpression0(self, n, o) : pass
+        def visitClassInstanceCreationExpression1(self, n, o) : pass
+        def visitArrayCreationExpression0(self, n, o) : pass
+        def visitArrayCreationExpression1(self, n, o) : pass
+        def visitArrayCreationExpression2(self, n, o) : pass
+        def visitArrayCreationExpression3(self, n, o) : pass
+        def visitDims0(self, n, o) : pass
+        def visitDims1(self, n, o) : pass
+        def visitFieldAccess0(self, n, o) : pass
+        def visitFieldAccess1(self, n, o) : pass
+        def visitFieldAccess2(self, n, o) : pass
+        def visitMethodInvocation0(self, n, o) : pass
+        def visitMethodInvocation1(self, n, o) : pass
+        def visitMethodInvocation2(self, n, o) : pass
+        def visitMethodInvocation3(self, n, o) : pass
+        def visitMethodInvocation4(self, n, o) : pass
+        def visitArrayAccess0(self, n, o) : pass
+        def visitArrayAccess1(self, n, o) : pass
+        def visitUnaryExpression0(self, n, o) : pass
+        def visitUnaryExpression1(self, n, o) : pass
+        def visitUnaryExpressionNotPlusMinus0(self, n, o) : pass
+        def visitUnaryExpressionNotPlusMinus1(self, n, o) : pass
+        def visitCastExpression0(self, n, o) : pass
+        def visitCastExpression1(self, n, o) : pass
+        def visitMultiplicativeExpression0(self, n, o) : pass
+        def visitMultiplicativeExpression1(self, n, o) : pass
+        def visitMultiplicativeExpression2(self, n, o) : pass
+        def visitAdditiveExpression0(self, n, o) : pass
+        def visitAdditiveExpression1(self, n, o) : pass
+        def visitShiftExpression0(self, n, o) : pass
+        def visitShiftExpression1(self, n, o) : pass
+        def visitShiftExpression2(self, n, o) : pass
+        def visitRelationalExpression0(self, n, o) : pass
+        def visitRelationalExpression1(self, n, o) : pass
+        def visitRelationalExpression2(self, n, o) : pass
+        def visitRelationalExpression3(self, n, o) : pass
+        def visitRelationalExpression4(self, n, o) : pass
+        def visitEqualityExpression0(self, n, o) : pass
+        def visitEqualityExpression1(self, n, o) : pass
+        def visitAssignmentOperator0(self, n, o) : pass
+        def visitAssignmentOperator1(self, n, o) : pass
+        def visitAssignmentOperator2(self, n, o) : pass
+        def visitAssignmentOperator3(self, n, o) : pass
+        def visitAssignmentOperator4(self, n, o) : pass
+        def visitAssignmentOperator5(self, n, o) : pass
+        def visitAssignmentOperator6(self, n, o) : pass
+        def visitAssignmentOperator7(self, n, o) : pass
+        def visitAssignmentOperator8(self, n, o) : pass
+        def visitAssignmentOperator9(self, n, o) : pass
+        def visitAssignmentOperator10(self, n, o) : pass
+        def visitAssignmentOperator11(self, n, o) : pass
+
+        def visit(self, n, o) : pass
+    
+class ResultVisitor(object):
+        __slots__ = ()
+    
+        def visitAstToken(self, n) : pass
+        def visitidentifier(self, n) : pass
+        def visitPrimitiveType(self, n) : pass
+        def visitClassType(self, n) : pass
+        def visitInterfaceType(self, n) : pass
+        def visitTypeName(self, n) : pass
+        def visitArrayType(self, n) : pass
+        def visitTypeParameter(self, n) : pass
+        def visitTypeBound(self, n) : pass
+        def visitAdditionalBoundList(self, n) : pass
+        def visitAdditionalBound(self, n) : pass
+        def visitTypeArguments(self, n) : pass
+        def visitActualTypeArgumentList(self, n) : pass
+        def visitWildcard(self, n) : pass
+        def visitPackageName(self, n) : pass
+        def visitExpressionName(self, n) : pass
+        def visitMethodName(self, n) : pass
+        def visitPackageOrTypeName(self, n) : pass
+        def visitAmbiguousName(self, n) : pass
+        def visitCompilationUnit(self, n) : pass
+        def visitImportDeclarations(self, n) : pass
+        def visitTypeDeclarations(self, n) : pass
+        def visitPackageDeclaration(self, n) : pass
+        def visitSingleTypeImportDeclaration(self, n) : pass
+        def visitTypeImportOnDemandDeclaration(self, n) : pass
+        def visitSingleStaticImportDeclaration(self, n) : pass
+        def visitStaticImportOnDemandDeclaration(self, n) : pass
+        def visitTypeDeclaration(self, n) : pass
+        def visitNormalClassDeclaration(self, n) : pass
+        def visitClassModifiers(self, n) : pass
+        def visitTypeParameters(self, n) : pass
+        def visitTypeParameterList(self, n) : pass
+        def visitSuper(self, n) : pass
+        def visitInterfaces(self, n) : pass
+        def visitInterfaceTypeList(self, n) : pass
+        def visitClassBody(self, n) : pass
+        def visitClassBodyDeclarations(self, n) : pass
+        def visitClassMemberDeclaration(self, n) : pass
+        def visitFieldDeclaration(self, n) : pass
+        def visitVariableDeclarators(self, n) : pass
+        def visitVariableDeclarator(self, n) : pass
+        def visitVariableDeclaratorId(self, n) : pass
+        def visitFieldModifiers(self, n) : pass
+        def visitMethodDeclaration(self, n) : pass
+        def visitMethodHeader(self, n) : pass
+        def visitResultType(self, n) : pass
+        def visitFormalParameterList(self, n) : pass
+        def visitFormalParameters(self, n) : pass
+        def visitFormalParameter(self, n) : pass
+        def visitVariableModifiers(self, n) : pass
+        def visitVariableModifier(self, n) : pass
+        def visitLastFormalParameter(self, n) : pass
+        def visitMethodModifiers(self, n) : pass
+        def visitThrows(self, n) : pass
+        def visitExceptionTypeList(self, n) : pass
+        def visitMethodBody(self, n) : pass
+        def visitStaticInitializer(self, n) : pass
+        def visitConstructorDeclaration(self, n) : pass
+        def visitConstructorDeclarator(self, n) : pass
+        def visitConstructorModifiers(self, n) : pass
+        def visitConstructorBody(self, n) : pass
+        def visitEnumDeclaration(self, n) : pass
+        def visitEnumBody(self, n) : pass
+        def visitEnumConstants(self, n) : pass
+        def visitEnumConstant(self, n) : pass
+        def visitArguments(self, n) : pass
+        def visitEnumBodyDeclarations(self, n) : pass
+        def visitNormalInterfaceDeclaration(self, n) : pass
+        def visitInterfaceModifiers(self, n) : pass
+        def visitInterfaceBody(self, n) : pass
+        def visitInterfaceMemberDeclarations(self, n) : pass
+        def visitInterfaceMemberDeclaration(self, n) : pass
+        def visitConstantDeclaration(self, n) : pass
+        def visitConstantModifiers(self, n) : pass
+        def visitAbstractMethodDeclaration(self, n) : pass
+        def visitAbstractMethodModifiers(self, n) : pass
+        def visitAnnotationTypeDeclaration(self, n) : pass
+        def visitAnnotationTypeBody(self, n) : pass
+        def visitAnnotationTypeElementDeclarations(self, n) : pass
+        def visitDefaultValue(self, n) : pass
+        def visitAnnotations(self, n) : pass
+        def visitNormalAnnotation(self, n) : pass
+        def visitElementValuePairs(self, n) : pass
+        def visitElementValuePair(self, n) : pass
+        def visitElementValueArrayInitializer(self, n) : pass
+        def visitElementValues(self, n) : pass
+        def visitMarkerAnnotation(self, n) : pass
+        def visitSingleElementAnnotation(self, n) : pass
+        def visitArrayInitializer(self, n) : pass
+        def visitVariableInitializers(self, n) : pass
+        def visitBlock(self, n) : pass
+        def visitBlockStatements(self, n) : pass
+        def visitLocalVariableDeclarationStatement(self, n) : pass
+        def visitLocalVariableDeclaration(self, n) : pass
+        def visitIfThenStatement(self, n) : pass
+        def visitIfThenElseStatement(self, n) : pass
+        def visitIfThenElseStatementNoShortIf(self, n) : pass
+        def visitEmptyStatement(self, n) : pass
+        def visitLabeledStatement(self, n) : pass
+        def visitLabeledStatementNoShortIf(self, n) : pass
+        def visitExpressionStatement(self, n) : pass
+        def visitSwitchStatement(self, n) : pass
+        def visitSwitchBlock(self, n) : pass
+        def visitSwitchBlockStatementGroups(self, n) : pass
+        def visitSwitchBlockStatementGroup(self, n) : pass
+        def visitSwitchLabels(self, n) : pass
+        def visitWhileStatement(self, n) : pass
+        def visitWhileStatementNoShortIf(self, n) : pass
+        def visitDoStatement(self, n) : pass
+        def visitBasicForStatement(self, n) : pass
+        def visitForStatementNoShortIf(self, n) : pass
+        def visitStatementExpressionList(self, n) : pass
+        def visitEnhancedForStatement(self, n) : pass
+        def visitBreakStatement(self, n) : pass
+        def visitContinueStatement(self, n) : pass
+        def visitReturnStatement(self, n) : pass
+        def visitThrowStatement(self, n) : pass
+        def visitSynchronizedStatement(self, n) : pass
+        def visitCatches(self, n) : pass
+        def visitCatchClause(self, n) : pass
+        def visitFinally(self, n) : pass
+        def visitArgumentList(self, n) : pass
+        def visitDimExprs(self, n) : pass
+        def visitDimExpr(self, n) : pass
+        def visitPostIncrementExpression(self, n) : pass
+        def visitPostDecrementExpression(self, n) : pass
+        def visitPreIncrementExpression(self, n) : pass
+        def visitPreDecrementExpression(self, n) : pass
+        def visitAndExpression(self, n) : pass
+        def visitExclusiveOrExpression(self, n) : pass
+        def visitInclusiveOrExpression(self, n) : pass
+        def visitConditionalAndExpression(self, n) : pass
+        def visitConditionalOrExpression(self, n) : pass
+        def visitConditionalExpression(self, n) : pass
+        def visitAssignment(self, n) : pass
+        def visitCommaopt(self, n) : pass
+        def visitEllipsisopt(self, n) : pass
+        def visitLPGUserAction0(self, n) : pass
+        def visitLPGUserAction1(self, n) : pass
+        def visitLPGUserAction2(self, n) : pass
+        def visitLPGUserAction3(self, n) : pass
+        def visitLPGUserAction4(self, n) : pass
+        def visitIntegralType0(self, n) : pass
+        def visitIntegralType1(self, n) : pass
+        def visitIntegralType2(self, n) : pass
+        def visitIntegralType3(self, n) : pass
+        def visitIntegralType4(self, n) : pass
+        def visitFloatingPointType0(self, n) : pass
+        def visitFloatingPointType1(self, n) : pass
+        def visitWildcardBounds0(self, n) : pass
+        def visitWildcardBounds1(self, n) : pass
+        def visitClassModifier0(self, n) : pass
+        def visitClassModifier1(self, n) : pass
+        def visitClassModifier2(self, n) : pass
+        def visitClassModifier3(self, n) : pass
+        def visitClassModifier4(self, n) : pass
+        def visitClassModifier5(self, n) : pass
+        def visitClassModifier6(self, n) : pass
+        def visitFieldModifier0(self, n) : pass
+        def visitFieldModifier1(self, n) : pass
+        def visitFieldModifier2(self, n) : pass
+        def visitFieldModifier3(self, n) : pass
+        def visitFieldModifier4(self, n) : pass
+        def visitFieldModifier5(self, n) : pass
+        def visitFieldModifier6(self, n) : pass
+        def visitMethodDeclarator0(self, n) : pass
+        def visitMethodDeclarator1(self, n) : pass
+        def visitMethodModifier0(self, n) : pass
+        def visitMethodModifier1(self, n) : pass
+        def visitMethodModifier2(self, n) : pass
+        def visitMethodModifier3(self, n) : pass
+        def visitMethodModifier4(self, n) : pass
+        def visitMethodModifier5(self, n) : pass
+        def visitMethodModifier6(self, n) : pass
+        def visitMethodModifier7(self, n) : pass
+        def visitMethodModifier8(self, n) : pass
+        def visitConstructorModifier0(self, n) : pass
+        def visitConstructorModifier1(self, n) : pass
+        def visitConstructorModifier2(self, n) : pass
+        def visitExplicitConstructorInvocation0(self, n) : pass
+        def visitExplicitConstructorInvocation1(self, n) : pass
+        def visitExplicitConstructorInvocation2(self, n) : pass
+        def visitInterfaceModifier0(self, n) : pass
+        def visitInterfaceModifier1(self, n) : pass
+        def visitInterfaceModifier2(self, n) : pass
+        def visitInterfaceModifier3(self, n) : pass
+        def visitInterfaceModifier4(self, n) : pass
+        def visitInterfaceModifier5(self, n) : pass
+        def visitExtendsInterfaces0(self, n) : pass
+        def visitExtendsInterfaces1(self, n) : pass
+        def visitConstantModifier0(self, n) : pass
+        def visitConstantModifier1(self, n) : pass
+        def visitConstantModifier2(self, n) : pass
+        def visitAbstractMethodModifier0(self, n) : pass
+        def visitAbstractMethodModifier1(self, n) : pass
+        def visitAnnotationTypeElementDeclaration0(self, n) : pass
+        def visitAnnotationTypeElementDeclaration1(self, n) : pass
+        def visitAssertStatement0(self, n) : pass
+        def visitAssertStatement1(self, n) : pass
+        def visitSwitchLabel0(self, n) : pass
+        def visitSwitchLabel1(self, n) : pass
+        def visitSwitchLabel2(self, n) : pass
+        def visitTryStatement0(self, n) : pass
+        def visitTryStatement1(self, n) : pass
+        def visitPrimaryNoNewArray0(self, n) : pass
+        def visitPrimaryNoNewArray1(self, n) : pass
+        def visitPrimaryNoNewArray2(self, n) : pass
+        def visitPrimaryNoNewArray3(self, n) : pass
+        def visitPrimaryNoNewArray4(self, n) : pass
+        def visitLiteral0(self, n) : pass
+        def visitLiteral1(self, n) : pass
+        def visitLiteral2(self, n) : pass
+        def visitLiteral3(self, n) : pass
+        def visitLiteral4(self, n) : pass
+        def visitLiteral5(self, n) : pass
+        def visitLiteral6(self, n) : pass
+        def visitBooleanLiteral0(self, n) : pass
+        def visitBooleanLiteral1(self, n) : pass
+        def visitClassInstanceCreationExpression0(self, n) : pass
+        def visitClassInstanceCreationExpression1(self, n) : pass
+        def visitArrayCreationExpression0(self, n) : pass
+        def visitArrayCreationExpression1(self, n) : pass
+        def visitArrayCreationExpression2(self, n) : pass
+        def visitArrayCreationExpression3(self, n) : pass
+        def visitDims0(self, n) : pass
+        def visitDims1(self, n) : pass
+        def visitFieldAccess0(self, n) : pass
+        def visitFieldAccess1(self, n) : pass
+        def visitFieldAccess2(self, n) : pass
+        def visitMethodInvocation0(self, n) : pass
+        def visitMethodInvocation1(self, n) : pass
+        def visitMethodInvocation2(self, n) : pass
+        def visitMethodInvocation3(self, n) : pass
+        def visitMethodInvocation4(self, n) : pass
+        def visitArrayAccess0(self, n) : pass
+        def visitArrayAccess1(self, n) : pass
+        def visitUnaryExpression0(self, n) : pass
+        def visitUnaryExpression1(self, n) : pass
+        def visitUnaryExpressionNotPlusMinus0(self, n) : pass
+        def visitUnaryExpressionNotPlusMinus1(self, n) : pass
+        def visitCastExpression0(self, n) : pass
+        def visitCastExpression1(self, n) : pass
+        def visitMultiplicativeExpression0(self, n) : pass
+        def visitMultiplicativeExpression1(self, n) : pass
+        def visitMultiplicativeExpression2(self, n) : pass
+        def visitAdditiveExpression0(self, n) : pass
+        def visitAdditiveExpression1(self, n) : pass
+        def visitShiftExpression0(self, n) : pass
+        def visitShiftExpression1(self, n) : pass
+        def visitShiftExpression2(self, n) : pass
+        def visitRelationalExpression0(self, n) : pass
+        def visitRelationalExpression1(self, n) : pass
+        def visitRelationalExpression2(self, n) : pass
+        def visitRelationalExpression3(self, n) : pass
+        def visitRelationalExpression4(self, n) : pass
+        def visitEqualityExpression0(self, n) : pass
+        def visitEqualityExpression1(self, n) : pass
+        def visitAssignmentOperator0(self, n) : pass
+        def visitAssignmentOperator1(self, n) : pass
+        def visitAssignmentOperator2(self, n) : pass
+        def visitAssignmentOperator3(self, n) : pass
+        def visitAssignmentOperator4(self, n) : pass
+        def visitAssignmentOperator5(self, n) : pass
+        def visitAssignmentOperator6(self, n) : pass
+        def visitAssignmentOperator7(self, n) : pass
+        def visitAssignmentOperator8(self, n) : pass
+        def visitAssignmentOperator9(self, n) : pass
+        def visitAssignmentOperator10(self, n) : pass
+        def visitAssignmentOperator11(self, n) : pass
+
+        def visit(self, n) : pass
+    
+class ResultArgumentVisitor(object):
+        __slots__ = ()
+    
+        def visitAstToken(self, n, o) : pass
+        def visitidentifier(self, n, o) : pass
+        def visitPrimitiveType(self, n, o) : pass
+        def visitClassType(self, n, o) : pass
+        def visitInterfaceType(self, n, o) : pass
+        def visitTypeName(self, n, o) : pass
+        def visitArrayType(self, n, o) : pass
+        def visitTypeParameter(self, n, o) : pass
+        def visitTypeBound(self, n, o) : pass
+        def visitAdditionalBoundList(self, n, o) : pass
+        def visitAdditionalBound(self, n, o) : pass
+        def visitTypeArguments(self, n, o) : pass
+        def visitActualTypeArgumentList(self, n, o) : pass
+        def visitWildcard(self, n, o) : pass
+        def visitPackageName(self, n, o) : pass
+        def visitExpressionName(self, n, o) : pass
+        def visitMethodName(self, n, o) : pass
+        def visitPackageOrTypeName(self, n, o) : pass
+        def visitAmbiguousName(self, n, o) : pass
+        def visitCompilationUnit(self, n, o) : pass
+        def visitImportDeclarations(self, n, o) : pass
+        def visitTypeDeclarations(self, n, o) : pass
+        def visitPackageDeclaration(self, n, o) : pass
+        def visitSingleTypeImportDeclaration(self, n, o) : pass
+        def visitTypeImportOnDemandDeclaration(self, n, o) : pass
+        def visitSingleStaticImportDeclaration(self, n, o) : pass
+        def visitStaticImportOnDemandDeclaration(self, n, o) : pass
+        def visitTypeDeclaration(self, n, o) : pass
+        def visitNormalClassDeclaration(self, n, o) : pass
+        def visitClassModifiers(self, n, o) : pass
+        def visitTypeParameters(self, n, o) : pass
+        def visitTypeParameterList(self, n, o) : pass
+        def visitSuper(self, n, o) : pass
+        def visitInterfaces(self, n, o) : pass
+        def visitInterfaceTypeList(self, n, o) : pass
+        def visitClassBody(self, n, o) : pass
+        def visitClassBodyDeclarations(self, n, o) : pass
+        def visitClassMemberDeclaration(self, n, o) : pass
+        def visitFieldDeclaration(self, n, o) : pass
+        def visitVariableDeclarators(self, n, o) : pass
+        def visitVariableDeclarator(self, n, o) : pass
+        def visitVariableDeclaratorId(self, n, o) : pass
+        def visitFieldModifiers(self, n, o) : pass
+        def visitMethodDeclaration(self, n, o) : pass
+        def visitMethodHeader(self, n, o) : pass
+        def visitResultType(self, n, o) : pass
+        def visitFormalParameterList(self, n, o) : pass
+        def visitFormalParameters(self, n, o) : pass
+        def visitFormalParameter(self, n, o) : pass
+        def visitVariableModifiers(self, n, o) : pass
+        def visitVariableModifier(self, n, o) : pass
+        def visitLastFormalParameter(self, n, o) : pass
+        def visitMethodModifiers(self, n, o) : pass
+        def visitThrows(self, n, o) : pass
+        def visitExceptionTypeList(self, n, o) : pass
+        def visitMethodBody(self, n, o) : pass
+        def visitStaticInitializer(self, n, o) : pass
+        def visitConstructorDeclaration(self, n, o) : pass
+        def visitConstructorDeclarator(self, n, o) : pass
+        def visitConstructorModifiers(self, n, o) : pass
+        def visitConstructorBody(self, n, o) : pass
+        def visitEnumDeclaration(self, n, o) : pass
+        def visitEnumBody(self, n, o) : pass
+        def visitEnumConstants(self, n, o) : pass
+        def visitEnumConstant(self, n, o) : pass
+        def visitArguments(self, n, o) : pass
+        def visitEnumBodyDeclarations(self, n, o) : pass
+        def visitNormalInterfaceDeclaration(self, n, o) : pass
+        def visitInterfaceModifiers(self, n, o) : pass
+        def visitInterfaceBody(self, n, o) : pass
+        def visitInterfaceMemberDeclarations(self, n, o) : pass
+        def visitInterfaceMemberDeclaration(self, n, o) : pass
+        def visitConstantDeclaration(self, n, o) : pass
+        def visitConstantModifiers(self, n, o) : pass
+        def visitAbstractMethodDeclaration(self, n, o) : pass
+        def visitAbstractMethodModifiers(self, n, o) : pass
+        def visitAnnotationTypeDeclaration(self, n, o) : pass
+        def visitAnnotationTypeBody(self, n, o) : pass
+        def visitAnnotationTypeElementDeclarations(self, n, o) : pass
+        def visitDefaultValue(self, n, o) : pass
+        def visitAnnotations(self, n, o) : pass
+        def visitNormalAnnotation(self, n, o) : pass
+        def visitElementValuePairs(self, n, o) : pass
+        def visitElementValuePair(self, n, o) : pass
+        def visitElementValueArrayInitializer(self, n, o) : pass
+        def visitElementValues(self, n, o) : pass
+        def visitMarkerAnnotation(self, n, o) : pass
+        def visitSingleElementAnnotation(self, n, o) : pass
+        def visitArrayInitializer(self, n, o) : pass
+        def visitVariableInitializers(self, n, o) : pass
+        def visitBlock(self, n, o) : pass
+        def visitBlockStatements(self, n, o) : pass
+        def visitLocalVariableDeclarationStatement(self, n, o) : pass
+        def visitLocalVariableDeclaration(self, n, o) : pass
+        def visitIfThenStatement(self, n, o) : pass
+        def visitIfThenElseStatement(self, n, o) : pass
+        def visitIfThenElseStatementNoShortIf(self, n, o) : pass
+        def visitEmptyStatement(self, n, o) : pass
+        def visitLabeledStatement(self, n, o) : pass
+        def visitLabeledStatementNoShortIf(self, n, o) : pass
+        def visitExpressionStatement(self, n, o) : pass
+        def visitSwitchStatement(self, n, o) : pass
+        def visitSwitchBlock(self, n, o) : pass
+        def visitSwitchBlockStatementGroups(self, n, o) : pass
+        def visitSwitchBlockStatementGroup(self, n, o) : pass
+        def visitSwitchLabels(self, n, o) : pass
+        def visitWhileStatement(self, n, o) : pass
+        def visitWhileStatementNoShortIf(self, n, o) : pass
+        def visitDoStatement(self, n, o) : pass
+        def visitBasicForStatement(self, n, o) : pass
+        def visitForStatementNoShortIf(self, n, o) : pass
+        def visitStatementExpressionList(self, n, o) : pass
+        def visitEnhancedForStatement(self, n, o) : pass
+        def visitBreakStatement(self, n, o) : pass
+        def visitContinueStatement(self, n, o) : pass
+        def visitReturnStatement(self, n, o) : pass
+        def visitThrowStatement(self, n, o) : pass
+        def visitSynchronizedStatement(self, n, o) : pass
+        def visitCatches(self, n, o) : pass
+        def visitCatchClause(self, n, o) : pass
+        def visitFinally(self, n, o) : pass
+        def visitArgumentList(self, n, o) : pass
+        def visitDimExprs(self, n, o) : pass
+        def visitDimExpr(self, n, o) : pass
+        def visitPostIncrementExpression(self, n, o) : pass
+        def visitPostDecrementExpression(self, n, o) : pass
+        def visitPreIncrementExpression(self, n, o) : pass
+        def visitPreDecrementExpression(self, n, o) : pass
+        def visitAndExpression(self, n, o) : pass
+        def visitExclusiveOrExpression(self, n, o) : pass
+        def visitInclusiveOrExpression(self, n, o) : pass
+        def visitConditionalAndExpression(self, n, o) : pass
+        def visitConditionalOrExpression(self, n, o) : pass
+        def visitConditionalExpression(self, n, o) : pass
+        def visitAssignment(self, n, o) : pass
+        def visitCommaopt(self, n, o) : pass
+        def visitEllipsisopt(self, n, o) : pass
+        def visitLPGUserAction0(self, n, o) : pass
+        def visitLPGUserAction1(self, n, o) : pass
+        def visitLPGUserAction2(self, n, o) : pass
+        def visitLPGUserAction3(self, n, o) : pass
+        def visitLPGUserAction4(self, n, o) : pass
+        def visitIntegralType0(self, n, o) : pass
+        def visitIntegralType1(self, n, o) : pass
+        def visitIntegralType2(self, n, o) : pass
+        def visitIntegralType3(self, n, o) : pass
+        def visitIntegralType4(self, n, o) : pass
+        def visitFloatingPointType0(self, n, o) : pass
+        def visitFloatingPointType1(self, n, o) : pass
+        def visitWildcardBounds0(self, n, o) : pass
+        def visitWildcardBounds1(self, n, o) : pass
+        def visitClassModifier0(self, n, o) : pass
+        def visitClassModifier1(self, n, o) : pass
+        def visitClassModifier2(self, n, o) : pass
+        def visitClassModifier3(self, n, o) : pass
+        def visitClassModifier4(self, n, o) : pass
+        def visitClassModifier5(self, n, o) : pass
+        def visitClassModifier6(self, n, o) : pass
+        def visitFieldModifier0(self, n, o) : pass
+        def visitFieldModifier1(self, n, o) : pass
+        def visitFieldModifier2(self, n, o) : pass
+        def visitFieldModifier3(self, n, o) : pass
+        def visitFieldModifier4(self, n, o) : pass
+        def visitFieldModifier5(self, n, o) : pass
+        def visitFieldModifier6(self, n, o) : pass
+        def visitMethodDeclarator0(self, n, o) : pass
+        def visitMethodDeclarator1(self, n, o) : pass
+        def visitMethodModifier0(self, n, o) : pass
+        def visitMethodModifier1(self, n, o) : pass
+        def visitMethodModifier2(self, n, o) : pass
+        def visitMethodModifier3(self, n, o) : pass
+        def visitMethodModifier4(self, n, o) : pass
+        def visitMethodModifier5(self, n, o) : pass
+        def visitMethodModifier6(self, n, o) : pass
+        def visitMethodModifier7(self, n, o) : pass
+        def visitMethodModifier8(self, n, o) : pass
+        def visitConstructorModifier0(self, n, o) : pass
+        def visitConstructorModifier1(self, n, o) : pass
+        def visitConstructorModifier2(self, n, o) : pass
+        def visitExplicitConstructorInvocation0(self, n, o) : pass
+        def visitExplicitConstructorInvocation1(self, n, o) : pass
+        def visitExplicitConstructorInvocation2(self, n, o) : pass
+        def visitInterfaceModifier0(self, n, o) : pass
+        def visitInterfaceModifier1(self, n, o) : pass
+        def visitInterfaceModifier2(self, n, o) : pass
+        def visitInterfaceModifier3(self, n, o) : pass
+        def visitInterfaceModifier4(self, n, o) : pass
+        def visitInterfaceModifier5(self, n, o) : pass
+        def visitExtendsInterfaces0(self, n, o) : pass
+        def visitExtendsInterfaces1(self, n, o) : pass
+        def visitConstantModifier0(self, n, o) : pass
+        def visitConstantModifier1(self, n, o) : pass
+        def visitConstantModifier2(self, n, o) : pass
+        def visitAbstractMethodModifier0(self, n, o) : pass
+        def visitAbstractMethodModifier1(self, n, o) : pass
+        def visitAnnotationTypeElementDeclaration0(self, n, o) : pass
+        def visitAnnotationTypeElementDeclaration1(self, n, o) : pass
+        def visitAssertStatement0(self, n, o) : pass
+        def visitAssertStatement1(self, n, o) : pass
+        def visitSwitchLabel0(self, n, o) : pass
+        def visitSwitchLabel1(self, n, o) : pass
+        def visitSwitchLabel2(self, n, o) : pass
+        def visitTryStatement0(self, n, o) : pass
+        def visitTryStatement1(self, n, o) : pass
+        def visitPrimaryNoNewArray0(self, n, o) : pass
+        def visitPrimaryNoNewArray1(self, n, o) : pass
+        def visitPrimaryNoNewArray2(self, n, o) : pass
+        def visitPrimaryNoNewArray3(self, n, o) : pass
+        def visitPrimaryNoNewArray4(self, n, o) : pass
+        def visitLiteral0(self, n, o) : pass
+        def visitLiteral1(self, n, o) : pass
+        def visitLiteral2(self, n, o) : pass
+        def visitLiteral3(self, n, o) : pass
+        def visitLiteral4(self, n, o) : pass
+        def visitLiteral5(self, n, o) : pass
+        def visitLiteral6(self, n, o) : pass
+        def visitBooleanLiteral0(self, n, o) : pass
+        def visitBooleanLiteral1(self, n, o) : pass
+        def visitClassInstanceCreationExpression0(self, n, o) : pass
+        def visitClassInstanceCreationExpression1(self, n, o) : pass
+        def visitArrayCreationExpression0(self, n, o) : pass
+        def visitArrayCreationExpression1(self, n, o) : pass
+        def visitArrayCreationExpression2(self, n, o) : pass
+        def visitArrayCreationExpression3(self, n, o) : pass
+        def visitDims0(self, n, o) : pass
+        def visitDims1(self, n, o) : pass
+        def visitFieldAccess0(self, n, o) : pass
+        def visitFieldAccess1(self, n, o) : pass
+        def visitFieldAccess2(self, n, o) : pass
+        def visitMethodInvocation0(self, n, o) : pass
+        def visitMethodInvocation1(self, n, o) : pass
+        def visitMethodInvocation2(self, n, o) : pass
+        def visitMethodInvocation3(self, n, o) : pass
+        def visitMethodInvocation4(self, n, o) : pass
+        def visitArrayAccess0(self, n, o) : pass
+        def visitArrayAccess1(self, n, o) : pass
+        def visitUnaryExpression0(self, n, o) : pass
+        def visitUnaryExpression1(self, n, o) : pass
+        def visitUnaryExpressionNotPlusMinus0(self, n, o) : pass
+        def visitUnaryExpressionNotPlusMinus1(self, n, o) : pass
+        def visitCastExpression0(self, n, o) : pass
+        def visitCastExpression1(self, n, o) : pass
+        def visitMultiplicativeExpression0(self, n, o) : pass
+        def visitMultiplicativeExpression1(self, n, o) : pass
+        def visitMultiplicativeExpression2(self, n, o) : pass
+        def visitAdditiveExpression0(self, n, o) : pass
+        def visitAdditiveExpression1(self, n, o) : pass
+        def visitShiftExpression0(self, n, o) : pass
+        def visitShiftExpression1(self, n, o) : pass
+        def visitShiftExpression2(self, n, o) : pass
+        def visitRelationalExpression0(self, n, o) : pass
+        def visitRelationalExpression1(self, n, o) : pass
+        def visitRelationalExpression2(self, n, o) : pass
+        def visitRelationalExpression3(self, n, o) : pass
+        def visitRelationalExpression4(self, n, o) : pass
+        def visitEqualityExpression0(self, n, o) : pass
+        def visitEqualityExpression1(self, n, o) : pass
+        def visitAssignmentOperator0(self, n, o) : pass
+        def visitAssignmentOperator1(self, n, o) : pass
+        def visitAssignmentOperator2(self, n, o) : pass
+        def visitAssignmentOperator3(self, n, o) : pass
+        def visitAssignmentOperator4(self, n, o) : pass
+        def visitAssignmentOperator5(self, n, o) : pass
+        def visitAssignmentOperator6(self, n, o) : pass
+        def visitAssignmentOperator7(self, n, o) : pass
+        def visitAssignmentOperator8(self, n, o) : pass
+        def visitAssignmentOperator9(self, n, o) : pass
+        def visitAssignmentOperator10(self, n, o) : pass
+        def visitAssignmentOperator11(self, n, o) : pass
+
+        def visit(self, n, o) : pass
+    
+class AbstractVisitor ( Visitor, ArgumentVisitor):
+          __slots__ = ()
+    
+          def unimplementedVisitor(self,s : str) :raise TypeError('Can not instantiate abstract class  with abstract methods') 
+
+          def visitAstToken(self, n, o = None) :   self.unimplementedVisitor("visitAstToken(AstToken, any)")
+
+          def visitidentifier(self, n, o = None) :   self.unimplementedVisitor("visitidentifier(identifier, any)")
+
+          def visitPrimitiveType(self, n, o = None) :   self.unimplementedVisitor("visitPrimitiveType(PrimitiveType, any)")
+
+          def visitClassType(self, n, o = None) :   self.unimplementedVisitor("visitClassType(ClassType, any)")
+
+          def visitInterfaceType(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceType(InterfaceType, any)")
+
+          def visitTypeName(self, n, o = None) :   self.unimplementedVisitor("visitTypeName(TypeName, any)")
+
+          def visitArrayType(self, n, o = None) :   self.unimplementedVisitor("visitArrayType(ArrayType, any)")
+
+          def visitTypeParameter(self, n, o = None) :   self.unimplementedVisitor("visitTypeParameter(TypeParameter, any)")
+
+          def visitTypeBound(self, n, o = None) :   self.unimplementedVisitor("visitTypeBound(TypeBound, any)")
+
+          def visitAdditionalBoundList(self, n, o = None) :   self.unimplementedVisitor("visitAdditionalBoundList(AdditionalBoundList, any)")
+
+          def visitAdditionalBound(self, n, o = None) :   self.unimplementedVisitor("visitAdditionalBound(AdditionalBound, any)")
+
+          def visitTypeArguments(self, n, o = None) :   self.unimplementedVisitor("visitTypeArguments(TypeArguments, any)")
+
+          def visitActualTypeArgumentList(self, n, o = None) :   self.unimplementedVisitor("visitActualTypeArgumentList(ActualTypeArgumentList, any)")
+
+          def visitWildcard(self, n, o = None) :   self.unimplementedVisitor("visitWildcard(Wildcard, any)")
+
+          def visitPackageName(self, n, o = None) :   self.unimplementedVisitor("visitPackageName(PackageName, any)")
+
+          def visitExpressionName(self, n, o = None) :   self.unimplementedVisitor("visitExpressionName(ExpressionName, any)")
+
+          def visitMethodName(self, n, o = None) :   self.unimplementedVisitor("visitMethodName(MethodName, any)")
+
+          def visitPackageOrTypeName(self, n, o = None) :   self.unimplementedVisitor("visitPackageOrTypeName(PackageOrTypeName, any)")
+
+          def visitAmbiguousName(self, n, o = None) :   self.unimplementedVisitor("visitAmbiguousName(AmbiguousName, any)")
+
+          def visitCompilationUnit(self, n, o = None) :   self.unimplementedVisitor("visitCompilationUnit(CompilationUnit, any)")
+
+          def visitImportDeclarations(self, n, o = None) :   self.unimplementedVisitor("visitImportDeclarations(ImportDeclarations, any)")
+
+          def visitTypeDeclarations(self, n, o = None) :   self.unimplementedVisitor("visitTypeDeclarations(TypeDeclarations, any)")
+
+          def visitPackageDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitPackageDeclaration(PackageDeclaration, any)")
+
+          def visitSingleTypeImportDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitSingleTypeImportDeclaration(SingleTypeImportDeclaration, any)")
+
+          def visitTypeImportOnDemandDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitTypeImportOnDemandDeclaration(TypeImportOnDemandDeclaration, any)")
+
+          def visitSingleStaticImportDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitSingleStaticImportDeclaration(SingleStaticImportDeclaration, any)")
+
+          def visitStaticImportOnDemandDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitStaticImportOnDemandDeclaration(StaticImportOnDemandDeclaration, any)")
+
+          def visitTypeDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitTypeDeclaration(TypeDeclaration, any)")
+
+          def visitNormalClassDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitNormalClassDeclaration(NormalClassDeclaration, any)")
+
+          def visitClassModifiers(self, n, o = None) :   self.unimplementedVisitor("visitClassModifiers(ClassModifiers, any)")
+
+          def visitTypeParameters(self, n, o = None) :   self.unimplementedVisitor("visitTypeParameters(TypeParameters, any)")
+
+          def visitTypeParameterList(self, n, o = None) :   self.unimplementedVisitor("visitTypeParameterList(TypeParameterList, any)")
+
+          def visitSuper(self, n, o = None) :   self.unimplementedVisitor("visitSuper(Super, any)")
+
+          def visitInterfaces(self, n, o = None) :   self.unimplementedVisitor("visitInterfaces(Interfaces, any)")
+
+          def visitInterfaceTypeList(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceTypeList(InterfaceTypeList, any)")
+
+          def visitClassBody(self, n, o = None) :   self.unimplementedVisitor("visitClassBody(ClassBody, any)")
+
+          def visitClassBodyDeclarations(self, n, o = None) :   self.unimplementedVisitor("visitClassBodyDeclarations(ClassBodyDeclarations, any)")
+
+          def visitClassMemberDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitClassMemberDeclaration(ClassMemberDeclaration, any)")
+
+          def visitFieldDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitFieldDeclaration(FieldDeclaration, any)")
+
+          def visitVariableDeclarators(self, n, o = None) :   self.unimplementedVisitor("visitVariableDeclarators(VariableDeclarators, any)")
+
+          def visitVariableDeclarator(self, n, o = None) :   self.unimplementedVisitor("visitVariableDeclarator(VariableDeclarator, any)")
+
+          def visitVariableDeclaratorId(self, n, o = None) :   self.unimplementedVisitor("visitVariableDeclaratorId(VariableDeclaratorId, any)")
+
+          def visitFieldModifiers(self, n, o = None) :   self.unimplementedVisitor("visitFieldModifiers(FieldModifiers, any)")
+
+          def visitMethodDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitMethodDeclaration(MethodDeclaration, any)")
+
+          def visitMethodHeader(self, n, o = None) :   self.unimplementedVisitor("visitMethodHeader(MethodHeader, any)")
+
+          def visitResultType(self, n, o = None) :   self.unimplementedVisitor("visitResultType(ResultType, any)")
+
+          def visitFormalParameterList(self, n, o = None) :   self.unimplementedVisitor("visitFormalParameterList(FormalParameterList, any)")
+
+          def visitFormalParameters(self, n, o = None) :   self.unimplementedVisitor("visitFormalParameters(FormalParameters, any)")
+
+          def visitFormalParameter(self, n, o = None) :   self.unimplementedVisitor("visitFormalParameter(FormalParameter, any)")
+
+          def visitVariableModifiers(self, n, o = None) :   self.unimplementedVisitor("visitVariableModifiers(VariableModifiers, any)")
+
+          def visitVariableModifier(self, n, o = None) :   self.unimplementedVisitor("visitVariableModifier(VariableModifier, any)")
+
+          def visitLastFormalParameter(self, n, o = None) :   self.unimplementedVisitor("visitLastFormalParameter(LastFormalParameter, any)")
+
+          def visitMethodModifiers(self, n, o = None) :   self.unimplementedVisitor("visitMethodModifiers(MethodModifiers, any)")
+
+          def visitThrows(self, n, o = None) :   self.unimplementedVisitor("visitThrows(Throws, any)")
+
+          def visitExceptionTypeList(self, n, o = None) :   self.unimplementedVisitor("visitExceptionTypeList(ExceptionTypeList, any)")
+
+          def visitMethodBody(self, n, o = None) :   self.unimplementedVisitor("visitMethodBody(MethodBody, any)")
+
+          def visitStaticInitializer(self, n, o = None) :   self.unimplementedVisitor("visitStaticInitializer(StaticInitializer, any)")
+
+          def visitConstructorDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitConstructorDeclaration(ConstructorDeclaration, any)")
+
+          def visitConstructorDeclarator(self, n, o = None) :   self.unimplementedVisitor("visitConstructorDeclarator(ConstructorDeclarator, any)")
+
+          def visitConstructorModifiers(self, n, o = None) :   self.unimplementedVisitor("visitConstructorModifiers(ConstructorModifiers, any)")
+
+          def visitConstructorBody(self, n, o = None) :   self.unimplementedVisitor("visitConstructorBody(ConstructorBody, any)")
+
+          def visitEnumDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitEnumDeclaration(EnumDeclaration, any)")
+
+          def visitEnumBody(self, n, o = None) :   self.unimplementedVisitor("visitEnumBody(EnumBody, any)")
+
+          def visitEnumConstants(self, n, o = None) :   self.unimplementedVisitor("visitEnumConstants(EnumConstants, any)")
+
+          def visitEnumConstant(self, n, o = None) :   self.unimplementedVisitor("visitEnumConstant(EnumConstant, any)")
+
+          def visitArguments(self, n, o = None) :   self.unimplementedVisitor("visitArguments(Arguments, any)")
+
+          def visitEnumBodyDeclarations(self, n, o = None) :   self.unimplementedVisitor("visitEnumBodyDeclarations(EnumBodyDeclarations, any)")
+
+          def visitNormalInterfaceDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitNormalInterfaceDeclaration(NormalInterfaceDeclaration, any)")
+
+          def visitInterfaceModifiers(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceModifiers(InterfaceModifiers, any)")
+
+          def visitInterfaceBody(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceBody(InterfaceBody, any)")
+
+          def visitInterfaceMemberDeclarations(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceMemberDeclarations(InterfaceMemberDeclarations, any)")
+
+          def visitInterfaceMemberDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceMemberDeclaration(InterfaceMemberDeclaration, any)")
+
+          def visitConstantDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitConstantDeclaration(ConstantDeclaration, any)")
+
+          def visitConstantModifiers(self, n, o = None) :   self.unimplementedVisitor("visitConstantModifiers(ConstantModifiers, any)")
+
+          def visitAbstractMethodDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitAbstractMethodDeclaration(AbstractMethodDeclaration, any)")
+
+          def visitAbstractMethodModifiers(self, n, o = None) :   self.unimplementedVisitor("visitAbstractMethodModifiers(AbstractMethodModifiers, any)")
+
+          def visitAnnotationTypeDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitAnnotationTypeDeclaration(AnnotationTypeDeclaration, any)")
+
+          def visitAnnotationTypeBody(self, n, o = None) :   self.unimplementedVisitor("visitAnnotationTypeBody(AnnotationTypeBody, any)")
+
+          def visitAnnotationTypeElementDeclarations(self, n, o = None) :   self.unimplementedVisitor("visitAnnotationTypeElementDeclarations(AnnotationTypeElementDeclarations, any)")
+
+          def visitDefaultValue(self, n, o = None) :   self.unimplementedVisitor("visitDefaultValue(DefaultValue, any)")
+
+          def visitAnnotations(self, n, o = None) :   self.unimplementedVisitor("visitAnnotations(Annotations, any)")
+
+          def visitNormalAnnotation(self, n, o = None) :   self.unimplementedVisitor("visitNormalAnnotation(NormalAnnotation, any)")
+
+          def visitElementValuePairs(self, n, o = None) :   self.unimplementedVisitor("visitElementValuePairs(ElementValuePairs, any)")
+
+          def visitElementValuePair(self, n, o = None) :   self.unimplementedVisitor("visitElementValuePair(ElementValuePair, any)")
+
+          def visitElementValueArrayInitializer(self, n, o = None) :   self.unimplementedVisitor("visitElementValueArrayInitializer(ElementValueArrayInitializer, any)")
+
+          def visitElementValues(self, n, o = None) :   self.unimplementedVisitor("visitElementValues(ElementValues, any)")
+
+          def visitMarkerAnnotation(self, n, o = None) :   self.unimplementedVisitor("visitMarkerAnnotation(MarkerAnnotation, any)")
+
+          def visitSingleElementAnnotation(self, n, o = None) :   self.unimplementedVisitor("visitSingleElementAnnotation(SingleElementAnnotation, any)")
+
+          def visitArrayInitializer(self, n, o = None) :   self.unimplementedVisitor("visitArrayInitializer(ArrayInitializer, any)")
+
+          def visitVariableInitializers(self, n, o = None) :   self.unimplementedVisitor("visitVariableInitializers(VariableInitializers, any)")
+
+          def visitBlock(self, n, o = None) :   self.unimplementedVisitor("visitBlock(Block, any)")
+
+          def visitBlockStatements(self, n, o = None) :   self.unimplementedVisitor("visitBlockStatements(BlockStatements, any)")
+
+          def visitLocalVariableDeclarationStatement(self, n, o = None) :   self.unimplementedVisitor("visitLocalVariableDeclarationStatement(LocalVariableDeclarationStatement, any)")
+
+          def visitLocalVariableDeclaration(self, n, o = None) :   self.unimplementedVisitor("visitLocalVariableDeclaration(LocalVariableDeclaration, any)")
+
+          def visitIfThenStatement(self, n, o = None) :   self.unimplementedVisitor("visitIfThenStatement(IfThenStatement, any)")
+
+          def visitIfThenElseStatement(self, n, o = None) :   self.unimplementedVisitor("visitIfThenElseStatement(IfThenElseStatement, any)")
+
+          def visitIfThenElseStatementNoShortIf(self, n, o = None) :   self.unimplementedVisitor("visitIfThenElseStatementNoShortIf(IfThenElseStatementNoShortIf, any)")
+
+          def visitEmptyStatement(self, n, o = None) :   self.unimplementedVisitor("visitEmptyStatement(EmptyStatement, any)")
+
+          def visitLabeledStatement(self, n, o = None) :   self.unimplementedVisitor("visitLabeledStatement(LabeledStatement, any)")
+
+          def visitLabeledStatementNoShortIf(self, n, o = None) :   self.unimplementedVisitor("visitLabeledStatementNoShortIf(LabeledStatementNoShortIf, any)")
+
+          def visitExpressionStatement(self, n, o = None) :   self.unimplementedVisitor("visitExpressionStatement(ExpressionStatement, any)")
+
+          def visitSwitchStatement(self, n, o = None) :   self.unimplementedVisitor("visitSwitchStatement(SwitchStatement, any)")
+
+          def visitSwitchBlock(self, n, o = None) :   self.unimplementedVisitor("visitSwitchBlock(SwitchBlock, any)")
+
+          def visitSwitchBlockStatementGroups(self, n, o = None) :   self.unimplementedVisitor("visitSwitchBlockStatementGroups(SwitchBlockStatementGroups, any)")
+
+          def visitSwitchBlockStatementGroup(self, n, o = None) :   self.unimplementedVisitor("visitSwitchBlockStatementGroup(SwitchBlockStatementGroup, any)")
+
+          def visitSwitchLabels(self, n, o = None) :   self.unimplementedVisitor("visitSwitchLabels(SwitchLabels, any)")
+
+          def visitWhileStatement(self, n, o = None) :   self.unimplementedVisitor("visitWhileStatement(WhileStatement, any)")
+
+          def visitWhileStatementNoShortIf(self, n, o = None) :   self.unimplementedVisitor("visitWhileStatementNoShortIf(WhileStatementNoShortIf, any)")
+
+          def visitDoStatement(self, n, o = None) :   self.unimplementedVisitor("visitDoStatement(DoStatement, any)")
+
+          def visitBasicForStatement(self, n, o = None) :   self.unimplementedVisitor("visitBasicForStatement(BasicForStatement, any)")
+
+          def visitForStatementNoShortIf(self, n, o = None) :   self.unimplementedVisitor("visitForStatementNoShortIf(ForStatementNoShortIf, any)")
+
+          def visitStatementExpressionList(self, n, o = None) :   self.unimplementedVisitor("visitStatementExpressionList(StatementExpressionList, any)")
+
+          def visitEnhancedForStatement(self, n, o = None) :   self.unimplementedVisitor("visitEnhancedForStatement(EnhancedForStatement, any)")
+
+          def visitBreakStatement(self, n, o = None) :   self.unimplementedVisitor("visitBreakStatement(BreakStatement, any)")
+
+          def visitContinueStatement(self, n, o = None) :   self.unimplementedVisitor("visitContinueStatement(ContinueStatement, any)")
+
+          def visitReturnStatement(self, n, o = None) :   self.unimplementedVisitor("visitReturnStatement(ReturnStatement, any)")
+
+          def visitThrowStatement(self, n, o = None) :   self.unimplementedVisitor("visitThrowStatement(ThrowStatement, any)")
+
+          def visitSynchronizedStatement(self, n, o = None) :   self.unimplementedVisitor("visitSynchronizedStatement(SynchronizedStatement, any)")
+
+          def visitCatches(self, n, o = None) :   self.unimplementedVisitor("visitCatches(Catches, any)")
+
+          def visitCatchClause(self, n, o = None) :   self.unimplementedVisitor("visitCatchClause(CatchClause, any)")
+
+          def visitFinally(self, n, o = None) :   self.unimplementedVisitor("visitFinally(Finally, any)")
+
+          def visitArgumentList(self, n, o = None) :   self.unimplementedVisitor("visitArgumentList(ArgumentList, any)")
+
+          def visitDimExprs(self, n, o = None) :   self.unimplementedVisitor("visitDimExprs(DimExprs, any)")
+
+          def visitDimExpr(self, n, o = None) :   self.unimplementedVisitor("visitDimExpr(DimExpr, any)")
+
+          def visitPostIncrementExpression(self, n, o = None) :   self.unimplementedVisitor("visitPostIncrementExpression(PostIncrementExpression, any)")
+
+          def visitPostDecrementExpression(self, n, o = None) :   self.unimplementedVisitor("visitPostDecrementExpression(PostDecrementExpression, any)")
+
+          def visitPreIncrementExpression(self, n, o = None) :   self.unimplementedVisitor("visitPreIncrementExpression(PreIncrementExpression, any)")
+
+          def visitPreDecrementExpression(self, n, o = None) :   self.unimplementedVisitor("visitPreDecrementExpression(PreDecrementExpression, any)")
+
+          def visitAndExpression(self, n, o = None) :   self.unimplementedVisitor("visitAndExpression(AndExpression, any)")
+
+          def visitExclusiveOrExpression(self, n, o = None) :   self.unimplementedVisitor("visitExclusiveOrExpression(ExclusiveOrExpression, any)")
+
+          def visitInclusiveOrExpression(self, n, o = None) :   self.unimplementedVisitor("visitInclusiveOrExpression(InclusiveOrExpression, any)")
+
+          def visitConditionalAndExpression(self, n, o = None) :   self.unimplementedVisitor("visitConditionalAndExpression(ConditionalAndExpression, any)")
+
+          def visitConditionalOrExpression(self, n, o = None) :   self.unimplementedVisitor("visitConditionalOrExpression(ConditionalOrExpression, any)")
+
+          def visitConditionalExpression(self, n, o = None) :   self.unimplementedVisitor("visitConditionalExpression(ConditionalExpression, any)")
+
+          def visitAssignment(self, n, o = None) :   self.unimplementedVisitor("visitAssignment(Assignment, any)")
+
+          def visitCommaopt(self, n, o = None) :   self.unimplementedVisitor("visitCommaopt(Commaopt, any)")
+
+          def visitEllipsisopt(self, n, o = None) :   self.unimplementedVisitor("visitEllipsisopt(Ellipsisopt, any)")
+
+          def visitLPGUserAction0(self, n, o = None) :   self.unimplementedVisitor("visitLPGUserAction0(LPGUserAction0, any)")
+
+          def visitLPGUserAction1(self, n, o = None) :   self.unimplementedVisitor("visitLPGUserAction1(LPGUserAction1, any)")
+
+          def visitLPGUserAction2(self, n, o = None) :   self.unimplementedVisitor("visitLPGUserAction2(LPGUserAction2, any)")
+
+          def visitLPGUserAction3(self, n, o = None) :   self.unimplementedVisitor("visitLPGUserAction3(LPGUserAction3, any)")
+
+          def visitLPGUserAction4(self, n, o = None) :   self.unimplementedVisitor("visitLPGUserAction4(LPGUserAction4, any)")
+
+          def visitIntegralType0(self, n, o = None) :   self.unimplementedVisitor("visitIntegralType0(IntegralType0, any)")
+
+          def visitIntegralType1(self, n, o = None) :   self.unimplementedVisitor("visitIntegralType1(IntegralType1, any)")
+
+          def visitIntegralType2(self, n, o = None) :   self.unimplementedVisitor("visitIntegralType2(IntegralType2, any)")
+
+          def visitIntegralType3(self, n, o = None) :   self.unimplementedVisitor("visitIntegralType3(IntegralType3, any)")
+
+          def visitIntegralType4(self, n, o = None) :   self.unimplementedVisitor("visitIntegralType4(IntegralType4, any)")
+
+          def visitFloatingPointType0(self, n, o = None) :   self.unimplementedVisitor("visitFloatingPointType0(FloatingPointType0, any)")
+
+          def visitFloatingPointType1(self, n, o = None) :   self.unimplementedVisitor("visitFloatingPointType1(FloatingPointType1, any)")
+
+          def visitWildcardBounds0(self, n, o = None) :   self.unimplementedVisitor("visitWildcardBounds0(WildcardBounds0, any)")
+
+          def visitWildcardBounds1(self, n, o = None) :   self.unimplementedVisitor("visitWildcardBounds1(WildcardBounds1, any)")
+
+          def visitClassModifier0(self, n, o = None) :   self.unimplementedVisitor("visitClassModifier0(ClassModifier0, any)")
+
+          def visitClassModifier1(self, n, o = None) :   self.unimplementedVisitor("visitClassModifier1(ClassModifier1, any)")
+
+          def visitClassModifier2(self, n, o = None) :   self.unimplementedVisitor("visitClassModifier2(ClassModifier2, any)")
+
+          def visitClassModifier3(self, n, o = None) :   self.unimplementedVisitor("visitClassModifier3(ClassModifier3, any)")
+
+          def visitClassModifier4(self, n, o = None) :   self.unimplementedVisitor("visitClassModifier4(ClassModifier4, any)")
+
+          def visitClassModifier5(self, n, o = None) :   self.unimplementedVisitor("visitClassModifier5(ClassModifier5, any)")
+
+          def visitClassModifier6(self, n, o = None) :   self.unimplementedVisitor("visitClassModifier6(ClassModifier6, any)")
+
+          def visitFieldModifier0(self, n, o = None) :   self.unimplementedVisitor("visitFieldModifier0(FieldModifier0, any)")
+
+          def visitFieldModifier1(self, n, o = None) :   self.unimplementedVisitor("visitFieldModifier1(FieldModifier1, any)")
+
+          def visitFieldModifier2(self, n, o = None) :   self.unimplementedVisitor("visitFieldModifier2(FieldModifier2, any)")
+
+          def visitFieldModifier3(self, n, o = None) :   self.unimplementedVisitor("visitFieldModifier3(FieldModifier3, any)")
+
+          def visitFieldModifier4(self, n, o = None) :   self.unimplementedVisitor("visitFieldModifier4(FieldModifier4, any)")
+
+          def visitFieldModifier5(self, n, o = None) :   self.unimplementedVisitor("visitFieldModifier5(FieldModifier5, any)")
+
+          def visitFieldModifier6(self, n, o = None) :   self.unimplementedVisitor("visitFieldModifier6(FieldModifier6, any)")
+
+          def visitMethodDeclarator0(self, n, o = None) :   self.unimplementedVisitor("visitMethodDeclarator0(MethodDeclarator0, any)")
+
+          def visitMethodDeclarator1(self, n, o = None) :   self.unimplementedVisitor("visitMethodDeclarator1(MethodDeclarator1, any)")
+
+          def visitMethodModifier0(self, n, o = None) :   self.unimplementedVisitor("visitMethodModifier0(MethodModifier0, any)")
+
+          def visitMethodModifier1(self, n, o = None) :   self.unimplementedVisitor("visitMethodModifier1(MethodModifier1, any)")
+
+          def visitMethodModifier2(self, n, o = None) :   self.unimplementedVisitor("visitMethodModifier2(MethodModifier2, any)")
+
+          def visitMethodModifier3(self, n, o = None) :   self.unimplementedVisitor("visitMethodModifier3(MethodModifier3, any)")
+
+          def visitMethodModifier4(self, n, o = None) :   self.unimplementedVisitor("visitMethodModifier4(MethodModifier4, any)")
+
+          def visitMethodModifier5(self, n, o = None) :   self.unimplementedVisitor("visitMethodModifier5(MethodModifier5, any)")
+
+          def visitMethodModifier6(self, n, o = None) :   self.unimplementedVisitor("visitMethodModifier6(MethodModifier6, any)")
+
+          def visitMethodModifier7(self, n, o = None) :   self.unimplementedVisitor("visitMethodModifier7(MethodModifier7, any)")
+
+          def visitMethodModifier8(self, n, o = None) :   self.unimplementedVisitor("visitMethodModifier8(MethodModifier8, any)")
+
+          def visitConstructorModifier0(self, n, o = None) :   self.unimplementedVisitor("visitConstructorModifier0(ConstructorModifier0, any)")
+
+          def visitConstructorModifier1(self, n, o = None) :   self.unimplementedVisitor("visitConstructorModifier1(ConstructorModifier1, any)")
+
+          def visitConstructorModifier2(self, n, o = None) :   self.unimplementedVisitor("visitConstructorModifier2(ConstructorModifier2, any)")
+
+          def visitExplicitConstructorInvocation0(self, n, o = None) :   self.unimplementedVisitor("visitExplicitConstructorInvocation0(ExplicitConstructorInvocation0, any)")
+
+          def visitExplicitConstructorInvocation1(self, n, o = None) :   self.unimplementedVisitor("visitExplicitConstructorInvocation1(ExplicitConstructorInvocation1, any)")
+
+          def visitExplicitConstructorInvocation2(self, n, o = None) :   self.unimplementedVisitor("visitExplicitConstructorInvocation2(ExplicitConstructorInvocation2, any)")
+
+          def visitInterfaceModifier0(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceModifier0(InterfaceModifier0, any)")
+
+          def visitInterfaceModifier1(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceModifier1(InterfaceModifier1, any)")
+
+          def visitInterfaceModifier2(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceModifier2(InterfaceModifier2, any)")
+
+          def visitInterfaceModifier3(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceModifier3(InterfaceModifier3, any)")
+
+          def visitInterfaceModifier4(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceModifier4(InterfaceModifier4, any)")
+
+          def visitInterfaceModifier5(self, n, o = None) :   self.unimplementedVisitor("visitInterfaceModifier5(InterfaceModifier5, any)")
+
+          def visitExtendsInterfaces0(self, n, o = None) :   self.unimplementedVisitor("visitExtendsInterfaces0(ExtendsInterfaces0, any)")
+
+          def visitExtendsInterfaces1(self, n, o = None) :   self.unimplementedVisitor("visitExtendsInterfaces1(ExtendsInterfaces1, any)")
+
+          def visitConstantModifier0(self, n, o = None) :   self.unimplementedVisitor("visitConstantModifier0(ConstantModifier0, any)")
+
+          def visitConstantModifier1(self, n, o = None) :   self.unimplementedVisitor("visitConstantModifier1(ConstantModifier1, any)")
+
+          def visitConstantModifier2(self, n, o = None) :   self.unimplementedVisitor("visitConstantModifier2(ConstantModifier2, any)")
+
+          def visitAbstractMethodModifier0(self, n, o = None) :   self.unimplementedVisitor("visitAbstractMethodModifier0(AbstractMethodModifier0, any)")
+
+          def visitAbstractMethodModifier1(self, n, o = None) :   self.unimplementedVisitor("visitAbstractMethodModifier1(AbstractMethodModifier1, any)")
+
+          def visitAnnotationTypeElementDeclaration0(self, n, o = None) :   self.unimplementedVisitor("visitAnnotationTypeElementDeclaration0(AnnotationTypeElementDeclaration0, any)")
+
+          def visitAnnotationTypeElementDeclaration1(self, n, o = None) :   self.unimplementedVisitor("visitAnnotationTypeElementDeclaration1(AnnotationTypeElementDeclaration1, any)")
+
+          def visitAssertStatement0(self, n, o = None) :   self.unimplementedVisitor("visitAssertStatement0(AssertStatement0, any)")
+
+          def visitAssertStatement1(self, n, o = None) :   self.unimplementedVisitor("visitAssertStatement1(AssertStatement1, any)")
+
+          def visitSwitchLabel0(self, n, o = None) :   self.unimplementedVisitor("visitSwitchLabel0(SwitchLabel0, any)")
+
+          def visitSwitchLabel1(self, n, o = None) :   self.unimplementedVisitor("visitSwitchLabel1(SwitchLabel1, any)")
+
+          def visitSwitchLabel2(self, n, o = None) :   self.unimplementedVisitor("visitSwitchLabel2(SwitchLabel2, any)")
+
+          def visitTryStatement0(self, n, o = None) :   self.unimplementedVisitor("visitTryStatement0(TryStatement0, any)")
+
+          def visitTryStatement1(self, n, o = None) :   self.unimplementedVisitor("visitTryStatement1(TryStatement1, any)")
+
+          def visitPrimaryNoNewArray0(self, n, o = None) :   self.unimplementedVisitor("visitPrimaryNoNewArray0(PrimaryNoNewArray0, any)")
+
+          def visitPrimaryNoNewArray1(self, n, o = None) :   self.unimplementedVisitor("visitPrimaryNoNewArray1(PrimaryNoNewArray1, any)")
+
+          def visitPrimaryNoNewArray2(self, n, o = None) :   self.unimplementedVisitor("visitPrimaryNoNewArray2(PrimaryNoNewArray2, any)")
+
+          def visitPrimaryNoNewArray3(self, n, o = None) :   self.unimplementedVisitor("visitPrimaryNoNewArray3(PrimaryNoNewArray3, any)")
+
+          def visitPrimaryNoNewArray4(self, n, o = None) :   self.unimplementedVisitor("visitPrimaryNoNewArray4(PrimaryNoNewArray4, any)")
+
+          def visitLiteral0(self, n, o = None) :   self.unimplementedVisitor("visitLiteral0(Literal0, any)")
+
+          def visitLiteral1(self, n, o = None) :   self.unimplementedVisitor("visitLiteral1(Literal1, any)")
+
+          def visitLiteral2(self, n, o = None) :   self.unimplementedVisitor("visitLiteral2(Literal2, any)")
+
+          def visitLiteral3(self, n, o = None) :   self.unimplementedVisitor("visitLiteral3(Literal3, any)")
+
+          def visitLiteral4(self, n, o = None) :   self.unimplementedVisitor("visitLiteral4(Literal4, any)")
+
+          def visitLiteral5(self, n, o = None) :   self.unimplementedVisitor("visitLiteral5(Literal5, any)")
+
+          def visitLiteral6(self, n, o = None) :   self.unimplementedVisitor("visitLiteral6(Literal6, any)")
+
+          def visitBooleanLiteral0(self, n, o = None) :   self.unimplementedVisitor("visitBooleanLiteral0(BooleanLiteral0, any)")
+
+          def visitBooleanLiteral1(self, n, o = None) :   self.unimplementedVisitor("visitBooleanLiteral1(BooleanLiteral1, any)")
+
+          def visitClassInstanceCreationExpression0(self, n, o = None) :   self.unimplementedVisitor("visitClassInstanceCreationExpression0(ClassInstanceCreationExpression0, any)")
+
+          def visitClassInstanceCreationExpression1(self, n, o = None) :   self.unimplementedVisitor("visitClassInstanceCreationExpression1(ClassInstanceCreationExpression1, any)")
+
+          def visitArrayCreationExpression0(self, n, o = None) :   self.unimplementedVisitor("visitArrayCreationExpression0(ArrayCreationExpression0, any)")
+
+          def visitArrayCreationExpression1(self, n, o = None) :   self.unimplementedVisitor("visitArrayCreationExpression1(ArrayCreationExpression1, any)")
+
+          def visitArrayCreationExpression2(self, n, o = None) :   self.unimplementedVisitor("visitArrayCreationExpression2(ArrayCreationExpression2, any)")
+
+          def visitArrayCreationExpression3(self, n, o = None) :   self.unimplementedVisitor("visitArrayCreationExpression3(ArrayCreationExpression3, any)")
+
+          def visitDims0(self, n, o = None) :   self.unimplementedVisitor("visitDims0(Dims0, any)")
+
+          def visitDims1(self, n, o = None) :   self.unimplementedVisitor("visitDims1(Dims1, any)")
+
+          def visitFieldAccess0(self, n, o = None) :   self.unimplementedVisitor("visitFieldAccess0(FieldAccess0, any)")
+
+          def visitFieldAccess1(self, n, o = None) :   self.unimplementedVisitor("visitFieldAccess1(FieldAccess1, any)")
+
+          def visitFieldAccess2(self, n, o = None) :   self.unimplementedVisitor("visitFieldAccess2(FieldAccess2, any)")
+
+          def visitMethodInvocation0(self, n, o = None) :   self.unimplementedVisitor("visitMethodInvocation0(MethodInvocation0, any)")
+
+          def visitMethodInvocation1(self, n, o = None) :   self.unimplementedVisitor("visitMethodInvocation1(MethodInvocation1, any)")
+
+          def visitMethodInvocation2(self, n, o = None) :   self.unimplementedVisitor("visitMethodInvocation2(MethodInvocation2, any)")
+
+          def visitMethodInvocation3(self, n, o = None) :   self.unimplementedVisitor("visitMethodInvocation3(MethodInvocation3, any)")
+
+          def visitMethodInvocation4(self, n, o = None) :   self.unimplementedVisitor("visitMethodInvocation4(MethodInvocation4, any)")
+
+          def visitArrayAccess0(self, n, o = None) :   self.unimplementedVisitor("visitArrayAccess0(ArrayAccess0, any)")
+
+          def visitArrayAccess1(self, n, o = None) :   self.unimplementedVisitor("visitArrayAccess1(ArrayAccess1, any)")
+
+          def visitUnaryExpression0(self, n, o = None) :   self.unimplementedVisitor("visitUnaryExpression0(UnaryExpression0, any)")
+
+          def visitUnaryExpression1(self, n, o = None) :   self.unimplementedVisitor("visitUnaryExpression1(UnaryExpression1, any)")
+
+          def visitUnaryExpressionNotPlusMinus0(self, n, o = None) :   self.unimplementedVisitor("visitUnaryExpressionNotPlusMinus0(UnaryExpressionNotPlusMinus0, any)")
+
+          def visitUnaryExpressionNotPlusMinus1(self, n, o = None) :   self.unimplementedVisitor("visitUnaryExpressionNotPlusMinus1(UnaryExpressionNotPlusMinus1, any)")
+
+          def visitCastExpression0(self, n, o = None) :   self.unimplementedVisitor("visitCastExpression0(CastExpression0, any)")
+
+          def visitCastExpression1(self, n, o = None) :   self.unimplementedVisitor("visitCastExpression1(CastExpression1, any)")
+
+          def visitMultiplicativeExpression0(self, n, o = None) :   self.unimplementedVisitor("visitMultiplicativeExpression0(MultiplicativeExpression0, any)")
+
+          def visitMultiplicativeExpression1(self, n, o = None) :   self.unimplementedVisitor("visitMultiplicativeExpression1(MultiplicativeExpression1, any)")
+
+          def visitMultiplicativeExpression2(self, n, o = None) :   self.unimplementedVisitor("visitMultiplicativeExpression2(MultiplicativeExpression2, any)")
+
+          def visitAdditiveExpression0(self, n, o = None) :   self.unimplementedVisitor("visitAdditiveExpression0(AdditiveExpression0, any)")
+
+          def visitAdditiveExpression1(self, n, o = None) :   self.unimplementedVisitor("visitAdditiveExpression1(AdditiveExpression1, any)")
+
+          def visitShiftExpression0(self, n, o = None) :   self.unimplementedVisitor("visitShiftExpression0(ShiftExpression0, any)")
+
+          def visitShiftExpression1(self, n, o = None) :   self.unimplementedVisitor("visitShiftExpression1(ShiftExpression1, any)")
+
+          def visitShiftExpression2(self, n, o = None) :   self.unimplementedVisitor("visitShiftExpression2(ShiftExpression2, any)")
+
+          def visitRelationalExpression0(self, n, o = None) :   self.unimplementedVisitor("visitRelationalExpression0(RelationalExpression0, any)")
+
+          def visitRelationalExpression1(self, n, o = None) :   self.unimplementedVisitor("visitRelationalExpression1(RelationalExpression1, any)")
+
+          def visitRelationalExpression2(self, n, o = None) :   self.unimplementedVisitor("visitRelationalExpression2(RelationalExpression2, any)")
+
+          def visitRelationalExpression3(self, n, o = None) :   self.unimplementedVisitor("visitRelationalExpression3(RelationalExpression3, any)")
+
+          def visitRelationalExpression4(self, n, o = None) :   self.unimplementedVisitor("visitRelationalExpression4(RelationalExpression4, any)")
+
+          def visitEqualityExpression0(self, n, o = None) :   self.unimplementedVisitor("visitEqualityExpression0(EqualityExpression0, any)")
+
+          def visitEqualityExpression1(self, n, o = None) :   self.unimplementedVisitor("visitEqualityExpression1(EqualityExpression1, any)")
+
+          def visitAssignmentOperator0(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator0(AssignmentOperator0, any)")
+
+          def visitAssignmentOperator1(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator1(AssignmentOperator1, any)")
+
+          def visitAssignmentOperator2(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator2(AssignmentOperator2, any)")
+
+          def visitAssignmentOperator3(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator3(AssignmentOperator3, any)")
+
+          def visitAssignmentOperator4(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator4(AssignmentOperator4, any)")
+
+          def visitAssignmentOperator5(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator5(AssignmentOperator5, any)")
+
+          def visitAssignmentOperator6(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator6(AssignmentOperator6, any)")
+
+          def visitAssignmentOperator7(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator7(AssignmentOperator7, any)")
+
+          def visitAssignmentOperator8(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator8(AssignmentOperator8, any)")
+
+          def visitAssignmentOperator9(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator9(AssignmentOperator9, any)")
+
+          def visitAssignmentOperator10(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator10(AssignmentOperator10, any)")
+
+          def visitAssignmentOperator11(self, n, o = None) :   self.unimplementedVisitor("visitAssignmentOperator11(AssignmentOperator11, any)")
+
+
+          def visit(self, n, o = None) : 
         
-            if isinstance(n, AstToken): return self.visitAstToken( n)
-            elif isinstance(n, identifier): return self.visitidentifier( n)
-            elif isinstance(n, PrimitiveType): return self.visitPrimitiveType( n)
-            elif isinstance(n, ClassType): return self.visitClassType( n)
-            elif isinstance(n, InterfaceType): return self.visitInterfaceType( n)
-            elif isinstance(n, TypeName): return self.visitTypeName( n)
-            elif isinstance(n, ArrayType): return self.visitArrayType( n)
-            elif isinstance(n, TypeParameter): return self.visitTypeParameter( n)
-            elif isinstance(n, TypeBound): return self.visitTypeBound( n)
-            elif isinstance(n, AdditionalBoundList): return self.visitAdditionalBoundList( n)
-            elif isinstance(n, AdditionalBound): return self.visitAdditionalBound( n)
-            elif isinstance(n, TypeArguments): return self.visitTypeArguments( n)
-            elif isinstance(n, ActualTypeArgumentList): return self.visitActualTypeArgumentList( n)
-            elif isinstance(n, Wildcard): return self.visitWildcard( n)
-            elif isinstance(n, PackageName): return self.visitPackageName( n)
-            elif isinstance(n, ExpressionName): return self.visitExpressionName( n)
-            elif isinstance(n, MethodName): return self.visitMethodName( n)
-            elif isinstance(n, PackageOrTypeName): return self.visitPackageOrTypeName( n)
-            elif isinstance(n, AmbiguousName): return self.visitAmbiguousName( n)
-            elif isinstance(n, CompilationUnit): return self.visitCompilationUnit( n)
-            elif isinstance(n, ImportDeclarations): return self.visitImportDeclarations( n)
-            elif isinstance(n, TypeDeclarations): return self.visitTypeDeclarations( n)
-            elif isinstance(n, PackageDeclaration): return self.visitPackageDeclaration( n)
-            elif isinstance(n, SingleTypeImportDeclaration): return self.visitSingleTypeImportDeclaration( n)
-            elif isinstance(n, TypeImportOnDemandDeclaration): return self.visitTypeImportOnDemandDeclaration( n)
-            elif isinstance(n, SingleStaticImportDeclaration): return self.visitSingleStaticImportDeclaration( n)
-            elif isinstance(n, StaticImportOnDemandDeclaration): return self.visitStaticImportOnDemandDeclaration( n)
-            elif isinstance(n, TypeDeclaration): return self.visitTypeDeclaration( n)
-            elif isinstance(n, NormalClassDeclaration): return self.visitNormalClassDeclaration( n)
-            elif isinstance(n, ClassModifiers): return self.visitClassModifiers( n)
-            elif isinstance(n, TypeParameters): return self.visitTypeParameters( n)
-            elif isinstance(n, TypeParameterList): return self.visitTypeParameterList( n)
-            elif isinstance(n, Super): return self.visitSuper( n)
-            elif isinstance(n, Interfaces): return self.visitInterfaces( n)
-            elif isinstance(n, InterfaceTypeList): return self.visitInterfaceTypeList( n)
-            elif isinstance(n, ClassBody): return self.visitClassBody( n)
-            elif isinstance(n, ClassBodyDeclarations): return self.visitClassBodyDeclarations( n)
-            elif isinstance(n, ClassMemberDeclaration): return self.visitClassMemberDeclaration( n)
-            elif isinstance(n, FieldDeclaration): return self.visitFieldDeclaration( n)
-            elif isinstance(n, VariableDeclarators): return self.visitVariableDeclarators( n)
-            elif isinstance(n, VariableDeclarator): return self.visitVariableDeclarator( n)
-            elif isinstance(n, VariableDeclaratorId): return self.visitVariableDeclaratorId( n)
-            elif isinstance(n, FieldModifiers): return self.visitFieldModifiers( n)
-            elif isinstance(n, MethodDeclaration): return self.visitMethodDeclaration( n)
-            elif isinstance(n, MethodHeader): return self.visitMethodHeader( n)
-            elif isinstance(n, ResultType): return self.visitResultType( n)
-            elif isinstance(n, FormalParameterList): return self.visitFormalParameterList( n)
-            elif isinstance(n, FormalParameters): return self.visitFormalParameters( n)
-            elif isinstance(n, FormalParameter): return self.visitFormalParameter( n)
-            elif isinstance(n, VariableModifiers): return self.visitVariableModifiers( n)
-            elif isinstance(n, VariableModifier): return self.visitVariableModifier( n)
-            elif isinstance(n, LastFormalParameter): return self.visitLastFormalParameter( n)
-            elif isinstance(n, MethodModifiers): return self.visitMethodModifiers( n)
-            elif isinstance(n, Throws): return self.visitThrows( n)
-            elif isinstance(n, ExceptionTypeList): return self.visitExceptionTypeList( n)
-            elif isinstance(n, MethodBody): return self.visitMethodBody( n)
-            elif isinstance(n, StaticInitializer): return self.visitStaticInitializer( n)
-            elif isinstance(n, ConstructorDeclaration): return self.visitConstructorDeclaration( n)
-            elif isinstance(n, ConstructorDeclarator): return self.visitConstructorDeclarator( n)
-            elif isinstance(n, ConstructorModifiers): return self.visitConstructorModifiers( n)
-            elif isinstance(n, ConstructorBody): return self.visitConstructorBody( n)
-            elif isinstance(n, EnumDeclaration): return self.visitEnumDeclaration( n)
-            elif isinstance(n, EnumBody): return self.visitEnumBody( n)
-            elif isinstance(n, EnumConstants): return self.visitEnumConstants( n)
-            elif isinstance(n, EnumConstant): return self.visitEnumConstant( n)
-            elif isinstance(n, Arguments): return self.visitArguments( n)
-            elif isinstance(n, EnumBodyDeclarations): return self.visitEnumBodyDeclarations( n)
-            elif isinstance(n, NormalInterfaceDeclaration): return self.visitNormalInterfaceDeclaration( n)
-            elif isinstance(n, InterfaceModifiers): return self.visitInterfaceModifiers( n)
-            elif isinstance(n, InterfaceBody): return self.visitInterfaceBody( n)
-            elif isinstance(n, InterfaceMemberDeclarations): return self.visitInterfaceMemberDeclarations( n)
-            elif isinstance(n, InterfaceMemberDeclaration): return self.visitInterfaceMemberDeclaration( n)
-            elif isinstance(n, ConstantDeclaration): return self.visitConstantDeclaration( n)
-            elif isinstance(n, ConstantModifiers): return self.visitConstantModifiers( n)
-            elif isinstance(n, AbstractMethodDeclaration): return self.visitAbstractMethodDeclaration( n)
-            elif isinstance(n, AbstractMethodModifiers): return self.visitAbstractMethodModifiers( n)
-            elif isinstance(n, AnnotationTypeDeclaration): return self.visitAnnotationTypeDeclaration( n)
-            elif isinstance(n, AnnotationTypeBody): return self.visitAnnotationTypeBody( n)
-            elif isinstance(n, AnnotationTypeElementDeclarations): return self.visitAnnotationTypeElementDeclarations( n)
-            elif isinstance(n, DefaultValue): return self.visitDefaultValue( n)
-            elif isinstance(n, Annotations): return self.visitAnnotations( n)
-            elif isinstance(n, NormalAnnotation): return self.visitNormalAnnotation( n)
-            elif isinstance(n, ElementValuePairs): return self.visitElementValuePairs( n)
-            elif isinstance(n, ElementValuePair): return self.visitElementValuePair( n)
-            elif isinstance(n, ElementValueArrayInitializer): return self.visitElementValueArrayInitializer( n)
-            elif isinstance(n, ElementValues): return self.visitElementValues( n)
-            elif isinstance(n, MarkerAnnotation): return self.visitMarkerAnnotation( n)
-            elif isinstance(n, SingleElementAnnotation): return self.visitSingleElementAnnotation( n)
-            elif isinstance(n, ArrayInitializer): return self.visitArrayInitializer( n)
-            elif isinstance(n, VariableInitializers): return self.visitVariableInitializers( n)
-            elif isinstance(n, Block): return self.visitBlock( n)
-            elif isinstance(n, BlockStatements): return self.visitBlockStatements( n)
-            elif isinstance(n, LocalVariableDeclarationStatement): return self.visitLocalVariableDeclarationStatement( n)
-            elif isinstance(n, LocalVariableDeclaration): return self.visitLocalVariableDeclaration( n)
-            elif isinstance(n, IfThenStatement): return self.visitIfThenStatement( n)
-            elif isinstance(n, IfThenElseStatement): return self.visitIfThenElseStatement( n)
-            elif isinstance(n, IfThenElseStatementNoShortIf): return self.visitIfThenElseStatementNoShortIf( n)
-            elif isinstance(n, EmptyStatement): return self.visitEmptyStatement( n)
-            elif isinstance(n, LabeledStatement): return self.visitLabeledStatement( n)
-            elif isinstance(n, LabeledStatementNoShortIf): return self.visitLabeledStatementNoShortIf( n)
-            elif isinstance(n, ExpressionStatement): return self.visitExpressionStatement( n)
-            elif isinstance(n, SwitchStatement): return self.visitSwitchStatement( n)
-            elif isinstance(n, SwitchBlock): return self.visitSwitchBlock( n)
-            elif isinstance(n, SwitchBlockStatementGroups): return self.visitSwitchBlockStatementGroups( n)
-            elif isinstance(n, SwitchBlockStatementGroup): return self.visitSwitchBlockStatementGroup( n)
-            elif isinstance(n, SwitchLabels): return self.visitSwitchLabels( n)
-            elif isinstance(n, WhileStatement): return self.visitWhileStatement( n)
-            elif isinstance(n, WhileStatementNoShortIf): return self.visitWhileStatementNoShortIf( n)
-            elif isinstance(n, DoStatement): return self.visitDoStatement( n)
-            elif isinstance(n, BasicForStatement): return self.visitBasicForStatement( n)
-            elif isinstance(n, ForStatementNoShortIf): return self.visitForStatementNoShortIf( n)
-            elif isinstance(n, StatementExpressionList): return self.visitStatementExpressionList( n)
-            elif isinstance(n, EnhancedForStatement): return self.visitEnhancedForStatement( n)
-            elif isinstance(n, BreakStatement): return self.visitBreakStatement( n)
-            elif isinstance(n, ContinueStatement): return self.visitContinueStatement( n)
-            elif isinstance(n, ReturnStatement): return self.visitReturnStatement( n)
-            elif isinstance(n, ThrowStatement): return self.visitThrowStatement( n)
-            elif isinstance(n, SynchronizedStatement): return self.visitSynchronizedStatement( n)
-            elif isinstance(n, Catches): return self.visitCatches( n)
-            elif isinstance(n, CatchClause): return self.visitCatchClause( n)
-            elif isinstance(n, Finally): return self.visitFinally( n)
-            elif isinstance(n, ArgumentList): return self.visitArgumentList( n)
-            elif isinstance(n, DimExprs): return self.visitDimExprs( n)
-            elif isinstance(n, DimExpr): return self.visitDimExpr( n)
-            elif isinstance(n, PostIncrementExpression): return self.visitPostIncrementExpression( n)
-            elif isinstance(n, PostDecrementExpression): return self.visitPostDecrementExpression( n)
-            elif isinstance(n, PreIncrementExpression): return self.visitPreIncrementExpression( n)
-            elif isinstance(n, PreDecrementExpression): return self.visitPreDecrementExpression( n)
-            elif isinstance(n, AndExpression): return self.visitAndExpression( n)
-            elif isinstance(n, ExclusiveOrExpression): return self.visitExclusiveOrExpression( n)
-            elif isinstance(n, InclusiveOrExpression): return self.visitInclusiveOrExpression( n)
-            elif isinstance(n, ConditionalAndExpression): return self.visitConditionalAndExpression( n)
-            elif isinstance(n, ConditionalOrExpression): return self.visitConditionalOrExpression( n)
-            elif isinstance(n, ConditionalExpression): return self.visitConditionalExpression( n)
-            elif isinstance(n, Assignment): return self.visitAssignment( n)
-            elif isinstance(n, Commaopt): return self.visitCommaopt( n)
-            elif isinstance(n, Ellipsisopt): return self.visitEllipsisopt( n)
-            elif isinstance(n, LPGUserAction0): return self.visitLPGUserAction0( n)
-            elif isinstance(n, LPGUserAction1): return self.visitLPGUserAction1( n)
-            elif isinstance(n, LPGUserAction2): return self.visitLPGUserAction2( n)
-            elif isinstance(n, LPGUserAction3): return self.visitLPGUserAction3( n)
-            elif isinstance(n, LPGUserAction4): return self.visitLPGUserAction4( n)
-            elif isinstance(n, IntegralType0): return self.visitIntegralType0( n)
-            elif isinstance(n, IntegralType1): return self.visitIntegralType1( n)
-            elif isinstance(n, IntegralType2): return self.visitIntegralType2( n)
-            elif isinstance(n, IntegralType3): return self.visitIntegralType3( n)
-            elif isinstance(n, IntegralType4): return self.visitIntegralType4( n)
-            elif isinstance(n, FloatingPointType0): return self.visitFloatingPointType0( n)
-            elif isinstance(n, FloatingPointType1): return self.visitFloatingPointType1( n)
-            elif isinstance(n, WildcardBounds0): return self.visitWildcardBounds0( n)
-            elif isinstance(n, WildcardBounds1): return self.visitWildcardBounds1( n)
-            elif isinstance(n, ClassModifier0): return self.visitClassModifier0( n)
-            elif isinstance(n, ClassModifier1): return self.visitClassModifier1( n)
-            elif isinstance(n, ClassModifier2): return self.visitClassModifier2( n)
-            elif isinstance(n, ClassModifier3): return self.visitClassModifier3( n)
-            elif isinstance(n, ClassModifier4): return self.visitClassModifier4( n)
-            elif isinstance(n, ClassModifier5): return self.visitClassModifier5( n)
-            elif isinstance(n, ClassModifier6): return self.visitClassModifier6( n)
-            elif isinstance(n, FieldModifier0): return self.visitFieldModifier0( n)
-            elif isinstance(n, FieldModifier1): return self.visitFieldModifier1( n)
-            elif isinstance(n, FieldModifier2): return self.visitFieldModifier2( n)
-            elif isinstance(n, FieldModifier3): return self.visitFieldModifier3( n)
-            elif isinstance(n, FieldModifier4): return self.visitFieldModifier4( n)
-            elif isinstance(n, FieldModifier5): return self.visitFieldModifier5( n)
-            elif isinstance(n, FieldModifier6): return self.visitFieldModifier6( n)
-            elif isinstance(n, MethodDeclarator0): return self.visitMethodDeclarator0( n)
-            elif isinstance(n, MethodDeclarator1): return self.visitMethodDeclarator1( n)
-            elif isinstance(n, MethodModifier0): return self.visitMethodModifier0( n)
-            elif isinstance(n, MethodModifier1): return self.visitMethodModifier1( n)
-            elif isinstance(n, MethodModifier2): return self.visitMethodModifier2( n)
-            elif isinstance(n, MethodModifier3): return self.visitMethodModifier3( n)
-            elif isinstance(n, MethodModifier4): return self.visitMethodModifier4( n)
-            elif isinstance(n, MethodModifier5): return self.visitMethodModifier5( n)
-            elif isinstance(n, MethodModifier6): return self.visitMethodModifier6( n)
-            elif isinstance(n, MethodModifier7): return self.visitMethodModifier7( n)
-            elif isinstance(n, MethodModifier8): return self.visitMethodModifier8( n)
-            elif isinstance(n, ConstructorModifier0): return self.visitConstructorModifier0( n)
-            elif isinstance(n, ConstructorModifier1): return self.visitConstructorModifier1( n)
-            elif isinstance(n, ConstructorModifier2): return self.visitConstructorModifier2( n)
-            elif isinstance(n, ExplicitConstructorInvocation0): return self.visitExplicitConstructorInvocation0( n)
-            elif isinstance(n, ExplicitConstructorInvocation1): return self.visitExplicitConstructorInvocation1( n)
-            elif isinstance(n, ExplicitConstructorInvocation2): return self.visitExplicitConstructorInvocation2( n)
-            elif isinstance(n, InterfaceModifier0): return self.visitInterfaceModifier0( n)
-            elif isinstance(n, InterfaceModifier1): return self.visitInterfaceModifier1( n)
-            elif isinstance(n, InterfaceModifier2): return self.visitInterfaceModifier2( n)
-            elif isinstance(n, InterfaceModifier3): return self.visitInterfaceModifier3( n)
-            elif isinstance(n, InterfaceModifier4): return self.visitInterfaceModifier4( n)
-            elif isinstance(n, InterfaceModifier5): return self.visitInterfaceModifier5( n)
-            elif isinstance(n, ExtendsInterfaces0): return self.visitExtendsInterfaces0( n)
-            elif isinstance(n, ExtendsInterfaces1): return self.visitExtendsInterfaces1( n)
-            elif isinstance(n, ConstantModifier0): return self.visitConstantModifier0( n)
-            elif isinstance(n, ConstantModifier1): return self.visitConstantModifier1( n)
-            elif isinstance(n, ConstantModifier2): return self.visitConstantModifier2( n)
-            elif isinstance(n, AbstractMethodModifier0): return self.visitAbstractMethodModifier0( n)
-            elif isinstance(n, AbstractMethodModifier1): return self.visitAbstractMethodModifier1( n)
-            elif isinstance(n, AnnotationTypeElementDeclaration0): return self.visitAnnotationTypeElementDeclaration0( n)
-            elif isinstance(n, AnnotationTypeElementDeclaration1): return self.visitAnnotationTypeElementDeclaration1( n)
-            elif isinstance(n, AssertStatement0): return self.visitAssertStatement0( n)
-            elif isinstance(n, AssertStatement1): return self.visitAssertStatement1( n)
-            elif isinstance(n, SwitchLabel0): return self.visitSwitchLabel0( n)
-            elif isinstance(n, SwitchLabel1): return self.visitSwitchLabel1( n)
-            elif isinstance(n, SwitchLabel2): return self.visitSwitchLabel2( n)
-            elif isinstance(n, TryStatement0): return self.visitTryStatement0( n)
-            elif isinstance(n, TryStatement1): return self.visitTryStatement1( n)
-            elif isinstance(n, PrimaryNoNewArray0): return self.visitPrimaryNoNewArray0( n)
-            elif isinstance(n, PrimaryNoNewArray1): return self.visitPrimaryNoNewArray1( n)
-            elif isinstance(n, PrimaryNoNewArray2): return self.visitPrimaryNoNewArray2( n)
-            elif isinstance(n, PrimaryNoNewArray3): return self.visitPrimaryNoNewArray3( n)
-            elif isinstance(n, PrimaryNoNewArray4): return self.visitPrimaryNoNewArray4( n)
-            elif isinstance(n, Literal0): return self.visitLiteral0( n)
-            elif isinstance(n, Literal1): return self.visitLiteral1( n)
-            elif isinstance(n, Literal2): return self.visitLiteral2( n)
-            elif isinstance(n, Literal3): return self.visitLiteral3( n)
-            elif isinstance(n, Literal4): return self.visitLiteral4( n)
-            elif isinstance(n, Literal5): return self.visitLiteral5( n)
-            elif isinstance(n, Literal6): return self.visitLiteral6( n)
-            elif isinstance(n, BooleanLiteral0): return self.visitBooleanLiteral0( n)
-            elif isinstance(n, BooleanLiteral1): return self.visitBooleanLiteral1( n)
-            elif isinstance(n, ClassInstanceCreationExpression0): return self.visitClassInstanceCreationExpression0( n)
-            elif isinstance(n, ClassInstanceCreationExpression1): return self.visitClassInstanceCreationExpression1( n)
-            elif isinstance(n, ArrayCreationExpression0): return self.visitArrayCreationExpression0( n)
-            elif isinstance(n, ArrayCreationExpression1): return self.visitArrayCreationExpression1( n)
-            elif isinstance(n, ArrayCreationExpression2): return self.visitArrayCreationExpression2( n)
-            elif isinstance(n, ArrayCreationExpression3): return self.visitArrayCreationExpression3( n)
-            elif isinstance(n, Dims0): return self.visitDims0( n)
-            elif isinstance(n, Dims1): return self.visitDims1( n)
-            elif isinstance(n, FieldAccess0): return self.visitFieldAccess0( n)
-            elif isinstance(n, FieldAccess1): return self.visitFieldAccess1( n)
-            elif isinstance(n, FieldAccess2): return self.visitFieldAccess2( n)
-            elif isinstance(n, MethodInvocation0): return self.visitMethodInvocation0( n)
-            elif isinstance(n, MethodInvocation1): return self.visitMethodInvocation1( n)
-            elif isinstance(n, MethodInvocation2): return self.visitMethodInvocation2( n)
-            elif isinstance(n, MethodInvocation3): return self.visitMethodInvocation3( n)
-            elif isinstance(n, MethodInvocation4): return self.visitMethodInvocation4( n)
-            elif isinstance(n, ArrayAccess0): return self.visitArrayAccess0( n)
-            elif isinstance(n, ArrayAccess1): return self.visitArrayAccess1( n)
-            elif isinstance(n, UnaryExpression0): return self.visitUnaryExpression0( n)
-            elif isinstance(n, UnaryExpression1): return self.visitUnaryExpression1( n)
-            elif isinstance(n, UnaryExpressionNotPlusMinus0): return self.visitUnaryExpressionNotPlusMinus0( n)
-            elif isinstance(n, UnaryExpressionNotPlusMinus1): return self.visitUnaryExpressionNotPlusMinus1( n)
-            elif isinstance(n, CastExpression0): return self.visitCastExpression0( n)
-            elif isinstance(n, CastExpression1): return self.visitCastExpression1( n)
-            elif isinstance(n, MultiplicativeExpression0): return self.visitMultiplicativeExpression0( n)
-            elif isinstance(n, MultiplicativeExpression1): return self.visitMultiplicativeExpression1( n)
-            elif isinstance(n, MultiplicativeExpression2): return self.visitMultiplicativeExpression2( n)
-            elif isinstance(n, AdditiveExpression0): return self.visitAdditiveExpression0( n)
-            elif isinstance(n, AdditiveExpression1): return self.visitAdditiveExpression1( n)
-            elif isinstance(n, ShiftExpression0): return self.visitShiftExpression0( n)
-            elif isinstance(n, ShiftExpression1): return self.visitShiftExpression1( n)
-            elif isinstance(n, ShiftExpression2): return self.visitShiftExpression2( n)
-            elif isinstance(n, RelationalExpression0): return self.visitRelationalExpression0( n)
-            elif isinstance(n, RelationalExpression1): return self.visitRelationalExpression1( n)
-            elif isinstance(n, RelationalExpression2): return self.visitRelationalExpression2( n)
-            elif isinstance(n, RelationalExpression3): return self.visitRelationalExpression3( n)
-            elif isinstance(n, RelationalExpression4): return self.visitRelationalExpression4( n)
-            elif isinstance(n, EqualityExpression0): return self.visitEqualityExpression0( n)
-            elif isinstance(n, EqualityExpression1): return self.visitEqualityExpression1( n)
-            elif isinstance(n, AssignmentOperator0): return self.visitAssignmentOperator0( n)
-            elif isinstance(n, AssignmentOperator1): return self.visitAssignmentOperator1( n)
-            elif isinstance(n, AssignmentOperator2): return self.visitAssignmentOperator2( n)
-            elif isinstance(n, AssignmentOperator3): return self.visitAssignmentOperator3( n)
-            elif isinstance(n, AssignmentOperator4): return self.visitAssignmentOperator4( n)
-            elif isinstance(n, AssignmentOperator5): return self.visitAssignmentOperator5( n)
-            elif isinstance(n, AssignmentOperator6): return self.visitAssignmentOperator6( n)
-            elif isinstance(n, AssignmentOperator7): return self.visitAssignmentOperator7( n)
-            elif isinstance(n, AssignmentOperator8): return self.visitAssignmentOperator8( n)
-            elif isinstance(n, AssignmentOperator9): return self.visitAssignmentOperator9( n)
-            elif isinstance(n, AssignmentOperator10): return self.visitAssignmentOperator10( n)
-            elif isinstance(n, AssignmentOperator11): return self.visitAssignmentOperator11( n)
-            raise ValueError("visit(" + n.toString() + ")")
+            if isinstance(n, AstToken): self.visitAstToken( n, o)
+            elif isinstance(n, identifier): self.visitidentifier( n, o)
+            elif isinstance(n, PrimitiveType): self.visitPrimitiveType( n, o)
+            elif isinstance(n, ClassType): self.visitClassType( n, o)
+            elif isinstance(n, InterfaceType): self.visitInterfaceType( n, o)
+            elif isinstance(n, TypeName): self.visitTypeName( n, o)
+            elif isinstance(n, ArrayType): self.visitArrayType( n, o)
+            elif isinstance(n, TypeParameter): self.visitTypeParameter( n, o)
+            elif isinstance(n, TypeBound): self.visitTypeBound( n, o)
+            elif isinstance(n, AdditionalBoundList): self.visitAdditionalBoundList( n, o)
+            elif isinstance(n, AdditionalBound): self.visitAdditionalBound( n, o)
+            elif isinstance(n, TypeArguments): self.visitTypeArguments( n, o)
+            elif isinstance(n, ActualTypeArgumentList): self.visitActualTypeArgumentList( n, o)
+            elif isinstance(n, Wildcard): self.visitWildcard( n, o)
+            elif isinstance(n, PackageName): self.visitPackageName( n, o)
+            elif isinstance(n, ExpressionName): self.visitExpressionName( n, o)
+            elif isinstance(n, MethodName): self.visitMethodName( n, o)
+            elif isinstance(n, PackageOrTypeName): self.visitPackageOrTypeName( n, o)
+            elif isinstance(n, AmbiguousName): self.visitAmbiguousName( n, o)
+            elif isinstance(n, CompilationUnit): self.visitCompilationUnit( n, o)
+            elif isinstance(n, ImportDeclarations): self.visitImportDeclarations( n, o)
+            elif isinstance(n, TypeDeclarations): self.visitTypeDeclarations( n, o)
+            elif isinstance(n, PackageDeclaration): self.visitPackageDeclaration( n, o)
+            elif isinstance(n, SingleTypeImportDeclaration): self.visitSingleTypeImportDeclaration( n, o)
+            elif isinstance(n, TypeImportOnDemandDeclaration): self.visitTypeImportOnDemandDeclaration( n, o)
+            elif isinstance(n, SingleStaticImportDeclaration): self.visitSingleStaticImportDeclaration( n, o)
+            elif isinstance(n, StaticImportOnDemandDeclaration): self.visitStaticImportOnDemandDeclaration( n, o)
+            elif isinstance(n, TypeDeclaration): self.visitTypeDeclaration( n, o)
+            elif isinstance(n, NormalClassDeclaration): self.visitNormalClassDeclaration( n, o)
+            elif isinstance(n, ClassModifiers): self.visitClassModifiers( n, o)
+            elif isinstance(n, TypeParameters): self.visitTypeParameters( n, o)
+            elif isinstance(n, TypeParameterList): self.visitTypeParameterList( n, o)
+            elif isinstance(n, Super): self.visitSuper( n, o)
+            elif isinstance(n, Interfaces): self.visitInterfaces( n, o)
+            elif isinstance(n, InterfaceTypeList): self.visitInterfaceTypeList( n, o)
+            elif isinstance(n, ClassBody): self.visitClassBody( n, o)
+            elif isinstance(n, ClassBodyDeclarations): self.visitClassBodyDeclarations( n, o)
+            elif isinstance(n, ClassMemberDeclaration): self.visitClassMemberDeclaration( n, o)
+            elif isinstance(n, FieldDeclaration): self.visitFieldDeclaration( n, o)
+            elif isinstance(n, VariableDeclarators): self.visitVariableDeclarators( n, o)
+            elif isinstance(n, VariableDeclarator): self.visitVariableDeclarator( n, o)
+            elif isinstance(n, VariableDeclaratorId): self.visitVariableDeclaratorId( n, o)
+            elif isinstance(n, FieldModifiers): self.visitFieldModifiers( n, o)
+            elif isinstance(n, MethodDeclaration): self.visitMethodDeclaration( n, o)
+            elif isinstance(n, MethodHeader): self.visitMethodHeader( n, o)
+            elif isinstance(n, ResultType): self.visitResultType( n, o)
+            elif isinstance(n, FormalParameterList): self.visitFormalParameterList( n, o)
+            elif isinstance(n, FormalParameters): self.visitFormalParameters( n, o)
+            elif isinstance(n, FormalParameter): self.visitFormalParameter( n, o)
+            elif isinstance(n, VariableModifiers): self.visitVariableModifiers( n, o)
+            elif isinstance(n, VariableModifier): self.visitVariableModifier( n, o)
+            elif isinstance(n, LastFormalParameter): self.visitLastFormalParameter( n, o)
+            elif isinstance(n, MethodModifiers): self.visitMethodModifiers( n, o)
+            elif isinstance(n, Throws): self.visitThrows( n, o)
+            elif isinstance(n, ExceptionTypeList): self.visitExceptionTypeList( n, o)
+            elif isinstance(n, MethodBody): self.visitMethodBody( n, o)
+            elif isinstance(n, StaticInitializer): self.visitStaticInitializer( n, o)
+            elif isinstance(n, ConstructorDeclaration): self.visitConstructorDeclaration( n, o)
+            elif isinstance(n, ConstructorDeclarator): self.visitConstructorDeclarator( n, o)
+            elif isinstance(n, ConstructorModifiers): self.visitConstructorModifiers( n, o)
+            elif isinstance(n, ConstructorBody): self.visitConstructorBody( n, o)
+            elif isinstance(n, EnumDeclaration): self.visitEnumDeclaration( n, o)
+            elif isinstance(n, EnumBody): self.visitEnumBody( n, o)
+            elif isinstance(n, EnumConstants): self.visitEnumConstants( n, o)
+            elif isinstance(n, EnumConstant): self.visitEnumConstant( n, o)
+            elif isinstance(n, Arguments): self.visitArguments( n, o)
+            elif isinstance(n, EnumBodyDeclarations): self.visitEnumBodyDeclarations( n, o)
+            elif isinstance(n, NormalInterfaceDeclaration): self.visitNormalInterfaceDeclaration( n, o)
+            elif isinstance(n, InterfaceModifiers): self.visitInterfaceModifiers( n, o)
+            elif isinstance(n, InterfaceBody): self.visitInterfaceBody( n, o)
+            elif isinstance(n, InterfaceMemberDeclarations): self.visitInterfaceMemberDeclarations( n, o)
+            elif isinstance(n, InterfaceMemberDeclaration): self.visitInterfaceMemberDeclaration( n, o)
+            elif isinstance(n, ConstantDeclaration): self.visitConstantDeclaration( n, o)
+            elif isinstance(n, ConstantModifiers): self.visitConstantModifiers( n, o)
+            elif isinstance(n, AbstractMethodDeclaration): self.visitAbstractMethodDeclaration( n, o)
+            elif isinstance(n, AbstractMethodModifiers): self.visitAbstractMethodModifiers( n, o)
+            elif isinstance(n, AnnotationTypeDeclaration): self.visitAnnotationTypeDeclaration( n, o)
+            elif isinstance(n, AnnotationTypeBody): self.visitAnnotationTypeBody( n, o)
+            elif isinstance(n, AnnotationTypeElementDeclarations): self.visitAnnotationTypeElementDeclarations( n, o)
+            elif isinstance(n, DefaultValue): self.visitDefaultValue( n, o)
+            elif isinstance(n, Annotations): self.visitAnnotations( n, o)
+            elif isinstance(n, NormalAnnotation): self.visitNormalAnnotation( n, o)
+            elif isinstance(n, ElementValuePairs): self.visitElementValuePairs( n, o)
+            elif isinstance(n, ElementValuePair): self.visitElementValuePair( n, o)
+            elif isinstance(n, ElementValueArrayInitializer): self.visitElementValueArrayInitializer( n, o)
+            elif isinstance(n, ElementValues): self.visitElementValues( n, o)
+            elif isinstance(n, MarkerAnnotation): self.visitMarkerAnnotation( n, o)
+            elif isinstance(n, SingleElementAnnotation): self.visitSingleElementAnnotation( n, o)
+            elif isinstance(n, ArrayInitializer): self.visitArrayInitializer( n, o)
+            elif isinstance(n, VariableInitializers): self.visitVariableInitializers( n, o)
+            elif isinstance(n, Block): self.visitBlock( n, o)
+            elif isinstance(n, BlockStatements): self.visitBlockStatements( n, o)
+            elif isinstance(n, LocalVariableDeclarationStatement): self.visitLocalVariableDeclarationStatement( n, o)
+            elif isinstance(n, LocalVariableDeclaration): self.visitLocalVariableDeclaration( n, o)
+            elif isinstance(n, IfThenStatement): self.visitIfThenStatement( n, o)
+            elif isinstance(n, IfThenElseStatement): self.visitIfThenElseStatement( n, o)
+            elif isinstance(n, IfThenElseStatementNoShortIf): self.visitIfThenElseStatementNoShortIf( n, o)
+            elif isinstance(n, EmptyStatement): self.visitEmptyStatement( n, o)
+            elif isinstance(n, LabeledStatement): self.visitLabeledStatement( n, o)
+            elif isinstance(n, LabeledStatementNoShortIf): self.visitLabeledStatementNoShortIf( n, o)
+            elif isinstance(n, ExpressionStatement): self.visitExpressionStatement( n, o)
+            elif isinstance(n, SwitchStatement): self.visitSwitchStatement( n, o)
+            elif isinstance(n, SwitchBlock): self.visitSwitchBlock( n, o)
+            elif isinstance(n, SwitchBlockStatementGroups): self.visitSwitchBlockStatementGroups( n, o)
+            elif isinstance(n, SwitchBlockStatementGroup): self.visitSwitchBlockStatementGroup( n, o)
+            elif isinstance(n, SwitchLabels): self.visitSwitchLabels( n, o)
+            elif isinstance(n, WhileStatement): self.visitWhileStatement( n, o)
+            elif isinstance(n, WhileStatementNoShortIf): self.visitWhileStatementNoShortIf( n, o)
+            elif isinstance(n, DoStatement): self.visitDoStatement( n, o)
+            elif isinstance(n, BasicForStatement): self.visitBasicForStatement( n, o)
+            elif isinstance(n, ForStatementNoShortIf): self.visitForStatementNoShortIf( n, o)
+            elif isinstance(n, StatementExpressionList): self.visitStatementExpressionList( n, o)
+            elif isinstance(n, EnhancedForStatement): self.visitEnhancedForStatement( n, o)
+            elif isinstance(n, BreakStatement): self.visitBreakStatement( n, o)
+            elif isinstance(n, ContinueStatement): self.visitContinueStatement( n, o)
+            elif isinstance(n, ReturnStatement): self.visitReturnStatement( n, o)
+            elif isinstance(n, ThrowStatement): self.visitThrowStatement( n, o)
+            elif isinstance(n, SynchronizedStatement): self.visitSynchronizedStatement( n, o)
+            elif isinstance(n, Catches): self.visitCatches( n, o)
+            elif isinstance(n, CatchClause): self.visitCatchClause( n, o)
+            elif isinstance(n, Finally): self.visitFinally( n, o)
+            elif isinstance(n, ArgumentList): self.visitArgumentList( n, o)
+            elif isinstance(n, DimExprs): self.visitDimExprs( n, o)
+            elif isinstance(n, DimExpr): self.visitDimExpr( n, o)
+            elif isinstance(n, PostIncrementExpression): self.visitPostIncrementExpression( n, o)
+            elif isinstance(n, PostDecrementExpression): self.visitPostDecrementExpression( n, o)
+            elif isinstance(n, PreIncrementExpression): self.visitPreIncrementExpression( n, o)
+            elif isinstance(n, PreDecrementExpression): self.visitPreDecrementExpression( n, o)
+            elif isinstance(n, AndExpression): self.visitAndExpression( n, o)
+            elif isinstance(n, ExclusiveOrExpression): self.visitExclusiveOrExpression( n, o)
+            elif isinstance(n, InclusiveOrExpression): self.visitInclusiveOrExpression( n, o)
+            elif isinstance(n, ConditionalAndExpression): self.visitConditionalAndExpression( n, o)
+            elif isinstance(n, ConditionalOrExpression): self.visitConditionalOrExpression( n, o)
+            elif isinstance(n, ConditionalExpression): self.visitConditionalExpression( n, o)
+            elif isinstance(n, Assignment): self.visitAssignment( n, o)
+            elif isinstance(n, Commaopt): self.visitCommaopt( n, o)
+            elif isinstance(n, Ellipsisopt): self.visitEllipsisopt( n, o)
+            elif isinstance(n, LPGUserAction0): self.visitLPGUserAction0( n, o)
+            elif isinstance(n, LPGUserAction1): self.visitLPGUserAction1( n, o)
+            elif isinstance(n, LPGUserAction2): self.visitLPGUserAction2( n, o)
+            elif isinstance(n, LPGUserAction3): self.visitLPGUserAction3( n, o)
+            elif isinstance(n, LPGUserAction4): self.visitLPGUserAction4( n, o)
+            elif isinstance(n, IntegralType0): self.visitIntegralType0( n, o)
+            elif isinstance(n, IntegralType1): self.visitIntegralType1( n, o)
+            elif isinstance(n, IntegralType2): self.visitIntegralType2( n, o)
+            elif isinstance(n, IntegralType3): self.visitIntegralType3( n, o)
+            elif isinstance(n, IntegralType4): self.visitIntegralType4( n, o)
+            elif isinstance(n, FloatingPointType0): self.visitFloatingPointType0( n, o)
+            elif isinstance(n, FloatingPointType1): self.visitFloatingPointType1( n, o)
+            elif isinstance(n, WildcardBounds0): self.visitWildcardBounds0( n, o)
+            elif isinstance(n, WildcardBounds1): self.visitWildcardBounds1( n, o)
+            elif isinstance(n, ClassModifier0): self.visitClassModifier0( n, o)
+            elif isinstance(n, ClassModifier1): self.visitClassModifier1( n, o)
+            elif isinstance(n, ClassModifier2): self.visitClassModifier2( n, o)
+            elif isinstance(n, ClassModifier3): self.visitClassModifier3( n, o)
+            elif isinstance(n, ClassModifier4): self.visitClassModifier4( n, o)
+            elif isinstance(n, ClassModifier5): self.visitClassModifier5( n, o)
+            elif isinstance(n, ClassModifier6): self.visitClassModifier6( n, o)
+            elif isinstance(n, FieldModifier0): self.visitFieldModifier0( n, o)
+            elif isinstance(n, FieldModifier1): self.visitFieldModifier1( n, o)
+            elif isinstance(n, FieldModifier2): self.visitFieldModifier2( n, o)
+            elif isinstance(n, FieldModifier3): self.visitFieldModifier3( n, o)
+            elif isinstance(n, FieldModifier4): self.visitFieldModifier4( n, o)
+            elif isinstance(n, FieldModifier5): self.visitFieldModifier5( n, o)
+            elif isinstance(n, FieldModifier6): self.visitFieldModifier6( n, o)
+            elif isinstance(n, MethodDeclarator0): self.visitMethodDeclarator0( n, o)
+            elif isinstance(n, MethodDeclarator1): self.visitMethodDeclarator1( n, o)
+            elif isinstance(n, MethodModifier0): self.visitMethodModifier0( n, o)
+            elif isinstance(n, MethodModifier1): self.visitMethodModifier1( n, o)
+            elif isinstance(n, MethodModifier2): self.visitMethodModifier2( n, o)
+            elif isinstance(n, MethodModifier3): self.visitMethodModifier3( n, o)
+            elif isinstance(n, MethodModifier4): self.visitMethodModifier4( n, o)
+            elif isinstance(n, MethodModifier5): self.visitMethodModifier5( n, o)
+            elif isinstance(n, MethodModifier6): self.visitMethodModifier6( n, o)
+            elif isinstance(n, MethodModifier7): self.visitMethodModifier7( n, o)
+            elif isinstance(n, MethodModifier8): self.visitMethodModifier8( n, o)
+            elif isinstance(n, ConstructorModifier0): self.visitConstructorModifier0( n, o)
+            elif isinstance(n, ConstructorModifier1): self.visitConstructorModifier1( n, o)
+            elif isinstance(n, ConstructorModifier2): self.visitConstructorModifier2( n, o)
+            elif isinstance(n, ExplicitConstructorInvocation0): self.visitExplicitConstructorInvocation0( n, o)
+            elif isinstance(n, ExplicitConstructorInvocation1): self.visitExplicitConstructorInvocation1( n, o)
+            elif isinstance(n, ExplicitConstructorInvocation2): self.visitExplicitConstructorInvocation2( n, o)
+            elif isinstance(n, InterfaceModifier0): self.visitInterfaceModifier0( n, o)
+            elif isinstance(n, InterfaceModifier1): self.visitInterfaceModifier1( n, o)
+            elif isinstance(n, InterfaceModifier2): self.visitInterfaceModifier2( n, o)
+            elif isinstance(n, InterfaceModifier3): self.visitInterfaceModifier3( n, o)
+            elif isinstance(n, InterfaceModifier4): self.visitInterfaceModifier4( n, o)
+            elif isinstance(n, InterfaceModifier5): self.visitInterfaceModifier5( n, o)
+            elif isinstance(n, ExtendsInterfaces0): self.visitExtendsInterfaces0( n, o)
+            elif isinstance(n, ExtendsInterfaces1): self.visitExtendsInterfaces1( n, o)
+            elif isinstance(n, ConstantModifier0): self.visitConstantModifier0( n, o)
+            elif isinstance(n, ConstantModifier1): self.visitConstantModifier1( n, o)
+            elif isinstance(n, ConstantModifier2): self.visitConstantModifier2( n, o)
+            elif isinstance(n, AbstractMethodModifier0): self.visitAbstractMethodModifier0( n, o)
+            elif isinstance(n, AbstractMethodModifier1): self.visitAbstractMethodModifier1( n, o)
+            elif isinstance(n, AnnotationTypeElementDeclaration0): self.visitAnnotationTypeElementDeclaration0( n, o)
+            elif isinstance(n, AnnotationTypeElementDeclaration1): self.visitAnnotationTypeElementDeclaration1( n, o)
+            elif isinstance(n, AssertStatement0): self.visitAssertStatement0( n, o)
+            elif isinstance(n, AssertStatement1): self.visitAssertStatement1( n, o)
+            elif isinstance(n, SwitchLabel0): self.visitSwitchLabel0( n, o)
+            elif isinstance(n, SwitchLabel1): self.visitSwitchLabel1( n, o)
+            elif isinstance(n, SwitchLabel2): self.visitSwitchLabel2( n, o)
+            elif isinstance(n, TryStatement0): self.visitTryStatement0( n, o)
+            elif isinstance(n, TryStatement1): self.visitTryStatement1( n, o)
+            elif isinstance(n, PrimaryNoNewArray0): self.visitPrimaryNoNewArray0( n, o)
+            elif isinstance(n, PrimaryNoNewArray1): self.visitPrimaryNoNewArray1( n, o)
+            elif isinstance(n, PrimaryNoNewArray2): self.visitPrimaryNoNewArray2( n, o)
+            elif isinstance(n, PrimaryNoNewArray3): self.visitPrimaryNoNewArray3( n, o)
+            elif isinstance(n, PrimaryNoNewArray4): self.visitPrimaryNoNewArray4( n, o)
+            elif isinstance(n, Literal0): self.visitLiteral0( n, o)
+            elif isinstance(n, Literal1): self.visitLiteral1( n, o)
+            elif isinstance(n, Literal2): self.visitLiteral2( n, o)
+            elif isinstance(n, Literal3): self.visitLiteral3( n, o)
+            elif isinstance(n, Literal4): self.visitLiteral4( n, o)
+            elif isinstance(n, Literal5): self.visitLiteral5( n, o)
+            elif isinstance(n, Literal6): self.visitLiteral6( n, o)
+            elif isinstance(n, BooleanLiteral0): self.visitBooleanLiteral0( n, o)
+            elif isinstance(n, BooleanLiteral1): self.visitBooleanLiteral1( n, o)
+            elif isinstance(n, ClassInstanceCreationExpression0): self.visitClassInstanceCreationExpression0( n, o)
+            elif isinstance(n, ClassInstanceCreationExpression1): self.visitClassInstanceCreationExpression1( n, o)
+            elif isinstance(n, ArrayCreationExpression0): self.visitArrayCreationExpression0( n, o)
+            elif isinstance(n, ArrayCreationExpression1): self.visitArrayCreationExpression1( n, o)
+            elif isinstance(n, ArrayCreationExpression2): self.visitArrayCreationExpression2( n, o)
+            elif isinstance(n, ArrayCreationExpression3): self.visitArrayCreationExpression3( n, o)
+            elif isinstance(n, Dims0): self.visitDims0( n, o)
+            elif isinstance(n, Dims1): self.visitDims1( n, o)
+            elif isinstance(n, FieldAccess0): self.visitFieldAccess0( n, o)
+            elif isinstance(n, FieldAccess1): self.visitFieldAccess1( n, o)
+            elif isinstance(n, FieldAccess2): self.visitFieldAccess2( n, o)
+            elif isinstance(n, MethodInvocation0): self.visitMethodInvocation0( n, o)
+            elif isinstance(n, MethodInvocation1): self.visitMethodInvocation1( n, o)
+            elif isinstance(n, MethodInvocation2): self.visitMethodInvocation2( n, o)
+            elif isinstance(n, MethodInvocation3): self.visitMethodInvocation3( n, o)
+            elif isinstance(n, MethodInvocation4): self.visitMethodInvocation4( n, o)
+            elif isinstance(n, ArrayAccess0): self.visitArrayAccess0( n, o)
+            elif isinstance(n, ArrayAccess1): self.visitArrayAccess1( n, o)
+            elif isinstance(n, UnaryExpression0): self.visitUnaryExpression0( n, o)
+            elif isinstance(n, UnaryExpression1): self.visitUnaryExpression1( n, o)
+            elif isinstance(n, UnaryExpressionNotPlusMinus0): self.visitUnaryExpressionNotPlusMinus0( n, o)
+            elif isinstance(n, UnaryExpressionNotPlusMinus1): self.visitUnaryExpressionNotPlusMinus1( n, o)
+            elif isinstance(n, CastExpression0): self.visitCastExpression0( n, o)
+            elif isinstance(n, CastExpression1): self.visitCastExpression1( n, o)
+            elif isinstance(n, MultiplicativeExpression0): self.visitMultiplicativeExpression0( n, o)
+            elif isinstance(n, MultiplicativeExpression1): self.visitMultiplicativeExpression1( n, o)
+            elif isinstance(n, MultiplicativeExpression2): self.visitMultiplicativeExpression2( n, o)
+            elif isinstance(n, AdditiveExpression0): self.visitAdditiveExpression0( n, o)
+            elif isinstance(n, AdditiveExpression1): self.visitAdditiveExpression1( n, o)
+            elif isinstance(n, ShiftExpression0): self.visitShiftExpression0( n, o)
+            elif isinstance(n, ShiftExpression1): self.visitShiftExpression1( n, o)
+            elif isinstance(n, ShiftExpression2): self.visitShiftExpression2( n, o)
+            elif isinstance(n, RelationalExpression0): self.visitRelationalExpression0( n, o)
+            elif isinstance(n, RelationalExpression1): self.visitRelationalExpression1( n, o)
+            elif isinstance(n, RelationalExpression2): self.visitRelationalExpression2( n, o)
+            elif isinstance(n, RelationalExpression3): self.visitRelationalExpression3( n, o)
+            elif isinstance(n, RelationalExpression4): self.visitRelationalExpression4( n, o)
+            elif isinstance(n, EqualityExpression0): self.visitEqualityExpression0( n, o)
+            elif isinstance(n, EqualityExpression1): self.visitEqualityExpression1( n, o)
+            elif isinstance(n, AssignmentOperator0): self.visitAssignmentOperator0( n, o)
+            elif isinstance(n, AssignmentOperator1): self.visitAssignmentOperator1( n, o)
+            elif isinstance(n, AssignmentOperator2): self.visitAssignmentOperator2( n, o)
+            elif isinstance(n, AssignmentOperator3): self.visitAssignmentOperator3( n, o)
+            elif isinstance(n, AssignmentOperator4): self.visitAssignmentOperator4( n, o)
+            elif isinstance(n, AssignmentOperator5): self.visitAssignmentOperator5( n, o)
+            elif isinstance(n, AssignmentOperator6): self.visitAssignmentOperator6( n, o)
+            elif isinstance(n, AssignmentOperator7): self.visitAssignmentOperator7( n, o)
+            elif isinstance(n, AssignmentOperator8): self.visitAssignmentOperator8( n, o)
+            elif isinstance(n, AssignmentOperator9): self.visitAssignmentOperator9( n, o)
+            elif isinstance(n, AssignmentOperator10): self.visitAssignmentOperator10( n, o)
+            elif isinstance(n, AssignmentOperator11): self.visitAssignmentOperator11( n, o)
+            else: raise ValueError("visit(" + n.toString() + ")")
         
-        def endVisit(self, n) : 
+    
+class AbstractResultVisitor (ResultVisitor, ResultArgumentVisitor):
+        __slots__ = ()
+    
+        def unimplementedVisitor(self,s : str) : raise TypeError('Can not instantiate abstract class  with abstract methods')
+
+        def visitAstToken(self, n, o = None) :  return  self.unimplementedVisitor("visitAstToken(AstToken, any)")
+
+        def visitidentifier(self, n, o = None) :  return  self.unimplementedVisitor("visitidentifier(identifier, any)")
+
+        def visitPrimitiveType(self, n, o = None) :  return  self.unimplementedVisitor("visitPrimitiveType(PrimitiveType, any)")
+
+        def visitClassType(self, n, o = None) :  return  self.unimplementedVisitor("visitClassType(ClassType, any)")
+
+        def visitInterfaceType(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceType(InterfaceType, any)")
+
+        def visitTypeName(self, n, o = None) :  return  self.unimplementedVisitor("visitTypeName(TypeName, any)")
+
+        def visitArrayType(self, n, o = None) :  return  self.unimplementedVisitor("visitArrayType(ArrayType, any)")
+
+        def visitTypeParameter(self, n, o = None) :  return  self.unimplementedVisitor("visitTypeParameter(TypeParameter, any)")
+
+        def visitTypeBound(self, n, o = None) :  return  self.unimplementedVisitor("visitTypeBound(TypeBound, any)")
+
+        def visitAdditionalBoundList(self, n, o = None) :  return  self.unimplementedVisitor("visitAdditionalBoundList(AdditionalBoundList, any)")
+
+        def visitAdditionalBound(self, n, o = None) :  return  self.unimplementedVisitor("visitAdditionalBound(AdditionalBound, any)")
+
+        def visitTypeArguments(self, n, o = None) :  return  self.unimplementedVisitor("visitTypeArguments(TypeArguments, any)")
+
+        def visitActualTypeArgumentList(self, n, o = None) :  return  self.unimplementedVisitor("visitActualTypeArgumentList(ActualTypeArgumentList, any)")
+
+        def visitWildcard(self, n, o = None) :  return  self.unimplementedVisitor("visitWildcard(Wildcard, any)")
+
+        def visitPackageName(self, n, o = None) :  return  self.unimplementedVisitor("visitPackageName(PackageName, any)")
+
+        def visitExpressionName(self, n, o = None) :  return  self.unimplementedVisitor("visitExpressionName(ExpressionName, any)")
+
+        def visitMethodName(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodName(MethodName, any)")
+
+        def visitPackageOrTypeName(self, n, o = None) :  return  self.unimplementedVisitor("visitPackageOrTypeName(PackageOrTypeName, any)")
+
+        def visitAmbiguousName(self, n, o = None) :  return  self.unimplementedVisitor("visitAmbiguousName(AmbiguousName, any)")
+
+        def visitCompilationUnit(self, n, o = None) :  return  self.unimplementedVisitor("visitCompilationUnit(CompilationUnit, any)")
+
+        def visitImportDeclarations(self, n, o = None) :  return  self.unimplementedVisitor("visitImportDeclarations(ImportDeclarations, any)")
+
+        def visitTypeDeclarations(self, n, o = None) :  return  self.unimplementedVisitor("visitTypeDeclarations(TypeDeclarations, any)")
+
+        def visitPackageDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitPackageDeclaration(PackageDeclaration, any)")
+
+        def visitSingleTypeImportDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitSingleTypeImportDeclaration(SingleTypeImportDeclaration, any)")
+
+        def visitTypeImportOnDemandDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitTypeImportOnDemandDeclaration(TypeImportOnDemandDeclaration, any)")
+
+        def visitSingleStaticImportDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitSingleStaticImportDeclaration(SingleStaticImportDeclaration, any)")
+
+        def visitStaticImportOnDemandDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitStaticImportOnDemandDeclaration(StaticImportOnDemandDeclaration, any)")
+
+        def visitTypeDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitTypeDeclaration(TypeDeclaration, any)")
+
+        def visitNormalClassDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitNormalClassDeclaration(NormalClassDeclaration, any)")
+
+        def visitClassModifiers(self, n, o = None) :  return  self.unimplementedVisitor("visitClassModifiers(ClassModifiers, any)")
+
+        def visitTypeParameters(self, n, o = None) :  return  self.unimplementedVisitor("visitTypeParameters(TypeParameters, any)")
+
+        def visitTypeParameterList(self, n, o = None) :  return  self.unimplementedVisitor("visitTypeParameterList(TypeParameterList, any)")
+
+        def visitSuper(self, n, o = None) :  return  self.unimplementedVisitor("visitSuper(Super, any)")
+
+        def visitInterfaces(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaces(Interfaces, any)")
+
+        def visitInterfaceTypeList(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceTypeList(InterfaceTypeList, any)")
+
+        def visitClassBody(self, n, o = None) :  return  self.unimplementedVisitor("visitClassBody(ClassBody, any)")
+
+        def visitClassBodyDeclarations(self, n, o = None) :  return  self.unimplementedVisitor("visitClassBodyDeclarations(ClassBodyDeclarations, any)")
+
+        def visitClassMemberDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitClassMemberDeclaration(ClassMemberDeclaration, any)")
+
+        def visitFieldDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldDeclaration(FieldDeclaration, any)")
+
+        def visitVariableDeclarators(self, n, o = None) :  return  self.unimplementedVisitor("visitVariableDeclarators(VariableDeclarators, any)")
+
+        def visitVariableDeclarator(self, n, o = None) :  return  self.unimplementedVisitor("visitVariableDeclarator(VariableDeclarator, any)")
+
+        def visitVariableDeclaratorId(self, n, o = None) :  return  self.unimplementedVisitor("visitVariableDeclaratorId(VariableDeclaratorId, any)")
+
+        def visitFieldModifiers(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldModifiers(FieldModifiers, any)")
+
+        def visitMethodDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodDeclaration(MethodDeclaration, any)")
+
+        def visitMethodHeader(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodHeader(MethodHeader, any)")
+
+        def visitResultType(self, n, o = None) :  return  self.unimplementedVisitor("visitResultType(ResultType, any)")
+
+        def visitFormalParameterList(self, n, o = None) :  return  self.unimplementedVisitor("visitFormalParameterList(FormalParameterList, any)")
+
+        def visitFormalParameters(self, n, o = None) :  return  self.unimplementedVisitor("visitFormalParameters(FormalParameters, any)")
+
+        def visitFormalParameter(self, n, o = None) :  return  self.unimplementedVisitor("visitFormalParameter(FormalParameter, any)")
+
+        def visitVariableModifiers(self, n, o = None) :  return  self.unimplementedVisitor("visitVariableModifiers(VariableModifiers, any)")
+
+        def visitVariableModifier(self, n, o = None) :  return  self.unimplementedVisitor("visitVariableModifier(VariableModifier, any)")
+
+        def visitLastFormalParameter(self, n, o = None) :  return  self.unimplementedVisitor("visitLastFormalParameter(LastFormalParameter, any)")
+
+        def visitMethodModifiers(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodModifiers(MethodModifiers, any)")
+
+        def visitThrows(self, n, o = None) :  return  self.unimplementedVisitor("visitThrows(Throws, any)")
+
+        def visitExceptionTypeList(self, n, o = None) :  return  self.unimplementedVisitor("visitExceptionTypeList(ExceptionTypeList, any)")
+
+        def visitMethodBody(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodBody(MethodBody, any)")
+
+        def visitStaticInitializer(self, n, o = None) :  return  self.unimplementedVisitor("visitStaticInitializer(StaticInitializer, any)")
+
+        def visitConstructorDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitConstructorDeclaration(ConstructorDeclaration, any)")
+
+        def visitConstructorDeclarator(self, n, o = None) :  return  self.unimplementedVisitor("visitConstructorDeclarator(ConstructorDeclarator, any)")
+
+        def visitConstructorModifiers(self, n, o = None) :  return  self.unimplementedVisitor("visitConstructorModifiers(ConstructorModifiers, any)")
+
+        def visitConstructorBody(self, n, o = None) :  return  self.unimplementedVisitor("visitConstructorBody(ConstructorBody, any)")
+
+        def visitEnumDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitEnumDeclaration(EnumDeclaration, any)")
+
+        def visitEnumBody(self, n, o = None) :  return  self.unimplementedVisitor("visitEnumBody(EnumBody, any)")
+
+        def visitEnumConstants(self, n, o = None) :  return  self.unimplementedVisitor("visitEnumConstants(EnumConstants, any)")
+
+        def visitEnumConstant(self, n, o = None) :  return  self.unimplementedVisitor("visitEnumConstant(EnumConstant, any)")
+
+        def visitArguments(self, n, o = None) :  return  self.unimplementedVisitor("visitArguments(Arguments, any)")
+
+        def visitEnumBodyDeclarations(self, n, o = None) :  return  self.unimplementedVisitor("visitEnumBodyDeclarations(EnumBodyDeclarations, any)")
+
+        def visitNormalInterfaceDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitNormalInterfaceDeclaration(NormalInterfaceDeclaration, any)")
+
+        def visitInterfaceModifiers(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceModifiers(InterfaceModifiers, any)")
+
+        def visitInterfaceBody(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceBody(InterfaceBody, any)")
+
+        def visitInterfaceMemberDeclarations(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceMemberDeclarations(InterfaceMemberDeclarations, any)")
+
+        def visitInterfaceMemberDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceMemberDeclaration(InterfaceMemberDeclaration, any)")
+
+        def visitConstantDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitConstantDeclaration(ConstantDeclaration, any)")
+
+        def visitConstantModifiers(self, n, o = None) :  return  self.unimplementedVisitor("visitConstantModifiers(ConstantModifiers, any)")
+
+        def visitAbstractMethodDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitAbstractMethodDeclaration(AbstractMethodDeclaration, any)")
+
+        def visitAbstractMethodModifiers(self, n, o = None) :  return  self.unimplementedVisitor("visitAbstractMethodModifiers(AbstractMethodModifiers, any)")
+
+        def visitAnnotationTypeDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitAnnotationTypeDeclaration(AnnotationTypeDeclaration, any)")
+
+        def visitAnnotationTypeBody(self, n, o = None) :  return  self.unimplementedVisitor("visitAnnotationTypeBody(AnnotationTypeBody, any)")
+
+        def visitAnnotationTypeElementDeclarations(self, n, o = None) :  return  self.unimplementedVisitor("visitAnnotationTypeElementDeclarations(AnnotationTypeElementDeclarations, any)")
+
+        def visitDefaultValue(self, n, o = None) :  return  self.unimplementedVisitor("visitDefaultValue(DefaultValue, any)")
+
+        def visitAnnotations(self, n, o = None) :  return  self.unimplementedVisitor("visitAnnotations(Annotations, any)")
+
+        def visitNormalAnnotation(self, n, o = None) :  return  self.unimplementedVisitor("visitNormalAnnotation(NormalAnnotation, any)")
+
+        def visitElementValuePairs(self, n, o = None) :  return  self.unimplementedVisitor("visitElementValuePairs(ElementValuePairs, any)")
+
+        def visitElementValuePair(self, n, o = None) :  return  self.unimplementedVisitor("visitElementValuePair(ElementValuePair, any)")
+
+        def visitElementValueArrayInitializer(self, n, o = None) :  return  self.unimplementedVisitor("visitElementValueArrayInitializer(ElementValueArrayInitializer, any)")
+
+        def visitElementValues(self, n, o = None) :  return  self.unimplementedVisitor("visitElementValues(ElementValues, any)")
+
+        def visitMarkerAnnotation(self, n, o = None) :  return  self.unimplementedVisitor("visitMarkerAnnotation(MarkerAnnotation, any)")
+
+        def visitSingleElementAnnotation(self, n, o = None) :  return  self.unimplementedVisitor("visitSingleElementAnnotation(SingleElementAnnotation, any)")
+
+        def visitArrayInitializer(self, n, o = None) :  return  self.unimplementedVisitor("visitArrayInitializer(ArrayInitializer, any)")
+
+        def visitVariableInitializers(self, n, o = None) :  return  self.unimplementedVisitor("visitVariableInitializers(VariableInitializers, any)")
+
+        def visitBlock(self, n, o = None) :  return  self.unimplementedVisitor("visitBlock(Block, any)")
+
+        def visitBlockStatements(self, n, o = None) :  return  self.unimplementedVisitor("visitBlockStatements(BlockStatements, any)")
+
+        def visitLocalVariableDeclarationStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitLocalVariableDeclarationStatement(LocalVariableDeclarationStatement, any)")
+
+        def visitLocalVariableDeclaration(self, n, o = None) :  return  self.unimplementedVisitor("visitLocalVariableDeclaration(LocalVariableDeclaration, any)")
+
+        def visitIfThenStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitIfThenStatement(IfThenStatement, any)")
+
+        def visitIfThenElseStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitIfThenElseStatement(IfThenElseStatement, any)")
+
+        def visitIfThenElseStatementNoShortIf(self, n, o = None) :  return  self.unimplementedVisitor("visitIfThenElseStatementNoShortIf(IfThenElseStatementNoShortIf, any)")
+
+        def visitEmptyStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitEmptyStatement(EmptyStatement, any)")
+
+        def visitLabeledStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitLabeledStatement(LabeledStatement, any)")
+
+        def visitLabeledStatementNoShortIf(self, n, o = None) :  return  self.unimplementedVisitor("visitLabeledStatementNoShortIf(LabeledStatementNoShortIf, any)")
+
+        def visitExpressionStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitExpressionStatement(ExpressionStatement, any)")
+
+        def visitSwitchStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitSwitchStatement(SwitchStatement, any)")
+
+        def visitSwitchBlock(self, n, o = None) :  return  self.unimplementedVisitor("visitSwitchBlock(SwitchBlock, any)")
+
+        def visitSwitchBlockStatementGroups(self, n, o = None) :  return  self.unimplementedVisitor("visitSwitchBlockStatementGroups(SwitchBlockStatementGroups, any)")
+
+        def visitSwitchBlockStatementGroup(self, n, o = None) :  return  self.unimplementedVisitor("visitSwitchBlockStatementGroup(SwitchBlockStatementGroup, any)")
+
+        def visitSwitchLabels(self, n, o = None) :  return  self.unimplementedVisitor("visitSwitchLabels(SwitchLabels, any)")
+
+        def visitWhileStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitWhileStatement(WhileStatement, any)")
+
+        def visitWhileStatementNoShortIf(self, n, o = None) :  return  self.unimplementedVisitor("visitWhileStatementNoShortIf(WhileStatementNoShortIf, any)")
+
+        def visitDoStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitDoStatement(DoStatement, any)")
+
+        def visitBasicForStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitBasicForStatement(BasicForStatement, any)")
+
+        def visitForStatementNoShortIf(self, n, o = None) :  return  self.unimplementedVisitor("visitForStatementNoShortIf(ForStatementNoShortIf, any)")
+
+        def visitStatementExpressionList(self, n, o = None) :  return  self.unimplementedVisitor("visitStatementExpressionList(StatementExpressionList, any)")
+
+        def visitEnhancedForStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitEnhancedForStatement(EnhancedForStatement, any)")
+
+        def visitBreakStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitBreakStatement(BreakStatement, any)")
+
+        def visitContinueStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitContinueStatement(ContinueStatement, any)")
+
+        def visitReturnStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitReturnStatement(ReturnStatement, any)")
+
+        def visitThrowStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitThrowStatement(ThrowStatement, any)")
+
+        def visitSynchronizedStatement(self, n, o = None) :  return  self.unimplementedVisitor("visitSynchronizedStatement(SynchronizedStatement, any)")
+
+        def visitCatches(self, n, o = None) :  return  self.unimplementedVisitor("visitCatches(Catches, any)")
+
+        def visitCatchClause(self, n, o = None) :  return  self.unimplementedVisitor("visitCatchClause(CatchClause, any)")
+
+        def visitFinally(self, n, o = None) :  return  self.unimplementedVisitor("visitFinally(Finally, any)")
+
+        def visitArgumentList(self, n, o = None) :  return  self.unimplementedVisitor("visitArgumentList(ArgumentList, any)")
+
+        def visitDimExprs(self, n, o = None) :  return  self.unimplementedVisitor("visitDimExprs(DimExprs, any)")
+
+        def visitDimExpr(self, n, o = None) :  return  self.unimplementedVisitor("visitDimExpr(DimExpr, any)")
+
+        def visitPostIncrementExpression(self, n, o = None) :  return  self.unimplementedVisitor("visitPostIncrementExpression(PostIncrementExpression, any)")
+
+        def visitPostDecrementExpression(self, n, o = None) :  return  self.unimplementedVisitor("visitPostDecrementExpression(PostDecrementExpression, any)")
+
+        def visitPreIncrementExpression(self, n, o = None) :  return  self.unimplementedVisitor("visitPreIncrementExpression(PreIncrementExpression, any)")
+
+        def visitPreDecrementExpression(self, n, o = None) :  return  self.unimplementedVisitor("visitPreDecrementExpression(PreDecrementExpression, any)")
+
+        def visitAndExpression(self, n, o = None) :  return  self.unimplementedVisitor("visitAndExpression(AndExpression, any)")
+
+        def visitExclusiveOrExpression(self, n, o = None) :  return  self.unimplementedVisitor("visitExclusiveOrExpression(ExclusiveOrExpression, any)")
+
+        def visitInclusiveOrExpression(self, n, o = None) :  return  self.unimplementedVisitor("visitInclusiveOrExpression(InclusiveOrExpression, any)")
+
+        def visitConditionalAndExpression(self, n, o = None) :  return  self.unimplementedVisitor("visitConditionalAndExpression(ConditionalAndExpression, any)")
+
+        def visitConditionalOrExpression(self, n, o = None) :  return  self.unimplementedVisitor("visitConditionalOrExpression(ConditionalOrExpression, any)")
+
+        def visitConditionalExpression(self, n, o = None) :  return  self.unimplementedVisitor("visitConditionalExpression(ConditionalExpression, any)")
+
+        def visitAssignment(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignment(Assignment, any)")
+
+        def visitCommaopt(self, n, o = None) :  return  self.unimplementedVisitor("visitCommaopt(Commaopt, any)")
+
+        def visitEllipsisopt(self, n, o = None) :  return  self.unimplementedVisitor("visitEllipsisopt(Ellipsisopt, any)")
+
+        def visitLPGUserAction0(self, n, o = None) :  return  self.unimplementedVisitor("visitLPGUserAction0(LPGUserAction0, any)")
+
+        def visitLPGUserAction1(self, n, o = None) :  return  self.unimplementedVisitor("visitLPGUserAction1(LPGUserAction1, any)")
+
+        def visitLPGUserAction2(self, n, o = None) :  return  self.unimplementedVisitor("visitLPGUserAction2(LPGUserAction2, any)")
+
+        def visitLPGUserAction3(self, n, o = None) :  return  self.unimplementedVisitor("visitLPGUserAction3(LPGUserAction3, any)")
+
+        def visitLPGUserAction4(self, n, o = None) :  return  self.unimplementedVisitor("visitLPGUserAction4(LPGUserAction4, any)")
+
+        def visitIntegralType0(self, n, o = None) :  return  self.unimplementedVisitor("visitIntegralType0(IntegralType0, any)")
+
+        def visitIntegralType1(self, n, o = None) :  return  self.unimplementedVisitor("visitIntegralType1(IntegralType1, any)")
+
+        def visitIntegralType2(self, n, o = None) :  return  self.unimplementedVisitor("visitIntegralType2(IntegralType2, any)")
+
+        def visitIntegralType3(self, n, o = None) :  return  self.unimplementedVisitor("visitIntegralType3(IntegralType3, any)")
+
+        def visitIntegralType4(self, n, o = None) :  return  self.unimplementedVisitor("visitIntegralType4(IntegralType4, any)")
+
+        def visitFloatingPointType0(self, n, o = None) :  return  self.unimplementedVisitor("visitFloatingPointType0(FloatingPointType0, any)")
+
+        def visitFloatingPointType1(self, n, o = None) :  return  self.unimplementedVisitor("visitFloatingPointType1(FloatingPointType1, any)")
+
+        def visitWildcardBounds0(self, n, o = None) :  return  self.unimplementedVisitor("visitWildcardBounds0(WildcardBounds0, any)")
+
+        def visitWildcardBounds1(self, n, o = None) :  return  self.unimplementedVisitor("visitWildcardBounds1(WildcardBounds1, any)")
+
+        def visitClassModifier0(self, n, o = None) :  return  self.unimplementedVisitor("visitClassModifier0(ClassModifier0, any)")
+
+        def visitClassModifier1(self, n, o = None) :  return  self.unimplementedVisitor("visitClassModifier1(ClassModifier1, any)")
+
+        def visitClassModifier2(self, n, o = None) :  return  self.unimplementedVisitor("visitClassModifier2(ClassModifier2, any)")
+
+        def visitClassModifier3(self, n, o = None) :  return  self.unimplementedVisitor("visitClassModifier3(ClassModifier3, any)")
+
+        def visitClassModifier4(self, n, o = None) :  return  self.unimplementedVisitor("visitClassModifier4(ClassModifier4, any)")
+
+        def visitClassModifier5(self, n, o = None) :  return  self.unimplementedVisitor("visitClassModifier5(ClassModifier5, any)")
+
+        def visitClassModifier6(self, n, o = None) :  return  self.unimplementedVisitor("visitClassModifier6(ClassModifier6, any)")
+
+        def visitFieldModifier0(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldModifier0(FieldModifier0, any)")
+
+        def visitFieldModifier1(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldModifier1(FieldModifier1, any)")
+
+        def visitFieldModifier2(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldModifier2(FieldModifier2, any)")
+
+        def visitFieldModifier3(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldModifier3(FieldModifier3, any)")
+
+        def visitFieldModifier4(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldModifier4(FieldModifier4, any)")
+
+        def visitFieldModifier5(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldModifier5(FieldModifier5, any)")
+
+        def visitFieldModifier6(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldModifier6(FieldModifier6, any)")
+
+        def visitMethodDeclarator0(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodDeclarator0(MethodDeclarator0, any)")
+
+        def visitMethodDeclarator1(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodDeclarator1(MethodDeclarator1, any)")
+
+        def visitMethodModifier0(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodModifier0(MethodModifier0, any)")
+
+        def visitMethodModifier1(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodModifier1(MethodModifier1, any)")
+
+        def visitMethodModifier2(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodModifier2(MethodModifier2, any)")
+
+        def visitMethodModifier3(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodModifier3(MethodModifier3, any)")
+
+        def visitMethodModifier4(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodModifier4(MethodModifier4, any)")
+
+        def visitMethodModifier5(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodModifier5(MethodModifier5, any)")
+
+        def visitMethodModifier6(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodModifier6(MethodModifier6, any)")
+
+        def visitMethodModifier7(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodModifier7(MethodModifier7, any)")
+
+        def visitMethodModifier8(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodModifier8(MethodModifier8, any)")
+
+        def visitConstructorModifier0(self, n, o = None) :  return  self.unimplementedVisitor("visitConstructorModifier0(ConstructorModifier0, any)")
+
+        def visitConstructorModifier1(self, n, o = None) :  return  self.unimplementedVisitor("visitConstructorModifier1(ConstructorModifier1, any)")
+
+        def visitConstructorModifier2(self, n, o = None) :  return  self.unimplementedVisitor("visitConstructorModifier2(ConstructorModifier2, any)")
+
+        def visitExplicitConstructorInvocation0(self, n, o = None) :  return  self.unimplementedVisitor("visitExplicitConstructorInvocation0(ExplicitConstructorInvocation0, any)")
+
+        def visitExplicitConstructorInvocation1(self, n, o = None) :  return  self.unimplementedVisitor("visitExplicitConstructorInvocation1(ExplicitConstructorInvocation1, any)")
+
+        def visitExplicitConstructorInvocation2(self, n, o = None) :  return  self.unimplementedVisitor("visitExplicitConstructorInvocation2(ExplicitConstructorInvocation2, any)")
+
+        def visitInterfaceModifier0(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceModifier0(InterfaceModifier0, any)")
+
+        def visitInterfaceModifier1(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceModifier1(InterfaceModifier1, any)")
+
+        def visitInterfaceModifier2(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceModifier2(InterfaceModifier2, any)")
+
+        def visitInterfaceModifier3(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceModifier3(InterfaceModifier3, any)")
+
+        def visitInterfaceModifier4(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceModifier4(InterfaceModifier4, any)")
+
+        def visitInterfaceModifier5(self, n, o = None) :  return  self.unimplementedVisitor("visitInterfaceModifier5(InterfaceModifier5, any)")
+
+        def visitExtendsInterfaces0(self, n, o = None) :  return  self.unimplementedVisitor("visitExtendsInterfaces0(ExtendsInterfaces0, any)")
+
+        def visitExtendsInterfaces1(self, n, o = None) :  return  self.unimplementedVisitor("visitExtendsInterfaces1(ExtendsInterfaces1, any)")
+
+        def visitConstantModifier0(self, n, o = None) :  return  self.unimplementedVisitor("visitConstantModifier0(ConstantModifier0, any)")
+
+        def visitConstantModifier1(self, n, o = None) :  return  self.unimplementedVisitor("visitConstantModifier1(ConstantModifier1, any)")
+
+        def visitConstantModifier2(self, n, o = None) :  return  self.unimplementedVisitor("visitConstantModifier2(ConstantModifier2, any)")
+
+        def visitAbstractMethodModifier0(self, n, o = None) :  return  self.unimplementedVisitor("visitAbstractMethodModifier0(AbstractMethodModifier0, any)")
+
+        def visitAbstractMethodModifier1(self, n, o = None) :  return  self.unimplementedVisitor("visitAbstractMethodModifier1(AbstractMethodModifier1, any)")
+
+        def visitAnnotationTypeElementDeclaration0(self, n, o = None) :  return  self.unimplementedVisitor("visitAnnotationTypeElementDeclaration0(AnnotationTypeElementDeclaration0, any)")
+
+        def visitAnnotationTypeElementDeclaration1(self, n, o = None) :  return  self.unimplementedVisitor("visitAnnotationTypeElementDeclaration1(AnnotationTypeElementDeclaration1, any)")
+
+        def visitAssertStatement0(self, n, o = None) :  return  self.unimplementedVisitor("visitAssertStatement0(AssertStatement0, any)")
+
+        def visitAssertStatement1(self, n, o = None) :  return  self.unimplementedVisitor("visitAssertStatement1(AssertStatement1, any)")
+
+        def visitSwitchLabel0(self, n, o = None) :  return  self.unimplementedVisitor("visitSwitchLabel0(SwitchLabel0, any)")
+
+        def visitSwitchLabel1(self, n, o = None) :  return  self.unimplementedVisitor("visitSwitchLabel1(SwitchLabel1, any)")
+
+        def visitSwitchLabel2(self, n, o = None) :  return  self.unimplementedVisitor("visitSwitchLabel2(SwitchLabel2, any)")
+
+        def visitTryStatement0(self, n, o = None) :  return  self.unimplementedVisitor("visitTryStatement0(TryStatement0, any)")
+
+        def visitTryStatement1(self, n, o = None) :  return  self.unimplementedVisitor("visitTryStatement1(TryStatement1, any)")
+
+        def visitPrimaryNoNewArray0(self, n, o = None) :  return  self.unimplementedVisitor("visitPrimaryNoNewArray0(PrimaryNoNewArray0, any)")
+
+        def visitPrimaryNoNewArray1(self, n, o = None) :  return  self.unimplementedVisitor("visitPrimaryNoNewArray1(PrimaryNoNewArray1, any)")
+
+        def visitPrimaryNoNewArray2(self, n, o = None) :  return  self.unimplementedVisitor("visitPrimaryNoNewArray2(PrimaryNoNewArray2, any)")
+
+        def visitPrimaryNoNewArray3(self, n, o = None) :  return  self.unimplementedVisitor("visitPrimaryNoNewArray3(PrimaryNoNewArray3, any)")
+
+        def visitPrimaryNoNewArray4(self, n, o = None) :  return  self.unimplementedVisitor("visitPrimaryNoNewArray4(PrimaryNoNewArray4, any)")
+
+        def visitLiteral0(self, n, o = None) :  return  self.unimplementedVisitor("visitLiteral0(Literal0, any)")
+
+        def visitLiteral1(self, n, o = None) :  return  self.unimplementedVisitor("visitLiteral1(Literal1, any)")
+
+        def visitLiteral2(self, n, o = None) :  return  self.unimplementedVisitor("visitLiteral2(Literal2, any)")
+
+        def visitLiteral3(self, n, o = None) :  return  self.unimplementedVisitor("visitLiteral3(Literal3, any)")
+
+        def visitLiteral4(self, n, o = None) :  return  self.unimplementedVisitor("visitLiteral4(Literal4, any)")
+
+        def visitLiteral5(self, n, o = None) :  return  self.unimplementedVisitor("visitLiteral5(Literal5, any)")
+
+        def visitLiteral6(self, n, o = None) :  return  self.unimplementedVisitor("visitLiteral6(Literal6, any)")
+
+        def visitBooleanLiteral0(self, n, o = None) :  return  self.unimplementedVisitor("visitBooleanLiteral0(BooleanLiteral0, any)")
+
+        def visitBooleanLiteral1(self, n, o = None) :  return  self.unimplementedVisitor("visitBooleanLiteral1(BooleanLiteral1, any)")
+
+        def visitClassInstanceCreationExpression0(self, n, o = None) :  return  self.unimplementedVisitor("visitClassInstanceCreationExpression0(ClassInstanceCreationExpression0, any)")
+
+        def visitClassInstanceCreationExpression1(self, n, o = None) :  return  self.unimplementedVisitor("visitClassInstanceCreationExpression1(ClassInstanceCreationExpression1, any)")
+
+        def visitArrayCreationExpression0(self, n, o = None) :  return  self.unimplementedVisitor("visitArrayCreationExpression0(ArrayCreationExpression0, any)")
+
+        def visitArrayCreationExpression1(self, n, o = None) :  return  self.unimplementedVisitor("visitArrayCreationExpression1(ArrayCreationExpression1, any)")
+
+        def visitArrayCreationExpression2(self, n, o = None) :  return  self.unimplementedVisitor("visitArrayCreationExpression2(ArrayCreationExpression2, any)")
+
+        def visitArrayCreationExpression3(self, n, o = None) :  return  self.unimplementedVisitor("visitArrayCreationExpression3(ArrayCreationExpression3, any)")
+
+        def visitDims0(self, n, o = None) :  return  self.unimplementedVisitor("visitDims0(Dims0, any)")
+
+        def visitDims1(self, n, o = None) :  return  self.unimplementedVisitor("visitDims1(Dims1, any)")
+
+        def visitFieldAccess0(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldAccess0(FieldAccess0, any)")
+
+        def visitFieldAccess1(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldAccess1(FieldAccess1, any)")
+
+        def visitFieldAccess2(self, n, o = None) :  return  self.unimplementedVisitor("visitFieldAccess2(FieldAccess2, any)")
+
+        def visitMethodInvocation0(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodInvocation0(MethodInvocation0, any)")
+
+        def visitMethodInvocation1(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodInvocation1(MethodInvocation1, any)")
+
+        def visitMethodInvocation2(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodInvocation2(MethodInvocation2, any)")
+
+        def visitMethodInvocation3(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodInvocation3(MethodInvocation3, any)")
+
+        def visitMethodInvocation4(self, n, o = None) :  return  self.unimplementedVisitor("visitMethodInvocation4(MethodInvocation4, any)")
+
+        def visitArrayAccess0(self, n, o = None) :  return  self.unimplementedVisitor("visitArrayAccess0(ArrayAccess0, any)")
+
+        def visitArrayAccess1(self, n, o = None) :  return  self.unimplementedVisitor("visitArrayAccess1(ArrayAccess1, any)")
+
+        def visitUnaryExpression0(self, n, o = None) :  return  self.unimplementedVisitor("visitUnaryExpression0(UnaryExpression0, any)")
+
+        def visitUnaryExpression1(self, n, o = None) :  return  self.unimplementedVisitor("visitUnaryExpression1(UnaryExpression1, any)")
+
+        def visitUnaryExpressionNotPlusMinus0(self, n, o = None) :  return  self.unimplementedVisitor("visitUnaryExpressionNotPlusMinus0(UnaryExpressionNotPlusMinus0, any)")
+
+        def visitUnaryExpressionNotPlusMinus1(self, n, o = None) :  return  self.unimplementedVisitor("visitUnaryExpressionNotPlusMinus1(UnaryExpressionNotPlusMinus1, any)")
+
+        def visitCastExpression0(self, n, o = None) :  return  self.unimplementedVisitor("visitCastExpression0(CastExpression0, any)")
+
+        def visitCastExpression1(self, n, o = None) :  return  self.unimplementedVisitor("visitCastExpression1(CastExpression1, any)")
+
+        def visitMultiplicativeExpression0(self, n, o = None) :  return  self.unimplementedVisitor("visitMultiplicativeExpression0(MultiplicativeExpression0, any)")
+
+        def visitMultiplicativeExpression1(self, n, o = None) :  return  self.unimplementedVisitor("visitMultiplicativeExpression1(MultiplicativeExpression1, any)")
+
+        def visitMultiplicativeExpression2(self, n, o = None) :  return  self.unimplementedVisitor("visitMultiplicativeExpression2(MultiplicativeExpression2, any)")
+
+        def visitAdditiveExpression0(self, n, o = None) :  return  self.unimplementedVisitor("visitAdditiveExpression0(AdditiveExpression0, any)")
+
+        def visitAdditiveExpression1(self, n, o = None) :  return  self.unimplementedVisitor("visitAdditiveExpression1(AdditiveExpression1, any)")
+
+        def visitShiftExpression0(self, n, o = None) :  return  self.unimplementedVisitor("visitShiftExpression0(ShiftExpression0, any)")
+
+        def visitShiftExpression1(self, n, o = None) :  return  self.unimplementedVisitor("visitShiftExpression1(ShiftExpression1, any)")
+
+        def visitShiftExpression2(self, n, o = None) :  return  self.unimplementedVisitor("visitShiftExpression2(ShiftExpression2, any)")
+
+        def visitRelationalExpression0(self, n, o = None) :  return  self.unimplementedVisitor("visitRelationalExpression0(RelationalExpression0, any)")
+
+        def visitRelationalExpression1(self, n, o = None) :  return  self.unimplementedVisitor("visitRelationalExpression1(RelationalExpression1, any)")
+
+        def visitRelationalExpression2(self, n, o = None) :  return  self.unimplementedVisitor("visitRelationalExpression2(RelationalExpression2, any)")
+
+        def visitRelationalExpression3(self, n, o = None) :  return  self.unimplementedVisitor("visitRelationalExpression3(RelationalExpression3, any)")
+
+        def visitRelationalExpression4(self, n, o = None) :  return  self.unimplementedVisitor("visitRelationalExpression4(RelationalExpression4, any)")
+
+        def visitEqualityExpression0(self, n, o = None) :  return  self.unimplementedVisitor("visitEqualityExpression0(EqualityExpression0, any)")
+
+        def visitEqualityExpression1(self, n, o = None) :  return  self.unimplementedVisitor("visitEqualityExpression1(EqualityExpression1, any)")
+
+        def visitAssignmentOperator0(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator0(AssignmentOperator0, any)")
+
+        def visitAssignmentOperator1(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator1(AssignmentOperator1, any)")
+
+        def visitAssignmentOperator2(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator2(AssignmentOperator2, any)")
+
+        def visitAssignmentOperator3(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator3(AssignmentOperator3, any)")
+
+        def visitAssignmentOperator4(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator4(AssignmentOperator4, any)")
+
+        def visitAssignmentOperator5(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator5(AssignmentOperator5, any)")
+
+        def visitAssignmentOperator6(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator6(AssignmentOperator6, any)")
+
+        def visitAssignmentOperator7(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator7(AssignmentOperator7, any)")
+
+        def visitAssignmentOperator8(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator8(AssignmentOperator8, any)")
+
+        def visitAssignmentOperator9(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator9(AssignmentOperator9, any)")
+
+        def visitAssignmentOperator10(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator10(AssignmentOperator10, any)")
+
+        def visitAssignmentOperator11(self, n, o = None) :  return  self.unimplementedVisitor("visitAssignmentOperator11(AssignmentOperator11, any)")
+
+
+        def visit(self, n, o = None) :
         
-            if isinstance(n, AstToken): self.endVisitAstToken( n)
-            elif isinstance(n, identifier): self.endVisitidentifier( n)
-            elif isinstance(n, PrimitiveType): self.endVisitPrimitiveType( n)
-            elif isinstance(n, ClassType): self.endVisitClassType( n)
-            elif isinstance(n, InterfaceType): self.endVisitInterfaceType( n)
-            elif isinstance(n, TypeName): self.endVisitTypeName( n)
-            elif isinstance(n, ArrayType): self.endVisitArrayType( n)
-            elif isinstance(n, TypeParameter): self.endVisitTypeParameter( n)
-            elif isinstance(n, TypeBound): self.endVisitTypeBound( n)
-            elif isinstance(n, AdditionalBoundList): self.endVisitAdditionalBoundList( n)
-            elif isinstance(n, AdditionalBound): self.endVisitAdditionalBound( n)
-            elif isinstance(n, TypeArguments): self.endVisitTypeArguments( n)
-            elif isinstance(n, ActualTypeArgumentList): self.endVisitActualTypeArgumentList( n)
-            elif isinstance(n, Wildcard): self.endVisitWildcard( n)
-            elif isinstance(n, PackageName): self.endVisitPackageName( n)
-            elif isinstance(n, ExpressionName): self.endVisitExpressionName( n)
-            elif isinstance(n, MethodName): self.endVisitMethodName( n)
-            elif isinstance(n, PackageOrTypeName): self.endVisitPackageOrTypeName( n)
-            elif isinstance(n, AmbiguousName): self.endVisitAmbiguousName( n)
-            elif isinstance(n, CompilationUnit): self.endVisitCompilationUnit( n)
-            elif isinstance(n, ImportDeclarations): self.endVisitImportDeclarations( n)
-            elif isinstance(n, TypeDeclarations): self.endVisitTypeDeclarations( n)
-            elif isinstance(n, PackageDeclaration): self.endVisitPackageDeclaration( n)
-            elif isinstance(n, SingleTypeImportDeclaration): self.endVisitSingleTypeImportDeclaration( n)
-            elif isinstance(n, TypeImportOnDemandDeclaration): self.endVisitTypeImportOnDemandDeclaration( n)
-            elif isinstance(n, SingleStaticImportDeclaration): self.endVisitSingleStaticImportDeclaration( n)
-            elif isinstance(n, StaticImportOnDemandDeclaration): self.endVisitStaticImportOnDemandDeclaration( n)
-            elif isinstance(n, TypeDeclaration): self.endVisitTypeDeclaration( n)
-            elif isinstance(n, NormalClassDeclaration): self.endVisitNormalClassDeclaration( n)
-            elif isinstance(n, ClassModifiers): self.endVisitClassModifiers( n)
-            elif isinstance(n, TypeParameters): self.endVisitTypeParameters( n)
-            elif isinstance(n, TypeParameterList): self.endVisitTypeParameterList( n)
-            elif isinstance(n, Super): self.endVisitSuper( n)
-            elif isinstance(n, Interfaces): self.endVisitInterfaces( n)
-            elif isinstance(n, InterfaceTypeList): self.endVisitInterfaceTypeList( n)
-            elif isinstance(n, ClassBody): self.endVisitClassBody( n)
-            elif isinstance(n, ClassBodyDeclarations): self.endVisitClassBodyDeclarations( n)
-            elif isinstance(n, ClassMemberDeclaration): self.endVisitClassMemberDeclaration( n)
-            elif isinstance(n, FieldDeclaration): self.endVisitFieldDeclaration( n)
-            elif isinstance(n, VariableDeclarators): self.endVisitVariableDeclarators( n)
-            elif isinstance(n, VariableDeclarator): self.endVisitVariableDeclarator( n)
-            elif isinstance(n, VariableDeclaratorId): self.endVisitVariableDeclaratorId( n)
-            elif isinstance(n, FieldModifiers): self.endVisitFieldModifiers( n)
-            elif isinstance(n, MethodDeclaration): self.endVisitMethodDeclaration( n)
-            elif isinstance(n, MethodHeader): self.endVisitMethodHeader( n)
-            elif isinstance(n, ResultType): self.endVisitResultType( n)
-            elif isinstance(n, FormalParameterList): self.endVisitFormalParameterList( n)
-            elif isinstance(n, FormalParameters): self.endVisitFormalParameters( n)
-            elif isinstance(n, FormalParameter): self.endVisitFormalParameter( n)
-            elif isinstance(n, VariableModifiers): self.endVisitVariableModifiers( n)
-            elif isinstance(n, VariableModifier): self.endVisitVariableModifier( n)
-            elif isinstance(n, LastFormalParameter): self.endVisitLastFormalParameter( n)
-            elif isinstance(n, MethodModifiers): self.endVisitMethodModifiers( n)
-            elif isinstance(n, Throws): self.endVisitThrows( n)
-            elif isinstance(n, ExceptionTypeList): self.endVisitExceptionTypeList( n)
-            elif isinstance(n, MethodBody): self.endVisitMethodBody( n)
-            elif isinstance(n, StaticInitializer): self.endVisitStaticInitializer( n)
-            elif isinstance(n, ConstructorDeclaration): self.endVisitConstructorDeclaration( n)
-            elif isinstance(n, ConstructorDeclarator): self.endVisitConstructorDeclarator( n)
-            elif isinstance(n, ConstructorModifiers): self.endVisitConstructorModifiers( n)
-            elif isinstance(n, ConstructorBody): self.endVisitConstructorBody( n)
-            elif isinstance(n, EnumDeclaration): self.endVisitEnumDeclaration( n)
-            elif isinstance(n, EnumBody): self.endVisitEnumBody( n)
-            elif isinstance(n, EnumConstants): self.endVisitEnumConstants( n)
-            elif isinstance(n, EnumConstant): self.endVisitEnumConstant( n)
-            elif isinstance(n, Arguments): self.endVisitArguments( n)
-            elif isinstance(n, EnumBodyDeclarations): self.endVisitEnumBodyDeclarations( n)
-            elif isinstance(n, NormalInterfaceDeclaration): self.endVisitNormalInterfaceDeclaration( n)
-            elif isinstance(n, InterfaceModifiers): self.endVisitInterfaceModifiers( n)
-            elif isinstance(n, InterfaceBody): self.endVisitInterfaceBody( n)
-            elif isinstance(n, InterfaceMemberDeclarations): self.endVisitInterfaceMemberDeclarations( n)
-            elif isinstance(n, InterfaceMemberDeclaration): self.endVisitInterfaceMemberDeclaration( n)
-            elif isinstance(n, ConstantDeclaration): self.endVisitConstantDeclaration( n)
-            elif isinstance(n, ConstantModifiers): self.endVisitConstantModifiers( n)
-            elif isinstance(n, AbstractMethodDeclaration): self.endVisitAbstractMethodDeclaration( n)
-            elif isinstance(n, AbstractMethodModifiers): self.endVisitAbstractMethodModifiers( n)
-            elif isinstance(n, AnnotationTypeDeclaration): self.endVisitAnnotationTypeDeclaration( n)
-            elif isinstance(n, AnnotationTypeBody): self.endVisitAnnotationTypeBody( n)
-            elif isinstance(n, AnnotationTypeElementDeclarations): self.endVisitAnnotationTypeElementDeclarations( n)
-            elif isinstance(n, DefaultValue): self.endVisitDefaultValue( n)
-            elif isinstance(n, Annotations): self.endVisitAnnotations( n)
-            elif isinstance(n, NormalAnnotation): self.endVisitNormalAnnotation( n)
-            elif isinstance(n, ElementValuePairs): self.endVisitElementValuePairs( n)
-            elif isinstance(n, ElementValuePair): self.endVisitElementValuePair( n)
-            elif isinstance(n, ElementValueArrayInitializer): self.endVisitElementValueArrayInitializer( n)
-            elif isinstance(n, ElementValues): self.endVisitElementValues( n)
-            elif isinstance(n, MarkerAnnotation): self.endVisitMarkerAnnotation( n)
-            elif isinstance(n, SingleElementAnnotation): self.endVisitSingleElementAnnotation( n)
-            elif isinstance(n, ArrayInitializer): self.endVisitArrayInitializer( n)
-            elif isinstance(n, VariableInitializers): self.endVisitVariableInitializers( n)
-            elif isinstance(n, Block): self.endVisitBlock( n)
-            elif isinstance(n, BlockStatements): self.endVisitBlockStatements( n)
-            elif isinstance(n, LocalVariableDeclarationStatement): self.endVisitLocalVariableDeclarationStatement( n)
-            elif isinstance(n, LocalVariableDeclaration): self.endVisitLocalVariableDeclaration( n)
-            elif isinstance(n, IfThenStatement): self.endVisitIfThenStatement( n)
-            elif isinstance(n, IfThenElseStatement): self.endVisitIfThenElseStatement( n)
-            elif isinstance(n, IfThenElseStatementNoShortIf): self.endVisitIfThenElseStatementNoShortIf( n)
-            elif isinstance(n, EmptyStatement): self.endVisitEmptyStatement( n)
-            elif isinstance(n, LabeledStatement): self.endVisitLabeledStatement( n)
-            elif isinstance(n, LabeledStatementNoShortIf): self.endVisitLabeledStatementNoShortIf( n)
-            elif isinstance(n, ExpressionStatement): self.endVisitExpressionStatement( n)
-            elif isinstance(n, SwitchStatement): self.endVisitSwitchStatement( n)
-            elif isinstance(n, SwitchBlock): self.endVisitSwitchBlock( n)
-            elif isinstance(n, SwitchBlockStatementGroups): self.endVisitSwitchBlockStatementGroups( n)
-            elif isinstance(n, SwitchBlockStatementGroup): self.endVisitSwitchBlockStatementGroup( n)
-            elif isinstance(n, SwitchLabels): self.endVisitSwitchLabels( n)
-            elif isinstance(n, WhileStatement): self.endVisitWhileStatement( n)
-            elif isinstance(n, WhileStatementNoShortIf): self.endVisitWhileStatementNoShortIf( n)
-            elif isinstance(n, DoStatement): self.endVisitDoStatement( n)
-            elif isinstance(n, BasicForStatement): self.endVisitBasicForStatement( n)
-            elif isinstance(n, ForStatementNoShortIf): self.endVisitForStatementNoShortIf( n)
-            elif isinstance(n, StatementExpressionList): self.endVisitStatementExpressionList( n)
-            elif isinstance(n, EnhancedForStatement): self.endVisitEnhancedForStatement( n)
-            elif isinstance(n, BreakStatement): self.endVisitBreakStatement( n)
-            elif isinstance(n, ContinueStatement): self.endVisitContinueStatement( n)
-            elif isinstance(n, ReturnStatement): self.endVisitReturnStatement( n)
-            elif isinstance(n, ThrowStatement): self.endVisitThrowStatement( n)
-            elif isinstance(n, SynchronizedStatement): self.endVisitSynchronizedStatement( n)
-            elif isinstance(n, Catches): self.endVisitCatches( n)
-            elif isinstance(n, CatchClause): self.endVisitCatchClause( n)
-            elif isinstance(n, Finally): self.endVisitFinally( n)
-            elif isinstance(n, ArgumentList): self.endVisitArgumentList( n)
-            elif isinstance(n, DimExprs): self.endVisitDimExprs( n)
-            elif isinstance(n, DimExpr): self.endVisitDimExpr( n)
-            elif isinstance(n, PostIncrementExpression): self.endVisitPostIncrementExpression( n)
-            elif isinstance(n, PostDecrementExpression): self.endVisitPostDecrementExpression( n)
-            elif isinstance(n, PreIncrementExpression): self.endVisitPreIncrementExpression( n)
-            elif isinstance(n, PreDecrementExpression): self.endVisitPreDecrementExpression( n)
-            elif isinstance(n, AndExpression): self.endVisitAndExpression( n)
-            elif isinstance(n, ExclusiveOrExpression): self.endVisitExclusiveOrExpression( n)
-            elif isinstance(n, InclusiveOrExpression): self.endVisitInclusiveOrExpression( n)
-            elif isinstance(n, ConditionalAndExpression): self.endVisitConditionalAndExpression( n)
-            elif isinstance(n, ConditionalOrExpression): self.endVisitConditionalOrExpression( n)
-            elif isinstance(n, ConditionalExpression): self.endVisitConditionalExpression( n)
-            elif isinstance(n, Assignment): self.endVisitAssignment( n)
-            elif isinstance(n, Commaopt): self.endVisitCommaopt( n)
-            elif isinstance(n, Ellipsisopt): self.endVisitEllipsisopt( n)
-            elif isinstance(n, LPGUserAction0): self.endVisitLPGUserAction0( n)
-            elif isinstance(n, LPGUserAction1): self.endVisitLPGUserAction1( n)
-            elif isinstance(n, LPGUserAction2): self.endVisitLPGUserAction2( n)
-            elif isinstance(n, LPGUserAction3): self.endVisitLPGUserAction3( n)
-            elif isinstance(n, LPGUserAction4): self.endVisitLPGUserAction4( n)
-            elif isinstance(n, IntegralType0): self.endVisitIntegralType0( n)
-            elif isinstance(n, IntegralType1): self.endVisitIntegralType1( n)
-            elif isinstance(n, IntegralType2): self.endVisitIntegralType2( n)
-            elif isinstance(n, IntegralType3): self.endVisitIntegralType3( n)
-            elif isinstance(n, IntegralType4): self.endVisitIntegralType4( n)
-            elif isinstance(n, FloatingPointType0): self.endVisitFloatingPointType0( n)
-            elif isinstance(n, FloatingPointType1): self.endVisitFloatingPointType1( n)
-            elif isinstance(n, WildcardBounds0): self.endVisitWildcardBounds0( n)
-            elif isinstance(n, WildcardBounds1): self.endVisitWildcardBounds1( n)
-            elif isinstance(n, ClassModifier0): self.endVisitClassModifier0( n)
-            elif isinstance(n, ClassModifier1): self.endVisitClassModifier1( n)
-            elif isinstance(n, ClassModifier2): self.endVisitClassModifier2( n)
-            elif isinstance(n, ClassModifier3): self.endVisitClassModifier3( n)
-            elif isinstance(n, ClassModifier4): self.endVisitClassModifier4( n)
-            elif isinstance(n, ClassModifier5): self.endVisitClassModifier5( n)
-            elif isinstance(n, ClassModifier6): self.endVisitClassModifier6( n)
-            elif isinstance(n, FieldModifier0): self.endVisitFieldModifier0( n)
-            elif isinstance(n, FieldModifier1): self.endVisitFieldModifier1( n)
-            elif isinstance(n, FieldModifier2): self.endVisitFieldModifier2( n)
-            elif isinstance(n, FieldModifier3): self.endVisitFieldModifier3( n)
-            elif isinstance(n, FieldModifier4): self.endVisitFieldModifier4( n)
-            elif isinstance(n, FieldModifier5): self.endVisitFieldModifier5( n)
-            elif isinstance(n, FieldModifier6): self.endVisitFieldModifier6( n)
-            elif isinstance(n, MethodDeclarator0): self.endVisitMethodDeclarator0( n)
-            elif isinstance(n, MethodDeclarator1): self.endVisitMethodDeclarator1( n)
-            elif isinstance(n, MethodModifier0): self.endVisitMethodModifier0( n)
-            elif isinstance(n, MethodModifier1): self.endVisitMethodModifier1( n)
-            elif isinstance(n, MethodModifier2): self.endVisitMethodModifier2( n)
-            elif isinstance(n, MethodModifier3): self.endVisitMethodModifier3( n)
-            elif isinstance(n, MethodModifier4): self.endVisitMethodModifier4( n)
-            elif isinstance(n, MethodModifier5): self.endVisitMethodModifier5( n)
-            elif isinstance(n, MethodModifier6): self.endVisitMethodModifier6( n)
-            elif isinstance(n, MethodModifier7): self.endVisitMethodModifier7( n)
-            elif isinstance(n, MethodModifier8): self.endVisitMethodModifier8( n)
-            elif isinstance(n, ConstructorModifier0): self.endVisitConstructorModifier0( n)
-            elif isinstance(n, ConstructorModifier1): self.endVisitConstructorModifier1( n)
-            elif isinstance(n, ConstructorModifier2): self.endVisitConstructorModifier2( n)
-            elif isinstance(n, ExplicitConstructorInvocation0): self.endVisitExplicitConstructorInvocation0( n)
-            elif isinstance(n, ExplicitConstructorInvocation1): self.endVisitExplicitConstructorInvocation1( n)
-            elif isinstance(n, ExplicitConstructorInvocation2): self.endVisitExplicitConstructorInvocation2( n)
-            elif isinstance(n, InterfaceModifier0): self.endVisitInterfaceModifier0( n)
-            elif isinstance(n, InterfaceModifier1): self.endVisitInterfaceModifier1( n)
-            elif isinstance(n, InterfaceModifier2): self.endVisitInterfaceModifier2( n)
-            elif isinstance(n, InterfaceModifier3): self.endVisitInterfaceModifier3( n)
-            elif isinstance(n, InterfaceModifier4): self.endVisitInterfaceModifier4( n)
-            elif isinstance(n, InterfaceModifier5): self.endVisitInterfaceModifier5( n)
-            elif isinstance(n, ExtendsInterfaces0): self.endVisitExtendsInterfaces0( n)
-            elif isinstance(n, ExtendsInterfaces1): self.endVisitExtendsInterfaces1( n)
-            elif isinstance(n, ConstantModifier0): self.endVisitConstantModifier0( n)
-            elif isinstance(n, ConstantModifier1): self.endVisitConstantModifier1( n)
-            elif isinstance(n, ConstantModifier2): self.endVisitConstantModifier2( n)
-            elif isinstance(n, AbstractMethodModifier0): self.endVisitAbstractMethodModifier0( n)
-            elif isinstance(n, AbstractMethodModifier1): self.endVisitAbstractMethodModifier1( n)
-            elif isinstance(n, AnnotationTypeElementDeclaration0): self.endVisitAnnotationTypeElementDeclaration0( n)
-            elif isinstance(n, AnnotationTypeElementDeclaration1): self.endVisitAnnotationTypeElementDeclaration1( n)
-            elif isinstance(n, AssertStatement0): self.endVisitAssertStatement0( n)
-            elif isinstance(n, AssertStatement1): self.endVisitAssertStatement1( n)
-            elif isinstance(n, SwitchLabel0): self.endVisitSwitchLabel0( n)
-            elif isinstance(n, SwitchLabel1): self.endVisitSwitchLabel1( n)
-            elif isinstance(n, SwitchLabel2): self.endVisitSwitchLabel2( n)
-            elif isinstance(n, TryStatement0): self.endVisitTryStatement0( n)
-            elif isinstance(n, TryStatement1): self.endVisitTryStatement1( n)
-            elif isinstance(n, PrimaryNoNewArray0): self.endVisitPrimaryNoNewArray0( n)
-            elif isinstance(n, PrimaryNoNewArray1): self.endVisitPrimaryNoNewArray1( n)
-            elif isinstance(n, PrimaryNoNewArray2): self.endVisitPrimaryNoNewArray2( n)
-            elif isinstance(n, PrimaryNoNewArray3): self.endVisitPrimaryNoNewArray3( n)
-            elif isinstance(n, PrimaryNoNewArray4): self.endVisitPrimaryNoNewArray4( n)
-            elif isinstance(n, Literal0): self.endVisitLiteral0( n)
-            elif isinstance(n, Literal1): self.endVisitLiteral1( n)
-            elif isinstance(n, Literal2): self.endVisitLiteral2( n)
-            elif isinstance(n, Literal3): self.endVisitLiteral3( n)
-            elif isinstance(n, Literal4): self.endVisitLiteral4( n)
-            elif isinstance(n, Literal5): self.endVisitLiteral5( n)
-            elif isinstance(n, Literal6): self.endVisitLiteral6( n)
-            elif isinstance(n, BooleanLiteral0): self.endVisitBooleanLiteral0( n)
-            elif isinstance(n, BooleanLiteral1): self.endVisitBooleanLiteral1( n)
-            elif isinstance(n, ClassInstanceCreationExpression0): self.endVisitClassInstanceCreationExpression0( n)
-            elif isinstance(n, ClassInstanceCreationExpression1): self.endVisitClassInstanceCreationExpression1( n)
-            elif isinstance(n, ArrayCreationExpression0): self.endVisitArrayCreationExpression0( n)
-            elif isinstance(n, ArrayCreationExpression1): self.endVisitArrayCreationExpression1( n)
-            elif isinstance(n, ArrayCreationExpression2): self.endVisitArrayCreationExpression2( n)
-            elif isinstance(n, ArrayCreationExpression3): self.endVisitArrayCreationExpression3( n)
-            elif isinstance(n, Dims0): self.endVisitDims0( n)
-            elif isinstance(n, Dims1): self.endVisitDims1( n)
-            elif isinstance(n, FieldAccess0): self.endVisitFieldAccess0( n)
-            elif isinstance(n, FieldAccess1): self.endVisitFieldAccess1( n)
-            elif isinstance(n, FieldAccess2): self.endVisitFieldAccess2( n)
-            elif isinstance(n, MethodInvocation0): self.endVisitMethodInvocation0( n)
-            elif isinstance(n, MethodInvocation1): self.endVisitMethodInvocation1( n)
-            elif isinstance(n, MethodInvocation2): self.endVisitMethodInvocation2( n)
-            elif isinstance(n, MethodInvocation3): self.endVisitMethodInvocation3( n)
-            elif isinstance(n, MethodInvocation4): self.endVisitMethodInvocation4( n)
-            elif isinstance(n, ArrayAccess0): self.endVisitArrayAccess0( n)
-            elif isinstance(n, ArrayAccess1): self.endVisitArrayAccess1( n)
-            elif isinstance(n, UnaryExpression0): self.endVisitUnaryExpression0( n)
-            elif isinstance(n, UnaryExpression1): self.endVisitUnaryExpression1( n)
-            elif isinstance(n, UnaryExpressionNotPlusMinus0): self.endVisitUnaryExpressionNotPlusMinus0( n)
-            elif isinstance(n, UnaryExpressionNotPlusMinus1): self.endVisitUnaryExpressionNotPlusMinus1( n)
-            elif isinstance(n, CastExpression0): self.endVisitCastExpression0( n)
-            elif isinstance(n, CastExpression1): self.endVisitCastExpression1( n)
-            elif isinstance(n, MultiplicativeExpression0): self.endVisitMultiplicativeExpression0( n)
-            elif isinstance(n, MultiplicativeExpression1): self.endVisitMultiplicativeExpression1( n)
-            elif isinstance(n, MultiplicativeExpression2): self.endVisitMultiplicativeExpression2( n)
-            elif isinstance(n, AdditiveExpression0): self.endVisitAdditiveExpression0( n)
-            elif isinstance(n, AdditiveExpression1): self.endVisitAdditiveExpression1( n)
-            elif isinstance(n, ShiftExpression0): self.endVisitShiftExpression0( n)
-            elif isinstance(n, ShiftExpression1): self.endVisitShiftExpression1( n)
-            elif isinstance(n, ShiftExpression2): self.endVisitShiftExpression2( n)
-            elif isinstance(n, RelationalExpression0): self.endVisitRelationalExpression0( n)
-            elif isinstance(n, RelationalExpression1): self.endVisitRelationalExpression1( n)
-            elif isinstance(n, RelationalExpression2): self.endVisitRelationalExpression2( n)
-            elif isinstance(n, RelationalExpression3): self.endVisitRelationalExpression3( n)
-            elif isinstance(n, RelationalExpression4): self.endVisitRelationalExpression4( n)
-            elif isinstance(n, EqualityExpression0): self.endVisitEqualityExpression0( n)
-            elif isinstance(n, EqualityExpression1): self.endVisitEqualityExpression1( n)
-            elif isinstance(n, AssignmentOperator0): self.endVisitAssignmentOperator0( n)
-            elif isinstance(n, AssignmentOperator1): self.endVisitAssignmentOperator1( n)
-            elif isinstance(n, AssignmentOperator2): self.endVisitAssignmentOperator2( n)
-            elif isinstance(n, AssignmentOperator3): self.endVisitAssignmentOperator3( n)
-            elif isinstance(n, AssignmentOperator4): self.endVisitAssignmentOperator4( n)
-            elif isinstance(n, AssignmentOperator5): self.endVisitAssignmentOperator5( n)
-            elif isinstance(n, AssignmentOperator6): self.endVisitAssignmentOperator6( n)
-            elif isinstance(n, AssignmentOperator7): self.endVisitAssignmentOperator7( n)
-            elif isinstance(n, AssignmentOperator8): self.endVisitAssignmentOperator8( n)
-            elif isinstance(n, AssignmentOperator9): self.endVisitAssignmentOperator9( n)
-            elif isinstance(n, AssignmentOperator10): self.endVisitAssignmentOperator10( n)
-            elif isinstance(n, AssignmentOperator11): self.endVisitAssignmentOperator11( n)
-            raise ValueError("visit(" + n.toString() + ")")
+            if isinstance(n, AstToken): return self.visitAstToken(n, o)
+            elif isinstance(n, identifier): return self.visitidentifier(n, o)
+            elif isinstance(n, PrimitiveType): return self.visitPrimitiveType(n, o)
+            elif isinstance(n, ClassType): return self.visitClassType(n, o)
+            elif isinstance(n, InterfaceType): return self.visitInterfaceType(n, o)
+            elif isinstance(n, TypeName): return self.visitTypeName(n, o)
+            elif isinstance(n, ArrayType): return self.visitArrayType(n, o)
+            elif isinstance(n, TypeParameter): return self.visitTypeParameter(n, o)
+            elif isinstance(n, TypeBound): return self.visitTypeBound(n, o)
+            elif isinstance(n, AdditionalBoundList): return self.visitAdditionalBoundList(n, o)
+            elif isinstance(n, AdditionalBound): return self.visitAdditionalBound(n, o)
+            elif isinstance(n, TypeArguments): return self.visitTypeArguments(n, o)
+            elif isinstance(n, ActualTypeArgumentList): return self.visitActualTypeArgumentList(n, o)
+            elif isinstance(n, Wildcard): return self.visitWildcard(n, o)
+            elif isinstance(n, PackageName): return self.visitPackageName(n, o)
+            elif isinstance(n, ExpressionName): return self.visitExpressionName(n, o)
+            elif isinstance(n, MethodName): return self.visitMethodName(n, o)
+            elif isinstance(n, PackageOrTypeName): return self.visitPackageOrTypeName(n, o)
+            elif isinstance(n, AmbiguousName): return self.visitAmbiguousName(n, o)
+            elif isinstance(n, CompilationUnit): return self.visitCompilationUnit(n, o)
+            elif isinstance(n, ImportDeclarations): return self.visitImportDeclarations(n, o)
+            elif isinstance(n, TypeDeclarations): return self.visitTypeDeclarations(n, o)
+            elif isinstance(n, PackageDeclaration): return self.visitPackageDeclaration(n, o)
+            elif isinstance(n, SingleTypeImportDeclaration): return self.visitSingleTypeImportDeclaration(n, o)
+            elif isinstance(n, TypeImportOnDemandDeclaration): return self.visitTypeImportOnDemandDeclaration(n, o)
+            elif isinstance(n, SingleStaticImportDeclaration): return self.visitSingleStaticImportDeclaration(n, o)
+            elif isinstance(n, StaticImportOnDemandDeclaration): return self.visitStaticImportOnDemandDeclaration(n, o)
+            elif isinstance(n, TypeDeclaration): return self.visitTypeDeclaration(n, o)
+            elif isinstance(n, NormalClassDeclaration): return self.visitNormalClassDeclaration(n, o)
+            elif isinstance(n, ClassModifiers): return self.visitClassModifiers(n, o)
+            elif isinstance(n, TypeParameters): return self.visitTypeParameters(n, o)
+            elif isinstance(n, TypeParameterList): return self.visitTypeParameterList(n, o)
+            elif isinstance(n, Super): return self.visitSuper(n, o)
+            elif isinstance(n, Interfaces): return self.visitInterfaces(n, o)
+            elif isinstance(n, InterfaceTypeList): return self.visitInterfaceTypeList(n, o)
+            elif isinstance(n, ClassBody): return self.visitClassBody(n, o)
+            elif isinstance(n, ClassBodyDeclarations): return self.visitClassBodyDeclarations(n, o)
+            elif isinstance(n, ClassMemberDeclaration): return self.visitClassMemberDeclaration(n, o)
+            elif isinstance(n, FieldDeclaration): return self.visitFieldDeclaration(n, o)
+            elif isinstance(n, VariableDeclarators): return self.visitVariableDeclarators(n, o)
+            elif isinstance(n, VariableDeclarator): return self.visitVariableDeclarator(n, o)
+            elif isinstance(n, VariableDeclaratorId): return self.visitVariableDeclaratorId(n, o)
+            elif isinstance(n, FieldModifiers): return self.visitFieldModifiers(n, o)
+            elif isinstance(n, MethodDeclaration): return self.visitMethodDeclaration(n, o)
+            elif isinstance(n, MethodHeader): return self.visitMethodHeader(n, o)
+            elif isinstance(n, ResultType): return self.visitResultType(n, o)
+            elif isinstance(n, FormalParameterList): return self.visitFormalParameterList(n, o)
+            elif isinstance(n, FormalParameters): return self.visitFormalParameters(n, o)
+            elif isinstance(n, FormalParameter): return self.visitFormalParameter(n, o)
+            elif isinstance(n, VariableModifiers): return self.visitVariableModifiers(n, o)
+            elif isinstance(n, VariableModifier): return self.visitVariableModifier(n, o)
+            elif isinstance(n, LastFormalParameter): return self.visitLastFormalParameter(n, o)
+            elif isinstance(n, MethodModifiers): return self.visitMethodModifiers(n, o)
+            elif isinstance(n, Throws): return self.visitThrows(n, o)
+            elif isinstance(n, ExceptionTypeList): return self.visitExceptionTypeList(n, o)
+            elif isinstance(n, MethodBody): return self.visitMethodBody(n, o)
+            elif isinstance(n, StaticInitializer): return self.visitStaticInitializer(n, o)
+            elif isinstance(n, ConstructorDeclaration): return self.visitConstructorDeclaration(n, o)
+            elif isinstance(n, ConstructorDeclarator): return self.visitConstructorDeclarator(n, o)
+            elif isinstance(n, ConstructorModifiers): return self.visitConstructorModifiers(n, o)
+            elif isinstance(n, ConstructorBody): return self.visitConstructorBody(n, o)
+            elif isinstance(n, EnumDeclaration): return self.visitEnumDeclaration(n, o)
+            elif isinstance(n, EnumBody): return self.visitEnumBody(n, o)
+            elif isinstance(n, EnumConstants): return self.visitEnumConstants(n, o)
+            elif isinstance(n, EnumConstant): return self.visitEnumConstant(n, o)
+            elif isinstance(n, Arguments): return self.visitArguments(n, o)
+            elif isinstance(n, EnumBodyDeclarations): return self.visitEnumBodyDeclarations(n, o)
+            elif isinstance(n, NormalInterfaceDeclaration): return self.visitNormalInterfaceDeclaration(n, o)
+            elif isinstance(n, InterfaceModifiers): return self.visitInterfaceModifiers(n, o)
+            elif isinstance(n, InterfaceBody): return self.visitInterfaceBody(n, o)
+            elif isinstance(n, InterfaceMemberDeclarations): return self.visitInterfaceMemberDeclarations(n, o)
+            elif isinstance(n, InterfaceMemberDeclaration): return self.visitInterfaceMemberDeclaration(n, o)
+            elif isinstance(n, ConstantDeclaration): return self.visitConstantDeclaration(n, o)
+            elif isinstance(n, ConstantModifiers): return self.visitConstantModifiers(n, o)
+            elif isinstance(n, AbstractMethodDeclaration): return self.visitAbstractMethodDeclaration(n, o)
+            elif isinstance(n, AbstractMethodModifiers): return self.visitAbstractMethodModifiers(n, o)
+            elif isinstance(n, AnnotationTypeDeclaration): return self.visitAnnotationTypeDeclaration(n, o)
+            elif isinstance(n, AnnotationTypeBody): return self.visitAnnotationTypeBody(n, o)
+            elif isinstance(n, AnnotationTypeElementDeclarations): return self.visitAnnotationTypeElementDeclarations(n, o)
+            elif isinstance(n, DefaultValue): return self.visitDefaultValue(n, o)
+            elif isinstance(n, Annotations): return self.visitAnnotations(n, o)
+            elif isinstance(n, NormalAnnotation): return self.visitNormalAnnotation(n, o)
+            elif isinstance(n, ElementValuePairs): return self.visitElementValuePairs(n, o)
+            elif isinstance(n, ElementValuePair): return self.visitElementValuePair(n, o)
+            elif isinstance(n, ElementValueArrayInitializer): return self.visitElementValueArrayInitializer(n, o)
+            elif isinstance(n, ElementValues): return self.visitElementValues(n, o)
+            elif isinstance(n, MarkerAnnotation): return self.visitMarkerAnnotation(n, o)
+            elif isinstance(n, SingleElementAnnotation): return self.visitSingleElementAnnotation(n, o)
+            elif isinstance(n, ArrayInitializer): return self.visitArrayInitializer(n, o)
+            elif isinstance(n, VariableInitializers): return self.visitVariableInitializers(n, o)
+            elif isinstance(n, Block): return self.visitBlock(n, o)
+            elif isinstance(n, BlockStatements): return self.visitBlockStatements(n, o)
+            elif isinstance(n, LocalVariableDeclarationStatement): return self.visitLocalVariableDeclarationStatement(n, o)
+            elif isinstance(n, LocalVariableDeclaration): return self.visitLocalVariableDeclaration(n, o)
+            elif isinstance(n, IfThenStatement): return self.visitIfThenStatement(n, o)
+            elif isinstance(n, IfThenElseStatement): return self.visitIfThenElseStatement(n, o)
+            elif isinstance(n, IfThenElseStatementNoShortIf): return self.visitIfThenElseStatementNoShortIf(n, o)
+            elif isinstance(n, EmptyStatement): return self.visitEmptyStatement(n, o)
+            elif isinstance(n, LabeledStatement): return self.visitLabeledStatement(n, o)
+            elif isinstance(n, LabeledStatementNoShortIf): return self.visitLabeledStatementNoShortIf(n, o)
+            elif isinstance(n, ExpressionStatement): return self.visitExpressionStatement(n, o)
+            elif isinstance(n, SwitchStatement): return self.visitSwitchStatement(n, o)
+            elif isinstance(n, SwitchBlock): return self.visitSwitchBlock(n, o)
+            elif isinstance(n, SwitchBlockStatementGroups): return self.visitSwitchBlockStatementGroups(n, o)
+            elif isinstance(n, SwitchBlockStatementGroup): return self.visitSwitchBlockStatementGroup(n, o)
+            elif isinstance(n, SwitchLabels): return self.visitSwitchLabels(n, o)
+            elif isinstance(n, WhileStatement): return self.visitWhileStatement(n, o)
+            elif isinstance(n, WhileStatementNoShortIf): return self.visitWhileStatementNoShortIf(n, o)
+            elif isinstance(n, DoStatement): return self.visitDoStatement(n, o)
+            elif isinstance(n, BasicForStatement): return self.visitBasicForStatement(n, o)
+            elif isinstance(n, ForStatementNoShortIf): return self.visitForStatementNoShortIf(n, o)
+            elif isinstance(n, StatementExpressionList): return self.visitStatementExpressionList(n, o)
+            elif isinstance(n, EnhancedForStatement): return self.visitEnhancedForStatement(n, o)
+            elif isinstance(n, BreakStatement): return self.visitBreakStatement(n, o)
+            elif isinstance(n, ContinueStatement): return self.visitContinueStatement(n, o)
+            elif isinstance(n, ReturnStatement): return self.visitReturnStatement(n, o)
+            elif isinstance(n, ThrowStatement): return self.visitThrowStatement(n, o)
+            elif isinstance(n, SynchronizedStatement): return self.visitSynchronizedStatement(n, o)
+            elif isinstance(n, Catches): return self.visitCatches(n, o)
+            elif isinstance(n, CatchClause): return self.visitCatchClause(n, o)
+            elif isinstance(n, Finally): return self.visitFinally(n, o)
+            elif isinstance(n, ArgumentList): return self.visitArgumentList(n, o)
+            elif isinstance(n, DimExprs): return self.visitDimExprs(n, o)
+            elif isinstance(n, DimExpr): return self.visitDimExpr(n, o)
+            elif isinstance(n, PostIncrementExpression): return self.visitPostIncrementExpression(n, o)
+            elif isinstance(n, PostDecrementExpression): return self.visitPostDecrementExpression(n, o)
+            elif isinstance(n, PreIncrementExpression): return self.visitPreIncrementExpression(n, o)
+            elif isinstance(n, PreDecrementExpression): return self.visitPreDecrementExpression(n, o)
+            elif isinstance(n, AndExpression): return self.visitAndExpression(n, o)
+            elif isinstance(n, ExclusiveOrExpression): return self.visitExclusiveOrExpression(n, o)
+            elif isinstance(n, InclusiveOrExpression): return self.visitInclusiveOrExpression(n, o)
+            elif isinstance(n, ConditionalAndExpression): return self.visitConditionalAndExpression(n, o)
+            elif isinstance(n, ConditionalOrExpression): return self.visitConditionalOrExpression(n, o)
+            elif isinstance(n, ConditionalExpression): return self.visitConditionalExpression(n, o)
+            elif isinstance(n, Assignment): return self.visitAssignment(n, o)
+            elif isinstance(n, Commaopt): return self.visitCommaopt(n, o)
+            elif isinstance(n, Ellipsisopt): return self.visitEllipsisopt(n, o)
+            elif isinstance(n, LPGUserAction0): return self.visitLPGUserAction0(n, o)
+            elif isinstance(n, LPGUserAction1): return self.visitLPGUserAction1(n, o)
+            elif isinstance(n, LPGUserAction2): return self.visitLPGUserAction2(n, o)
+            elif isinstance(n, LPGUserAction3): return self.visitLPGUserAction3(n, o)
+            elif isinstance(n, LPGUserAction4): return self.visitLPGUserAction4(n, o)
+            elif isinstance(n, IntegralType0): return self.visitIntegralType0(n, o)
+            elif isinstance(n, IntegralType1): return self.visitIntegralType1(n, o)
+            elif isinstance(n, IntegralType2): return self.visitIntegralType2(n, o)
+            elif isinstance(n, IntegralType3): return self.visitIntegralType3(n, o)
+            elif isinstance(n, IntegralType4): return self.visitIntegralType4(n, o)
+            elif isinstance(n, FloatingPointType0): return self.visitFloatingPointType0(n, o)
+            elif isinstance(n, FloatingPointType1): return self.visitFloatingPointType1(n, o)
+            elif isinstance(n, WildcardBounds0): return self.visitWildcardBounds0(n, o)
+            elif isinstance(n, WildcardBounds1): return self.visitWildcardBounds1(n, o)
+            elif isinstance(n, ClassModifier0): return self.visitClassModifier0(n, o)
+            elif isinstance(n, ClassModifier1): return self.visitClassModifier1(n, o)
+            elif isinstance(n, ClassModifier2): return self.visitClassModifier2(n, o)
+            elif isinstance(n, ClassModifier3): return self.visitClassModifier3(n, o)
+            elif isinstance(n, ClassModifier4): return self.visitClassModifier4(n, o)
+            elif isinstance(n, ClassModifier5): return self.visitClassModifier5(n, o)
+            elif isinstance(n, ClassModifier6): return self.visitClassModifier6(n, o)
+            elif isinstance(n, FieldModifier0): return self.visitFieldModifier0(n, o)
+            elif isinstance(n, FieldModifier1): return self.visitFieldModifier1(n, o)
+            elif isinstance(n, FieldModifier2): return self.visitFieldModifier2(n, o)
+            elif isinstance(n, FieldModifier3): return self.visitFieldModifier3(n, o)
+            elif isinstance(n, FieldModifier4): return self.visitFieldModifier4(n, o)
+            elif isinstance(n, FieldModifier5): return self.visitFieldModifier5(n, o)
+            elif isinstance(n, FieldModifier6): return self.visitFieldModifier6(n, o)
+            elif isinstance(n, MethodDeclarator0): return self.visitMethodDeclarator0(n, o)
+            elif isinstance(n, MethodDeclarator1): return self.visitMethodDeclarator1(n, o)
+            elif isinstance(n, MethodModifier0): return self.visitMethodModifier0(n, o)
+            elif isinstance(n, MethodModifier1): return self.visitMethodModifier1(n, o)
+            elif isinstance(n, MethodModifier2): return self.visitMethodModifier2(n, o)
+            elif isinstance(n, MethodModifier3): return self.visitMethodModifier3(n, o)
+            elif isinstance(n, MethodModifier4): return self.visitMethodModifier4(n, o)
+            elif isinstance(n, MethodModifier5): return self.visitMethodModifier5(n, o)
+            elif isinstance(n, MethodModifier6): return self.visitMethodModifier6(n, o)
+            elif isinstance(n, MethodModifier7): return self.visitMethodModifier7(n, o)
+            elif isinstance(n, MethodModifier8): return self.visitMethodModifier8(n, o)
+            elif isinstance(n, ConstructorModifier0): return self.visitConstructorModifier0(n, o)
+            elif isinstance(n, ConstructorModifier1): return self.visitConstructorModifier1(n, o)
+            elif isinstance(n, ConstructorModifier2): return self.visitConstructorModifier2(n, o)
+            elif isinstance(n, ExplicitConstructorInvocation0): return self.visitExplicitConstructorInvocation0(n, o)
+            elif isinstance(n, ExplicitConstructorInvocation1): return self.visitExplicitConstructorInvocation1(n, o)
+            elif isinstance(n, ExplicitConstructorInvocation2): return self.visitExplicitConstructorInvocation2(n, o)
+            elif isinstance(n, InterfaceModifier0): return self.visitInterfaceModifier0(n, o)
+            elif isinstance(n, InterfaceModifier1): return self.visitInterfaceModifier1(n, o)
+            elif isinstance(n, InterfaceModifier2): return self.visitInterfaceModifier2(n, o)
+            elif isinstance(n, InterfaceModifier3): return self.visitInterfaceModifier3(n, o)
+            elif isinstance(n, InterfaceModifier4): return self.visitInterfaceModifier4(n, o)
+            elif isinstance(n, InterfaceModifier5): return self.visitInterfaceModifier5(n, o)
+            elif isinstance(n, ExtendsInterfaces0): return self.visitExtendsInterfaces0(n, o)
+            elif isinstance(n, ExtendsInterfaces1): return self.visitExtendsInterfaces1(n, o)
+            elif isinstance(n, ConstantModifier0): return self.visitConstantModifier0(n, o)
+            elif isinstance(n, ConstantModifier1): return self.visitConstantModifier1(n, o)
+            elif isinstance(n, ConstantModifier2): return self.visitConstantModifier2(n, o)
+            elif isinstance(n, AbstractMethodModifier0): return self.visitAbstractMethodModifier0(n, o)
+            elif isinstance(n, AbstractMethodModifier1): return self.visitAbstractMethodModifier1(n, o)
+            elif isinstance(n, AnnotationTypeElementDeclaration0): return self.visitAnnotationTypeElementDeclaration0(n, o)
+            elif isinstance(n, AnnotationTypeElementDeclaration1): return self.visitAnnotationTypeElementDeclaration1(n, o)
+            elif isinstance(n, AssertStatement0): return self.visitAssertStatement0(n, o)
+            elif isinstance(n, AssertStatement1): return self.visitAssertStatement1(n, o)
+            elif isinstance(n, SwitchLabel0): return self.visitSwitchLabel0(n, o)
+            elif isinstance(n, SwitchLabel1): return self.visitSwitchLabel1(n, o)
+            elif isinstance(n, SwitchLabel2): return self.visitSwitchLabel2(n, o)
+            elif isinstance(n, TryStatement0): return self.visitTryStatement0(n, o)
+            elif isinstance(n, TryStatement1): return self.visitTryStatement1(n, o)
+            elif isinstance(n, PrimaryNoNewArray0): return self.visitPrimaryNoNewArray0(n, o)
+            elif isinstance(n, PrimaryNoNewArray1): return self.visitPrimaryNoNewArray1(n, o)
+            elif isinstance(n, PrimaryNoNewArray2): return self.visitPrimaryNoNewArray2(n, o)
+            elif isinstance(n, PrimaryNoNewArray3): return self.visitPrimaryNoNewArray3(n, o)
+            elif isinstance(n, PrimaryNoNewArray4): return self.visitPrimaryNoNewArray4(n, o)
+            elif isinstance(n, Literal0): return self.visitLiteral0(n, o)
+            elif isinstance(n, Literal1): return self.visitLiteral1(n, o)
+            elif isinstance(n, Literal2): return self.visitLiteral2(n, o)
+            elif isinstance(n, Literal3): return self.visitLiteral3(n, o)
+            elif isinstance(n, Literal4): return self.visitLiteral4(n, o)
+            elif isinstance(n, Literal5): return self.visitLiteral5(n, o)
+            elif isinstance(n, Literal6): return self.visitLiteral6(n, o)
+            elif isinstance(n, BooleanLiteral0): return self.visitBooleanLiteral0(n, o)
+            elif isinstance(n, BooleanLiteral1): return self.visitBooleanLiteral1(n, o)
+            elif isinstance(n, ClassInstanceCreationExpression0): return self.visitClassInstanceCreationExpression0(n, o)
+            elif isinstance(n, ClassInstanceCreationExpression1): return self.visitClassInstanceCreationExpression1(n, o)
+            elif isinstance(n, ArrayCreationExpression0): return self.visitArrayCreationExpression0(n, o)
+            elif isinstance(n, ArrayCreationExpression1): return self.visitArrayCreationExpression1(n, o)
+            elif isinstance(n, ArrayCreationExpression2): return self.visitArrayCreationExpression2(n, o)
+            elif isinstance(n, ArrayCreationExpression3): return self.visitArrayCreationExpression3(n, o)
+            elif isinstance(n, Dims0): return self.visitDims0(n, o)
+            elif isinstance(n, Dims1): return self.visitDims1(n, o)
+            elif isinstance(n, FieldAccess0): return self.visitFieldAccess0(n, o)
+            elif isinstance(n, FieldAccess1): return self.visitFieldAccess1(n, o)
+            elif isinstance(n, FieldAccess2): return self.visitFieldAccess2(n, o)
+            elif isinstance(n, MethodInvocation0): return self.visitMethodInvocation0(n, o)
+            elif isinstance(n, MethodInvocation1): return self.visitMethodInvocation1(n, o)
+            elif isinstance(n, MethodInvocation2): return self.visitMethodInvocation2(n, o)
+            elif isinstance(n, MethodInvocation3): return self.visitMethodInvocation3(n, o)
+            elif isinstance(n, MethodInvocation4): return self.visitMethodInvocation4(n, o)
+            elif isinstance(n, ArrayAccess0): return self.visitArrayAccess0(n, o)
+            elif isinstance(n, ArrayAccess1): return self.visitArrayAccess1(n, o)
+            elif isinstance(n, UnaryExpression0): return self.visitUnaryExpression0(n, o)
+            elif isinstance(n, UnaryExpression1): return self.visitUnaryExpression1(n, o)
+            elif isinstance(n, UnaryExpressionNotPlusMinus0): return self.visitUnaryExpressionNotPlusMinus0(n, o)
+            elif isinstance(n, UnaryExpressionNotPlusMinus1): return self.visitUnaryExpressionNotPlusMinus1(n, o)
+            elif isinstance(n, CastExpression0): return self.visitCastExpression0(n, o)
+            elif isinstance(n, CastExpression1): return self.visitCastExpression1(n, o)
+            elif isinstance(n, MultiplicativeExpression0): return self.visitMultiplicativeExpression0(n, o)
+            elif isinstance(n, MultiplicativeExpression1): return self.visitMultiplicativeExpression1(n, o)
+            elif isinstance(n, MultiplicativeExpression2): return self.visitMultiplicativeExpression2(n, o)
+            elif isinstance(n, AdditiveExpression0): return self.visitAdditiveExpression0(n, o)
+            elif isinstance(n, AdditiveExpression1): return self.visitAdditiveExpression1(n, o)
+            elif isinstance(n, ShiftExpression0): return self.visitShiftExpression0(n, o)
+            elif isinstance(n, ShiftExpression1): return self.visitShiftExpression1(n, o)
+            elif isinstance(n, ShiftExpression2): return self.visitShiftExpression2(n, o)
+            elif isinstance(n, RelationalExpression0): return self.visitRelationalExpression0(n, o)
+            elif isinstance(n, RelationalExpression1): return self.visitRelationalExpression1(n, o)
+            elif isinstance(n, RelationalExpression2): return self.visitRelationalExpression2(n, o)
+            elif isinstance(n, RelationalExpression3): return self.visitRelationalExpression3(n, o)
+            elif isinstance(n, RelationalExpression4): return self.visitRelationalExpression4(n, o)
+            elif isinstance(n, EqualityExpression0): return self.visitEqualityExpression0(n, o)
+            elif isinstance(n, EqualityExpression1): return self.visitEqualityExpression1(n, o)
+            elif isinstance(n, AssignmentOperator0): return self.visitAssignmentOperator0(n, o)
+            elif isinstance(n, AssignmentOperator1): return self.visitAssignmentOperator1(n, o)
+            elif isinstance(n, AssignmentOperator2): return self.visitAssignmentOperator2(n, o)
+            elif isinstance(n, AssignmentOperator3): return self.visitAssignmentOperator3(n, o)
+            elif isinstance(n, AssignmentOperator4): return self.visitAssignmentOperator4(n, o)
+            elif isinstance(n, AssignmentOperator5): return self.visitAssignmentOperator5(n, o)
+            elif isinstance(n, AssignmentOperator6): return self.visitAssignmentOperator6(n, o)
+            elif isinstance(n, AssignmentOperator7): return self.visitAssignmentOperator7(n, o)
+            elif isinstance(n, AssignmentOperator8): return self.visitAssignmentOperator8(n, o)
+            elif isinstance(n, AssignmentOperator9): return self.visitAssignmentOperator9(n, o)
+            elif isinstance(n, AssignmentOperator10): return self.visitAssignmentOperator10(n, o)
+            elif isinstance(n, AssignmentOperator11): return self.visitAssignmentOperator11(n, o)
+            else: raise ValueError("visit(" + n.toString() + ")")
         
     
 

@@ -221,6 +221,6 @@ class LPGLexersym(object):
                  "CtlCharNotWS"
              ]
 
-   numTokenKinds : int  = 103
+   numTokenKinds : int  = 102
    isValidForParser : bool = True
 
