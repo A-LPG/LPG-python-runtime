@@ -197,7 +197,8 @@ class PrsStream(IPrsStream):
         return self.iLexStream.getLineNumberOfCharAt(i)
 
     def getColumnOfCharAt(self, i: int) -> int:
-        return self.getColumnOfCharAt(i)
+        if not self.iLexStream: return 0
+        return self.iLexStream.getColumnOfCharAt(i)
 
     def getFirstErrorToken(self, i: int) -> int:
         return self.getFirstRealToken(i)
